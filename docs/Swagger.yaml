@@ -1,0 +1,709 @@
+swagger: '2.0'
+info:
+  description: |
+    Mushroom Cultivation System
+  version: pre-alpha-1.0
+  title: Mushroom++
+paths:
+  /defined/mushroom/stages:
+    get:
+      summary: returns the predifined list of possible mushroom developement stages
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              type: string
+            example: ["Inoculation","Casing","Spawn Run","Pinning","Fruiting","Dead"]
+  /defined/mushroom/types:
+    get:
+      summary: returns the predifined list of possible mushroom types
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              type: string
+            example: ["Agaricus bisporus","Pleurotus","Lentinula edodes"]
+  /token:
+    get:
+      summary: returns jwt, provided that the username and password is correct
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Basic Authorization
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: JSON Web Token using HS256 algorithm
+          schema:
+            example: Header.Payload.Signature
+        401:
+          description: Unauthorized
+          schema:
+            example: Incorrect credentials
+  /user:
+    post:
+      summary: creates a new user
+      parameters:
+      - in: body
+        name: User
+        required: true
+        description: User
+        schema:
+          $ref: '#/definitions/user'
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: Created
+        409:
+          description: "Conflict, descriptive error message detailing if the username is taken or invalid, or if the password is too weak or invalid."
+          schema:
+            example: "username \"Bob\" taken"
+  /user/name/{username}:
+    get:
+      summary: returns the user with the given username
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: username
+        in: path
+        description: username of the user to return
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/user'
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+  /user/key/{user_key}:
+    delete:
+      summary: deletes the user with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: user_key
+        in: path
+        description: key of the User
+        required: true
+        type: integer
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: Deleted
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+    put:
+      summary: updates the user with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: user_key
+        in: path
+        description: key of the User
+        required: true
+        type: integer
+      - in: body
+        name: User
+        required: true
+        description: User
+        schema:
+          $ref: '#/definitions/user'
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: Updated
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        409:
+          description: "Conflict, descriptive error message detailing if the username is taken or invalid, or if the password is too weak or invalid."
+          schema:
+            example: "username \"Bob\" taken"
+  /hardware:
+    post:
+      summary: registers a new hardware
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - in: body
+        name: Hardware
+        required: true
+        description: Hardware
+        schema:
+          $ref: '#/definitions/hardware'
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: Registered
+        401:
+          description: Unauthorized
+        409:
+          description: "Conflict, descriptive error message detailing if the hardware_id is taken."
+          schema:
+            example: "hardware_id \"bobs_test_hardware_1\" taken"
+    get:
+      summary: returns the list of hardwares associated with the user
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/hardware'
+        401:
+          description: Unauthorized
+  /hardware/key/{hardware_key}:
+    get:
+      summary: returns the hardware with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: hardware_key
+        in: path
+        description: key of the Hardware
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/hardware'
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+    delete:
+      summary: deletes the hardware with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: hardware_key
+        in: path
+        description: key of the Hardware
+        required: true
+        type: integer
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: Deleted
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+    put:
+      summary: updates the hardware with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: hardware_key
+        in: path
+        description: key of the Hardware
+        required: true
+        type: integer
+      - in: body
+        name: Hardware
+        required: true
+        description: Hardware
+        schema:
+          $ref: '#/definitions/hardware'
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: Updated
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        409:
+          description: "Conflict, descriptive error message detailing if the hardware_id is taken."
+          schema:
+            example: "hardware_id \"bobs_test_hardware_1\" taken"
+  /specimen:
+    post:
+      summary: creates a new specimen
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - in: body
+        name: Specimen
+        required: true
+        description: Specimen
+        schema:
+          $ref: '#/definitions/specimen'
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: Created
+        401:
+          description: Unauthorized
+        409:
+          description: "Conflict, descriptive error message detailing if the hardware_id is invalid, or the desired hardware_id already has an active specimen assigned, or if the specimen_type is invalid."
+          schema:
+            example: "hardware_id \"bobs_test_hardware_1\" not found"
+    get:
+      summary: returns the list of active specimens associated with the user
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/specimen'
+        401:
+          description: Unauthorized
+  /specimen/key/{specimen_key}:
+    get:
+      summary: returns the specimen with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: specimen_key
+        in: path
+        description: key of the Specimen
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/specimen'
+        401:
+          description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
+        404:
+          description: Not Found
+    delete:
+      summary: deletes (marks as inactive, aka discards) the specimen with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: specimen_key
+        in: path
+        description: key of the Specimen
+        required: true
+        type: integer
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: Deleted
+        401:
+          description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
+        404:
+          description: Not Found
+    put:
+      summary: updates the specimen with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: specimen_key
+        in: path
+        description: key of the Specimen
+        required: true
+        type: integer
+      - in: body
+        name: Specimen
+        required: true
+        description: Specimen
+        schema:
+          $ref: '#/definitions/specimen'
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: Updated
+        401:
+          description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
+        404:
+          description: Not Found
+        409:
+          description: "Conflict, descriptive error message detailing if the hardware_id is invalid, or the desired hardware_id already has an active specimen assigned, or if the specimen_type is invalid."
+          schema:
+            example: "hardware_id \"bobs_test_hardware_1\" not found"
+  /specimen/key/{specimen_key}/sensor:
+    get:
+      summary: returns the sensor history associated with the given specimen_key (can be filtered further with query strings)
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: specimen_key
+        in: path
+        description: key of the Specimen
+        required: true
+        type: integer
+      - name: datetime_from
+        in: query
+        description: "Filter data based on a timespan.\nUnix datetime format: number of milliseconds since the standard base time January 1, 1970, 00:00:00 GMT."
+        required: false
+        type: integer
+      - name: datetime_until
+        in: query
+        description: "Filter data based on a timespan.\nUnix datetime format: number of milliseconds since the standard base time January 1, 1970, 00:00:00 GMT."
+        required: false
+        type: integer
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/sensor_entry'
+        401:
+          description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
+        404:
+          description: Not Found
+  /specimen/key/{specimen_key}/status:
+    post:
+      summary: creates a new status entry associated with the specimen with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: specimen_key
+        in: path
+        description: key of the Specimen
+        required: true
+        type: integer
+      - in: body
+        name: Status Entry
+        required: true
+        description: Status Entry
+        schema:
+          $ref: '#/definitions/status_entry'
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: Created
+        401:
+          description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
+        404:
+          description: Not Found
+        409:
+          description: "Conflict, descriptive error message detailing if the stage_name is invalid."
+          schema:
+            example: "stage_name \"Fruiting\" is invalid"
+    get:
+      summary: returns the list status entries associated with the specimen with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: specimen_key
+        in: path
+        description: key of the Specimen
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/status_entry'
+        401:
+          description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
+        404:
+          description: Not Found
+  /status/key/{status_key}:
+    get:
+      summary: returns the status entry with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: status_key
+        in: path
+        description: key of the Status Entry
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/status_entry'
+        401:
+          description: Unauthorized (can be because of the associated Specimen is marked as inactive, aka discarded, aka deleted)
+        404:
+          description: Not Found
+    delete:
+      summary: deletes the status entry with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: status_key
+        in: path
+        description: key of the Status Entry
+        required: true
+        type: integer
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: Deleted
+        401:
+          description: Unauthorized (can be because of the associated Specimen is marked as inactive, aka discarded, aka deleted)
+        404:
+          description: Not Found
+    put:
+      summary: updates the status entry with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: status_key
+        in: path
+        description: key of the Status Entry
+        required: true
+        type: integer
+      - in: body
+        name: Status Entry
+        required: true
+        description: Status Entry
+        schema:
+          $ref: '#/definitions/status_entry'
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: Updated
+        401:
+          description: Unauthorized (can be because of the associated Specimen is marked as inactive, aka discarded, aka deleted)
+        404:
+          description: Not Found
+        409:
+          description: "Conflict, descriptive error message detailing if the stage_name is invalid."
+          schema:
+            example: "stage_name \"Fruiting\" is invalid"
+
+definitions:
+  
+  user:
+    type: object
+    properties:
+      user_key:
+        description: "Nullable.\nReadonly value. (automatically generated on POST method)"
+        type: integer
+        example: 0
+      username:
+        description: "Nullable (null means unchanged value in PUT method)."
+        type: string
+        example: Bob
+      password:
+        description: "Nullable (used only in POST and PUT method, null means unchanged value)."
+        type: string
+        example: kolbiharcos1234
+  hardware:
+    type: object
+    properties:
+      hardware_key:
+        description: "Nullable.\nReadonly value. (automatically generated on POST method)"
+        type: integer
+        example: 0
+      hardware_id:
+        description: "Nullable (null means unchanged value in PUT method)."
+        type: string
+        example: "bobs_test_hardware_1"
+      in_use:
+        description: "Nullable\nReadonly value."
+        type: boolean
+        example: true
+      last_update:
+        description: "Nullable.\nReadonly value.\nUnix datetime format: number of milliseconds since the standard base time January 1, 1970, 00:00:00 GMT."
+        type: integer
+        example: 1492992000000
+      current_air_temperature:
+        description: "Nullable\nReadonly value."
+        type: number
+        example: 21.7
+      current_air_humidity:
+        description: "Nullable\nReadonly value."
+        type: number
+        example: 54.3
+      current_air_co2:
+        description: "Nullable\nReadonly value."
+        type: number
+        example: 1.2
+      desired_air_humidity:
+        description: "Nullable.\nReadonly value."
+        type: number
+        example: 1.2
+  specimen:
+    type: object
+    properties:
+      specimen_key:
+        description: "Nullable.\nReadonly value. (automatically generated on POST method)"
+        type: integer
+        example: 0
+      planted_date:        
+        description: "Readonly value.\nUnix datetime format: number of milliseconds since the standard base time January 1, 1970, 00:00:00 GMT."
+        type: integer
+        example: 1492992000000
+      specimen_name:
+        description: "Nullable (null means unchanged value in PUT method).\nUser specified name."
+        type: string
+        example: "Champignon Test Cultivation Instance 1"
+      specimen_type:
+        description: "Nullable (null means unchanged value in PUT method).\nType of mushroom (must be from the predefined list)."
+        type: string
+        example: "Champignon"
+      specimen_description:
+        description: "Nullable (null means unchanged value in PUT method).\nUser specified description (notes)."
+        type: string
+        example: "Seeds are from AliExpress."
+      desired_air_humidity:
+        description: "Nullable (null means unchanged value in PUT method).\nUser specified value, also changes the assigned hardware's value."
+        type: number
+        example: 1.2
+      hardware_id:
+        description: "Nullable (null means unchanged value in PUT method).\nUser specified value, must be from the list of hardwares' ids associated with the user.\nAlternatively, \"none\" sets the hardware_key to null."
+        type: string
+        example: "bobs_test_hardware_1"
+  sensor_entry:
+    type: object
+    properties:
+      entry_key:
+        description: "Readonly value."
+        type: integer
+        example: 0
+      entry_time:
+        description: "Readonly value.\nUnix datetime format: number of milliseconds since the standard base time January 1, 1970, 00:00:00 GMT."
+        type: integer
+        example: 1492992000000
+      air_temperature:
+        description: "Readonly value."
+        type: number
+        example: 21.7
+      air_humidity:
+        description: "Readonly value."
+        type: number
+        example: 54.3
+      air_co2:
+        description: "Readonly value."
+        type: number
+        example: 1.2
+      desired_air_humidity:
+        description: "Readonly value."
+        type: number
+        example: 1.2
+      specimen_key:
+        description: "Readonly value.\nKey of the associated specimen."
+        type: integer
+        example: 145
+  status_entry:
+    type: object
+    properties:
+      entry_key:
+        description: "Nullable.\nReadonly value. (automatically generated on POST method)"
+        type: integer
+        example: 0
+      entry_time:
+        description: "Nullable (null means unchanged value in PUT method, default value is NOW in POST method).\nUnix datetime format: number of milliseconds since the standard base time January 1, 1970, 00:00:00 GMT."
+        type: integer
+        example: 1492992000000
+      stage_name:
+        description: "Nullable (null means unchanged value in PUT method).\nStage of the developement (must be from the predefined list)"
+        type: string
+        example: "Fruiting"
+      specimen_key:
+        description: "Readonly value (can only be set in POST method).\nKey of the associated specimen."
+        type: integer
+        example: 145
