@@ -1,0 +1,5 @@
+USE MushroomPP
+GO
+
+DROP SCHEMA [dwh]
+GO

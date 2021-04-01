@@ -1,0 +1,6 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="deployment_arm64" type="DotNetFolderPublish" factoryName="Publish to folder">
+    <riderPublish runtime="linux-arm64" target_folder="$PROJECT_DIR$/out/arm64" target_framework="netcoreapp5.0" uuid_high="3784269269384515384" uuid_low="-5210957039802795926" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -1,0 +1,8 @@
+*.iml
+modules.xml
+workspace.xml
+navEditor.xml
+assetWizardSettings.xml
+*/obj
+*/bin
+/out
