@@ -274,6 +274,31 @@ paths:
           description: "Conflict, descriptive error message detailing if the hardware_id is taken."
           schema:
             example: "hardware_id \"bobs_test_hardware_1\" taken"
+  /hardware/key/{hardware_key}/sensor:
+    get:
+      summary: returns the current sensor data of the hardware associated with the given hardware key (polls realtime)
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: hardware_key
+        in: path
+        description: key of the Hardware 
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/sensor_entry'
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
   /specimen:
     post:
       summary: creates a new specimen
@@ -400,7 +425,7 @@ paths:
             example: "hardware_id \"bobs_test_hardware_1\" not found"
   /specimen/key/{specimen_key}/sensor:
     get:
-      summary: returns the sensor history associated with the given specimen_key (can be filtered further with query strings)
+      summary: returns the sensor history associated with the given specimen key (can be filtered further with query strings)
       parameters:
       - in: header
         name: Authorization
@@ -584,11 +609,11 @@ definitions:
         type: integer
         example: 0
       username:
-        description: "Nullable (null means unchanged value in PUT method)."
+        description: ""
         type: string
         example: Bob
       password:
-        description: "Nullable (used only in POST and PUT method, null means unchanged value)."
+        description: "Nullable (used only in POST and PUT method)."
         type: string
         example: kolbiharcos1234
   hardware:
@@ -599,31 +624,23 @@ definitions:
         type: integer
         example: 0
       hardware_id:
-        description: "Nullable (null means unchanged value in PUT method)."
+        description: "16 characters long HEX string, representing 64bit LoRaWAN id"
         type: string
-        example: "bobs_test_hardware_1"
-      in_use:
+        example: "0123456789ABCDEF"
+      specimen_key:
         description: "Nullable\nReadonly value."
-        type: boolean
-        example: true
-      last_update:
-        description: "Nullable.\nReadonly value.\nUnix datetime format: number of milliseconds since the standard base time January 1, 1970, 00:00:00 GMT."
         type: integer
-        example: 1492992000000
-      current_air_temperature:
+        example: 0
+      desired_air_temperature:
         description: "Nullable\nReadonly value."
         type: number
         example: 21.7
-      current_air_humidity:
-        description: "Nullable\nReadonly value."
-        type: number
-        example: 54.3
-      current_air_co2:
+      desired_air_humidity:
         description: "Nullable\nReadonly value."
         type: number
         example: 1.2
-      desired_air_humidity:
-        description: "Nullable.\nReadonly value."
+      desired_air_co2:
+        description: "Nullable\nReadonly value."
         type: number
         example: 1.2
   specimen:
@@ -638,30 +655,38 @@ definitions:
         type: integer
         example: 1492992000000
       specimen_name:
-        description: "Nullable (null means unchanged value in PUT method).\nUser specified name."
+        description: "User specified name."
         type: string
         example: "Champignon Test Cultivation Instance 1"
       specimen_type:
-        description: "Nullable (null means unchanged value in PUT method).\nType of mushroom (must be from the predefined list)."
+        description: "Type of mushroom (must be from the predefined list)."
         type: string
         example: "Champignon"
       specimen_description:
-        description: "Nullable (null means unchanged value in PUT method).\nUser specified description (notes)."
+        description: "User specified description (notes)."
         type: string
         example: "Seeds are from AliExpress."
+      desired_air_temperature:
+        description: "Nullable, User specified value, also changes the assigned hardware's value."
+        type: number
+        example: 21.7
       desired_air_humidity:
-        description: "Nullable (null means unchanged value in PUT method).\nUser specified value, also changes the assigned hardware's value."
+        description: "Nullable, User specified value, also changes the assigned hardware's value."
+        type: number
+        example: 1.2
+      desired_air_co2:
+        description: "Nullable, User specified value, also changes the assigned hardware's value."
         type: number
         example: 1.2
       hardware_id:
-        description: "Nullable (null means unchanged value in PUT method).\nUser specified value, must be from the list of hardwares' ids associated with the user.\nAlternatively, \"none\" sets the hardware_key to null."
-        type: string
-        example: "bobs_test_hardware_1"
+        description: "Nullable, User specified value, must be from the list of hardwares keys associated with the user."
+        type: integer
+        example: "1"
   sensor_entry:
     type: object
     properties:
       entry_key:
-        description: "Readonly value."
+        description: "Nullabe (only used in history, not real time polling).\nReadonly value."
         type: integer
         example: 0
       entry_time:
@@ -680,12 +705,32 @@ definitions:
         description: "Readonly value."
         type: number
         example: 1.2
+      desired_air_temperature:
+        description: "Nullable, Readonly value."
+        type: number
+        example: 21.7
       desired_air_humidity:
+        description: "Nullable, Readonly value."
+        type: number
+        example: 1.2
+      desired_air_co2:
+        description: "Nullable, Readonly value."
+        type: number
+        example: 1.2
+      ambient_air_temperature:
+        description: "Readonly value."
+        type: number
+        example: 21.7
+      ambient_air_humidity:
+        description: "Readonly value."
+        type: number
+        example: 1.2
+      ambient_air_co2:
         description: "Readonly value."
         type: number
         example: 1.2
       specimen_key:
-        description: "Readonly value.\nKey of the associated specimen."
+        description: "Nullabe (only used in history, not real time polling).\nReadonly value.\nKey of the associated specimen."
         type: integer
         example: 145
   status_entry:
@@ -696,11 +741,11 @@ definitions:
         type: integer
         example: 0
       entry_time:
-        description: "Nullable (null means unchanged value in PUT method, default value is NOW in POST method).\nUnix datetime format: number of milliseconds since the standard base time January 1, 1970, 00:00:00 GMT."
+        description: "Nullable (default value is NOW in POST method).\nUnix datetime format: number of milliseconds since the standard base time January 1, 1970, 00:00:00 GMT."
         type: integer
         example: 1492992000000
       stage_name:
-        description: "Nullable (null means unchanged value in PUT method).\nStage of the developement (must be from the predefined list)"
+        description: "Stage of the developement (must be from the predefined list)"
         type: string
         example: "Fruiting"
       specimen_key:

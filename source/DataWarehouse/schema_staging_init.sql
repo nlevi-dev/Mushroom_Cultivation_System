@@ -16,11 +16,6 @@ CREATE TABLE staging.[dim_hardware]
 (
 	[hardware_key] int NOT NULL,
 	[in_use] bit NOT NULL,
-	[last_update] datetime NOT NULL,
-	[current_air_temperature] real NOT NULL,
-	[current_air_humidity] real NOT NULL,
-	[current_air_co2] real NOT NULL,
-	[desired_air_humidity] real NOT NULL,
 	[user_key] int NOT NULL
 )
 GO
@@ -35,16 +30,21 @@ GO
 CREATE TABLE staging.[dim_sensor_entry]
 (
 	[entry_key] int NOT NULL,
-	[entry_time] datetime NOT NULL,
+	[entry_time] datetime2(0) NOT NULL,
 	[air_temperature] real NOT NULL,
 	[air_humidity] real NOT NULL,
 	[air_co2] real NOT NULL,
+	[desired_air_temperature] real NULL,
 	[desired_air_humidity] real NULL,
+	[desired_air_co2] real NULL,
+	[ambient_air_temperature] real NOT NULL,
+	[ambient_air_humidity] real NOT NULL,
+	[ambient_air_co2] real NOT NULL,
 	[specimen_key] int NOT NULL
 )
 GO
 
-CREATE TABLE staging.[dim_stage]
+CREATE TABLE staging.[dim_mushroom_stage]
 (
 	[stage_key] int NOT NULL,
 	[stage_name] nvarchar(32) NOT NULL
@@ -54,7 +54,7 @@ GO
 CREATE TABLE staging.[dim_status_entry]
 (
 	[entry_key] int NOT NULL,
-	[entry_time] datetime NOT NULL,
+	[entry_time] datetime2(0) NOT NULL,
 	[stage_key] int NOT NULL,
 	[specimen_key] int NOT NULL
 )
@@ -71,9 +71,8 @@ CREATE TABLE staging.[fact_specimen]
 (
 	[specimen_key] int NOT NULL,
 	[active] bit NOT NULL,
-	[planted_date] datetime NOT NULL,
-	[discraded_date] datetime NOT NULL,
-	[desired_air_humidity] real NOT NULL,
+	[planted_date] date NOT NULL,
+	[discraded_date] date NOT NULL,
 	[type_key] int NOT NULL,
 	[hardware_key] int NULL
 )
@@ -105,12 +104,12 @@ ALTER TABLE staging.[dim_sensor_entry]
 	PRIMARY KEY CLUSTERED ([entry_key] ASC)
 GO
 
-ALTER TABLE staging.[dim_stage] 
- ADD CONSTRAINT [PK_dim_stage]
+ALTER TABLE staging.[dim_mushroom_stage] 
+ ADD CONSTRAINT [PK_dim_mushroom_stage]
 	PRIMARY KEY CLUSTERED ([stage_key] ASC)
 GO
 
-ALTER TABLE staging.[dim_stage] 
+ALTER TABLE staging.[dim_mushroom_stage] 
  ADD CONSTRAINT [mushroom_stage_name] UNIQUE NONCLUSTERED ([stage_name] ASC)
 GO
 
@@ -147,8 +146,8 @@ ALTER TABLE staging.[dim_status_entry] ADD CONSTRAINT [FK_dim_status_entry_bridg
 	FOREIGN KEY ([specimen_key]) REFERENCES staging.[bridge_specimen] ([specimen_key]) ON DELETE No Action ON UPDATE No Action
 GO
 
-ALTER TABLE staging.[dim_status_entry] ADD CONSTRAINT [FK_dim_status_entry_dim_stage]
-	FOREIGN KEY ([stage_key]) REFERENCES staging.[dim_stage] ([stage_key]) ON DELETE No Action ON UPDATE No Action
+ALTER TABLE staging.[dim_status_entry] ADD CONSTRAINT [FK_dim_status_entry_dim_mushroom_stage]
+	FOREIGN KEY ([stage_key]) REFERENCES staging.[dim_mushroom_stage] ([stage_key]) ON DELETE No Action ON UPDATE No Action
 GO
 
 ALTER TABLE staging.[fact_specimen] ADD CONSTRAINT [FK_fact_specimen_bridge_specimen]
