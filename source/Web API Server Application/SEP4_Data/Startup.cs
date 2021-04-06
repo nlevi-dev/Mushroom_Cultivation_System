@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using SEP4_Data.Data;
 
 namespace SEP4_Data
 {
@@ -17,13 +18,16 @@ namespace SEP4_Data
 
         public IConfiguration Configuration { get; }
         
+        private ConfigService _configService;
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            /*ConfigService configService = new ConfigService();
-            PersistenceService persistenceService = new PersistenceService(configService);
-            services.AddSingleton<IConfigService, ConfigService>(init => configService);
-            services.AddSingleton<IPersistenceService, PersistenceService>(init => persistenceService);*/
+            _configService = new ConfigService();
+            PersistenceService persistenceService = new PersistenceService(_configService);
+            services.AddSingleton<IConfigService, ConfigService>(init => _configService);
+            services.AddSingleton<IPersistenceService, PersistenceService>(init => persistenceService);
+            services.AddSingleton<ILogService, LogService>();
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Mushroom++", Version = "v1"});
                 // add JWT Authentication
@@ -65,15 +69,16 @@ namespace SEP4_Data
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            if (env.IsDevelopment() || _configService.Swagger)
+            {
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AuthorAPI v1"));
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
-            //app.UseMiddleware<JwtMiddleware>();
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

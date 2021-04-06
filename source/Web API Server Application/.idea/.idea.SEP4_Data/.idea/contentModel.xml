@@ -11,6 +11,36 @@
         <e p="appsettings.json" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="config.json" t="Include" />
+        <e p="config_live.json" t="Include" />
+        <e p="Controllers" t="Include">
+          <e p="HardwareController.cs" t="Include" />
+          <e p="MiscController.cs" t="Include" />
+          <e p="SpecimenController.cs" t="Include" />
+          <e p="StatusController.cs" t="Include" />
+          <e p="UserController.cs" t="Include" />
+        </e>
+        <e p="Data" t="Include">
+          <e p="ConfigService.cs" t="Include" />
+          <e p="IConfigService.cs" t="Include" />
+          <e p="ILogService.cs" t="Include" />
+          <e p="IPersistenceService.cs" t="Include" />
+          <e p="JwtMiddleware.cs" t="Include" />
+          <e p="LogService.cs" t="Include" />
+          <e p="PersistenceService.cs" t="Include" />
+        </e>
+        <e p="log.txt" t="Include" />
+        <e p="Model" t="Include">
+          <e p="Exception" t="Include">
+            <e p="ConflictException.cs" t="Include" />
+            <e p="NotFoundException.cs" t="Include" />
+            <e p="UnauthorizedException.cs" t="Include" />
+          </e>
+          <e p="Hardware.cs" t="Include" />
+          <e p="SensorEntry.cs" t="Include" />
+          <e p="Specimen.cs" t="Include" />
+          <e p="StatusEntry.cs" t="Include" />
+          <e p="User.cs" t="Include" />
+        </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="net5.0" t="Include">

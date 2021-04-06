@@ -29,4 +29,8 @@ IF OBJECT_ID('dbo._user') IS NOT NULL
 	TRUNCATE TABLE dbo._user
 IF OBJECT_ID('dbo._user') IS NOT NULL
 	DROP TABLE dbo._user
+IF OBJECT_ID('dbo._permission_level') IS NOT NULL
+	TRUNCATE TABLE dbo._permission_level
+IF OBJECT_ID('dbo._permission_level') IS NOT NULL
+	DROP TABLE dbo._permission_level
 GO

@@ -47,7 +47,7 @@ paths:
           description: JSON Web Token using HS256 algorithm
           schema:
             example: Header.Payload.Signature
-        401:
+        403:
           description: Unauthorized
           schema:
             example: Incorrect credentials
@@ -91,10 +91,28 @@ paths:
           description: Ok
           schema:
             $ref: '#/definitions/user'
-        401:
+        403:
           description: Unauthorized
         404:
           description: Not Found
+  /user/name:
+    get:
+      summary: returns the authenticated user
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/user'
+        403:
+          description: Unauthorized
   /user/key/{user_key}:
     delete:
       summary: deletes the user with the given key
@@ -114,12 +132,13 @@ paths:
       responses:
         200:
           description: Deleted
-        401:
+        403:
           description: Unauthorized
         404:
           description: Not Found
-    put:
-      summary: updates the user with the given key
+  /user/key/{user_key}/username:
+    patch:
+      summary: changes the username of the user with the given key
       parameters:
       - in: header
         name: Authorization
@@ -131,25 +150,66 @@ paths:
         description: key of the User
         required: true
         type: integer
-      - in: body
-        name: User
+      - name: username
+        in: body
+        description: "new username\nUser Model could be used as it has this field, while the other fields can be ignored."
         required: true
-        description: User
         schema:
-          $ref: '#/definitions/user'
+          type: object
+          properties:
+            username:
+              type: string
+              example: Bob
       produces:
       - text/plain
       responses:
         200:
-          description: Updated
-        401:
+          description: Username Changed
+        403:
           description: Unauthorized
         404:
           description: Not Found
         409:
-          description: "Conflict, descriptive error message detailing if the username is taken or invalid, or if the password is too weak or invalid."
+          description: "Conflict, descriptive error message detailing if the username is taken or invalid."
           schema:
             example: "username \"Bob\" taken"
+  /user/key/{user_key}/password:
+    patch:
+      summary: changes the password of the user with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: user_key
+        in: path
+        description: key of the User
+        required: true
+        type: integer
+      - name: password
+        in: body
+        description: "new password\nUser Model could be used as it has this field, while the other fields can be ignored."
+        required: true
+        schema:
+          type: object
+          properties:
+            password:
+              type: string
+              example: kolbiharcos1234
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: Password Changed
+        403:
+          description: Unauthorized
+        404:
+          description: Not Found
+        409:
+          description: "Conflict, descriptive error message detailing if the password is too weak or invalid."
+          schema:
+            example: "the password is too short"
   /hardware:
     post:
       summary: registers a new hardware
@@ -170,7 +230,7 @@ paths:
       responses:
         200:
           description: Registered
-        401:
+        403:
           description: Unauthorized
         409:
           description: "Conflict, descriptive error message detailing if the hardware_id is taken."
@@ -193,7 +253,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/hardware'
-        401:
+        403:
           description: Unauthorized
   /hardware/key/{hardware_key}:
     get:
@@ -216,7 +276,7 @@ paths:
           description: Ok
           schema:
             $ref: '#/definitions/hardware'
-        401:
+        403:
           description: Unauthorized
         404:
           description: Not Found
@@ -238,7 +298,7 @@ paths:
       responses:
         200:
           description: Deleted
-        401:
+        403:
           description: Unauthorized
         404:
           description: Not Found
@@ -266,7 +326,7 @@ paths:
       responses:
         200:
           description: Updated
-        401:
+        403:
           description: Unauthorized
         404:
           description: Not Found
@@ -295,7 +355,7 @@ paths:
           description: Ok
           schema:
             $ref: '#/definitions/sensor_entry'
-        401:
+        403:
           description: Unauthorized
         404:
           description: Not Found
@@ -319,12 +379,12 @@ paths:
       responses:
         200:
           description: Created
-        401:
+        403:
           description: Unauthorized
         409:
           description: "Conflict, descriptive error message detailing if the hardware_id is invalid, or the desired hardware_id already has an active specimen assigned, or if the specimen_type is invalid."
           schema:
-            example: "hardware_id \"bobs_test_hardware_1\" not found"
+            example: "hardware_id \"0123456789ABCDEF\" already has a specimen"
     get:
       summary: returns the list of active specimens associated with the user
       parameters:
@@ -342,7 +402,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/specimen'
-        401:
+        403:
           description: Unauthorized
   /specimen/key/{specimen_key}:
     get:
@@ -365,7 +425,7 @@ paths:
           description: Ok
           schema:
             $ref: '#/definitions/specimen'
-        401:
+        403:
           description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
         404:
           description: Not Found
@@ -387,7 +447,7 @@ paths:
       responses:
         200:
           description: Deleted
-        401:
+        403:
           description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
         404:
           description: Not Found
@@ -415,7 +475,7 @@ paths:
       responses:
         200:
           description: Updated
-        401:
+        403:
           description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
         404:
           description: Not Found
@@ -456,7 +516,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/sensor_entry'
-        401:
+        403:
           description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
         404:
           description: Not Found
@@ -485,7 +545,7 @@ paths:
       responses:
         200:
           description: Created
-        401:
+        403:
           description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
         404:
           description: Not Found
@@ -515,7 +575,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/status_entry'
-        401:
+        403:
           description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
         404:
           description: Not Found
@@ -540,7 +600,7 @@ paths:
           description: Ok
           schema:
             $ref: '#/definitions/status_entry'
-        401:
+        403:
           description: Unauthorized (can be because of the associated Specimen is marked as inactive, aka discarded, aka deleted)
         404:
           description: Not Found
@@ -562,7 +622,7 @@ paths:
       responses:
         200:
           description: Deleted
-        401:
+        403:
           description: Unauthorized (can be because of the associated Specimen is marked as inactive, aka discarded, aka deleted)
         404:
           description: Not Found
@@ -590,7 +650,7 @@ paths:
       responses:
         200:
           description: Updated
-        401:
+        403:
           description: Unauthorized (can be because of the associated Specimen is marked as inactive, aka discarded, aka deleted)
         404:
           description: Not Found
@@ -613,9 +673,13 @@ definitions:
         type: string
         example: Bob
       password:
-        description: "Nullable (used only in POST and PUT method)."
+        description: "Nullable (used only in POST method)."
         type: string
         example: kolbiharcos1234
+      user_type:
+        description: "Nullable.\nReadonly value.\nAdmin or User (or possibly other future roles)"
+        type: string
+        example: User
   hardware:
     type: object
     properties:
@@ -679,9 +743,9 @@ definitions:
         type: number
         example: 1.2
       hardware_id:
-        description: "Nullable, User specified value, must be from the list of hardwares keys associated with the user."
-        type: integer
-        example: "1"
+        description: "Nullable.\nUser specified value, must be from the list of hardware ids associated with the user, or null."
+        type: string
+        example: "0123456789ABCDEF"
   sensor_entry:
     type: object
     properties:

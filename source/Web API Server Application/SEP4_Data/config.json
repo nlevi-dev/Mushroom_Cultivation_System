@@ -1,0 +1,14 @@
+{
+  "Port": 5000,
+  "Https": true,
+  "DbHost": "127.0.0.1",
+  "DbPort": 1433,
+  "DbName": "MushroomPP",
+  "DbUser": "Admin",
+  "DbPassword": "mssql",
+  "JwtKey": "eG7tjlgnSMFDqcr1hmsP0A==",
+  "Salt": "6JXU7TQdR9DkiKgR96liAQ==",
+  "CheckIntegrityOnStartup": false,
+  "TokenExpire": 0,
+  "Swagger": true
+}

@@ -3,6 +3,13 @@ GO
 
 /* Create Tables */
 
+CREATE TABLE dbo.[_permission_level]
+(
+	[permission_key] int IDENTITY (1, 1) NOT NULL,
+	[permission_type] nvarchar(16) NOT NULL
+)
+GO
+
 CREATE TABLE dbo.[_hardware]
 (
 	[hardware_key] int IDENTITY (1, 1) NOT NULL,
@@ -24,7 +31,7 @@ GO
 CREATE TABLE dbo.[_mushroom_type]
 (
 	[type_key] int IDENTITY (1, 1) NOT NULL,
-	[type_name] nvarchar(32) NOT NULL
+	[mushroom_name] nvarchar(32) NOT NULL
 )
 GO
 
@@ -73,7 +80,8 @@ CREATE TABLE dbo.[_user]
 (
 	[user_key] int IDENTITY (1, 1) NOT NULL,
 	[username] nvarchar(32) NOT NULL,
-	[password_hashed] nvarchar(64) NOT NULL
+	[password_hashed] nvarchar(64) NOT NULL,
+	[permission_key] int NOT NULL
 )
 GO
 
@@ -103,7 +111,7 @@ ALTER TABLE dbo.[_mushroom_type]
 GO
 
 ALTER TABLE dbo.[_mushroom_type] 
- ADD CONSTRAINT [mushroom_type] UNIQUE NONCLUSTERED ([type_name] ASC)
+ ADD CONSTRAINT [mushroom_type] UNIQUE NONCLUSTERED ([mushroom_name] ASC)
 GO
 
 ALTER TABLE dbo.[_sensor_entry] 
@@ -130,6 +138,11 @@ ALTER TABLE dbo.[_user]
  ADD CONSTRAINT [username] UNIQUE NONCLUSTERED ([username] ASC)
 GO
 
+ALTER TABLE [_permission_level] 
+ ADD CONSTRAINT [PK_permission_level]
+	PRIMARY KEY CLUSTERED ([permission_key] ASC)
+GO
+
 /* Create Foreign Key Constraints */
 
 ALTER TABLE dbo.[_hardware] ADD CONSTRAINT [FK_hardware_user]
@@ -154,6 +167,16 @@ GO
 
 ALTER TABLE dbo.[_status_entry] ADD CONSTRAINT [FK_status_entry_specimen]
 	FOREIGN KEY ([specimen_key]) REFERENCES dbo.[_specimen] ([specimen_key]) ON DELETE No Action ON UPDATE No Action
+GO
+
+ALTER TABLE dbo.[_user] ADD CONSTRAINT [FK_user_permission_level]
+	FOREIGN KEY ([permission_key]) REFERENCES dbo.[_permission_level] ([permission_key]) ON DELETE No Action ON UPDATE No Action
+GO
+
+/* Defaults */
+
+ALTER TABLE dbo.[_user] ADD CONSTRAINT [DEFAULT_user_permission_level]
+	DEFAULT 1 FOR [permission_key] 
 GO
 
 /* Triggers */
