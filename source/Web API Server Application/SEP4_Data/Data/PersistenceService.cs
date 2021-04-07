@@ -38,11 +38,11 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "SELECT mushroom_name FROM _mushroom_type";
+                command.CommandText = "SELECT mushroom_genus, mushroom_name FROM _mushroom_type";
                 var reader = command.ExecuteReader();
                 var temp = new List<string>();
                 while (reader.Read())
-                    temp.Add(reader.GetString(0));
+                    temp.Add(reader.GetString(0) + " - " + reader.GetString(1));
                 return temp.ToArray();
             }
         }
