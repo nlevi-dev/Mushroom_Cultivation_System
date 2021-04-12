@@ -31,7 +31,8 @@ GO
 CREATE TABLE dbo.[_mushroom_type]
 (
 	[type_key] int IDENTITY (1, 1) NOT NULL,
-	[mushroom_name] nvarchar(32) NOT NULL
+	[mushroom_name] nvarchar(32) NOT NULL,
+	[mushroom_genus] nvarchar(32) NOT NULL
 )
 GO
 
@@ -101,17 +102,9 @@ ALTER TABLE dbo.[_mushroom_stage]
 	PRIMARY KEY CLUSTERED ([stage_key] ASC)
 GO
 
-ALTER TABLE dbo.[_mushroom_stage] 
- ADD CONSTRAINT [mushroom_stage] UNIQUE NONCLUSTERED ([stage_name] ASC)
-GO
-
 ALTER TABLE dbo.[_mushroom_type] 
  ADD CONSTRAINT [PK_mushroom_type]
 	PRIMARY KEY CLUSTERED ([type_key] ASC)
-GO
-
-ALTER TABLE dbo.[_mushroom_type] 
- ADD CONSTRAINT [mushroom_type] UNIQUE NONCLUSTERED ([mushroom_name] ASC)
 GO
 
 ALTER TABLE dbo.[_sensor_entry] 
