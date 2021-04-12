@@ -23,7 +23,8 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                _persistence.CreateHardware(hardware);
+                return StatusCode(200);
             }
             catch (UnauthorizedException e)
             {
@@ -63,7 +64,8 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                var temp = _persistence.GetHardware(hardwareKey);
+                return StatusCode(200, temp);
             }
             catch (UnauthorizedException e)
             {
@@ -85,7 +87,8 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                _persistence.DeleteHardware(hardwareKey);
+                return StatusCode(200);
             }
             catch (UnauthorizedException e)
             {
@@ -107,7 +110,12 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                var existingHardware = _persistence.GetHardware(hardwareKey);
+
+                if (existingHardware != null)
+                {   
+                    
+                }
             }
             catch (UnauthorizedException e)
             {

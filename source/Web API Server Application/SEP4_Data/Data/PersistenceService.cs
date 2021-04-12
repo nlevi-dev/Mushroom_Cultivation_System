@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Data.SqlClient;
 using SEP4_Data.Model;
 using SEP4_Data.Model.Exception;
@@ -175,8 +176,19 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "";
-                throw new NotImplementedException();
+                command.CommandText = 
+                    "INSERT INTO _hardware (hardware_key, hardware_id, specimen_key,desired_air_temperature,desired_air_humidity,desired_air_co2) VALUES (@key, @id,@specimen,@airtemp,@airhumidity,@air_c02)";
+                command.Parameters.AddWithValue("@key", hardware.Key);
+                command.Parameters.AddWithValue("@id", hardware.Id);
+                command.Parameters.AddWithValue("@specimen", hardware.SpecimenKey);
+                command.Parameters.AddWithValue("@airtemp", hardware.DesiredAirTemperature);
+                command.Parameters.AddWithValue("@airhumidity", hardware.DesiredAirHumidity);
+                command.Parameters.AddWithValue("@air_co2", hardware.DesiredAirCo2);
+                try {
+                    command.ExecuteNonQuery();
+                } catch {
+                    throw new ConflictException("hardware already registered");
+                }
             }
         }
 
@@ -186,8 +198,25 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "";
-                throw new NotImplementedException();
+                command.CommandText = "SELECT * from _hardware WHERE user_key = @user_key";
+                command.Parameters.AddWithValue("@user_key", userKey);
+                var reader = command.ExecuteReader();
+                var temp = new List<Hardware>();
+                while (reader.Read())
+                {
+                    Hardware item = new Hardware()
+                    {
+                        Key = (int) reader["hardware_key"],
+                        Id = (string) reader["hardware_id"],
+                        SpecimenKey = (int) reader["specimen_key"],
+                        DesiredAirTemperature = (float) reader["desired_air_temperature"],
+                        DesiredAirCo2 = (float) reader["desired_air_co2"],
+                        DesiredAirHumidity = (float) reader["desired_air_humidity"]
+                    };
+                    temp.Add(item);
+                }
+
+                return temp.ToArray();
             }
         }
 
@@ -197,9 +226,25 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "";
-                throw new NotImplementedException();
+                command.CommandText = "SELECT * from _hardware WHERE hardware_key = @key";
+                command.Parameters.AddWithValue("@key", hardwareKey);
+                var reader = command.ExecuteReader();
+                
+                if (reader.Read())
+                { 
+                    Hardware temp = new Hardware()
+                    {
+                        Key = (int) reader["hardware_key"],
+                        Id = (string) reader["hardware_id"],
+                        SpecimenKey = (int) reader["specimen_key"],
+                        DesiredAirTemperature = (float) reader["desired_air_temperature"],
+                        DesiredAirCo2 = (float) reader["desired_air_co2"],
+                        DesiredAirHumidity = (float) reader["desired_air_humidity"]
+                    };
+                    return temp;
+                }
             }
+            throw new NotFoundException("hardware \"" + hardwareKey + "\" not found!");
         }
 
         public void DeleteHardware(int hardwareKey)
@@ -208,8 +253,10 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "";
-                throw new NotImplementedException();
+                command.CommandText = "DELETE * FROM _hardware WHERE hardware_key = @key";
+                command.Parameters.AddWithValue("@key", hardwareKey);
+                command.ExecuteNonQuery();
+                // I am not sure how to execute this delete statement
             }
         }
 

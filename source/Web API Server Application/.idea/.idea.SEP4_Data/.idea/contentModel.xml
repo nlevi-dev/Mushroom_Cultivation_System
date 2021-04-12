@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Levente\AppData\Local\JetBrains\Rider2020.2\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\Levente\AppData\Local\JetBrains\Rider2020.2\resharper-host\Local\Transient\Rider\v202\SolutionCaches\_SEP4_Data.849219553.00" t="ExcludeRecursive" />
-    <e p="C:\Users\Levente\Documents\Subjects\Documents\semester 4\SEP4\Project\source\Web API Server Application" t="IncludeFlat">
+    <e p="C:\Users\azata\AppData\Local\JetBrains\Rider2020.3\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\azata\AppData\Local\JetBrains\Rider2020.3\resharper-host\Local\Transient\Rider\v203\SolutionCaches\_SEP4_Data.-1426955147.00" t="ExcludeRecursive" />
+    <e p="C:\Users\azata\AppData\Roaming\JetBrains\Rider2020.3\consoles\db" t="IncludeRecursive" />
+    <e p="D:\Github\SEP4_Data\source\Web API Server Application" t="IncludeFlat">
       <e p="packages" t="ExcludeRecursive" />
       <e p="SEP4_Data" t="IncludeRecursive">
         <e p=".gitignore" t="Include" />
@@ -11,7 +12,6 @@
         <e p="appsettings.json" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="config.json" t="Include" />
-        <e p="config_live.json" t="Include" />
         <e p="Controllers" t="Include">
           <e p="HardwareController.cs" t="Include" />
           <e p="MiscController.cs" t="Include" />
