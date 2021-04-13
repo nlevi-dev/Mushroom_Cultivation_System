@@ -110,12 +110,8 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                var existingHardware = _persistence.GetHardware(hardwareKey);
-
-                if (existingHardware != null)
-                {   
-                    
-                }
+               _persistence.UpdateHardware(hardware);
+               return StatusCode(200);
             }
             catch (UnauthorizedException e)
             {

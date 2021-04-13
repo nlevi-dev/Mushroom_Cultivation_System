@@ -189,7 +189,11 @@ namespace SEP4_Data.Data
                 } catch {
                     throw new ConflictException("hardware already registered");
                 }
+                var reader = command.ExecuteReader();
+                reader.Read();
+                return reader.GetInt32(0);
             }
+            
         }
 
         public Hardware[] GetAllHardware(int userKey)
@@ -255,8 +259,13 @@ namespace SEP4_Data.Data
                 var command = connection.CreateCommand();
                 command.CommandText = "DELETE * FROM _hardware WHERE hardware_key = @key";
                 command.Parameters.AddWithValue("@key", hardwareKey);
-                command.ExecuteNonQuery();
-                // I am not sure how to execute this delete statement
+                try {
+                    command.ExecuteNonQuery();
+                } catch (Exception e) {
+                    if (e.Message.Contains("duplicate key"))
+                        throw new ConflictException("liking already exists");
+                    throw;
+                }
             }
         }
 
@@ -266,8 +275,12 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "";
-                throw new NotImplementedException();
+                command.CommandText =
+                    "UPDATE _hardware SET desired_air_temperature = @field1, desired_air_humidity = @field2, desired_air_co2 = @field3 WHERE id = @id";
+                command.Parameters.AddWithValue("@Field1", hardware.DesiredAirTemperature);
+                command.Parameters.AddWithValue("@Field2", hardware.DesiredAirHumidity);
+                command.Parameters.AddWithValue("@Field1", hardware.DesiredAirCo2);
+                command.ExecuteNonQuery();
             }
         }
 
