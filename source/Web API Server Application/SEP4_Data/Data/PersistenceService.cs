@@ -249,6 +249,33 @@ namespace SEP4_Data.Data
             }
             throw new NotFoundException("hardware \"" + hardwareKey + "\" not found!");
         }
+        
+        public Hardware GetHardwareById(string hardwareId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT * from _hardware WHERE hardware_id = @id";
+                command.Parameters.AddWithValue("@id", hardwareId);
+                var reader = command.ExecuteReader();
+                
+                if (reader.Read())
+                { 
+                    Hardware temp = new Hardware()
+                    {
+                        Key = (int) reader["hardware_key"],
+                        Id = (string) reader["hardware_id"],
+                        SpecimenKey = (int) reader["specimen_key"],
+                        DesiredAirTemperature = (float) reader["desired_air_temperature"],
+                        DesiredAirCo2 = (float) reader["desired_air_co2"],
+                        DesiredAirHumidity = (float) reader["desired_air_humidity"]
+                    };
+                    return temp;
+                }
+            }
+            throw new NotFoundException("hardware \"" + hardwareId + "\" not found!");
+        }
 
         public void DeleteHardware(int hardwareKey)
         {
