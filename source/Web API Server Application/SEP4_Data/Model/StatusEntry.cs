@@ -34,6 +34,8 @@ namespace SEP4_Data.Model
         }
         [JsonPropertyName("stage_name")]
         public string Stage { get; set; }
+        [JsonIgnore]
+        public int? StageKey { get; set; }
         [JsonPropertyName("specimen_key")]
         public int? Specimen { get; set; }
     }

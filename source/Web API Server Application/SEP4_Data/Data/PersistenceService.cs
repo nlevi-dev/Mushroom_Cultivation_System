@@ -360,6 +360,21 @@ namespace SEP4_Data.Data
             }
         }
 
+        public int GetMushroomStageKey(string name)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText =  "SELECT stage_key FROM _mushroom_stage WHERE stage_name = @name";
+                command.Parameters.AddWithValue("@name", name);
+                var reader = command.ExecuteReader();
+                if (!reader.Read())
+                    throw new NotFoundException("stage does not exist with name of \"" + name + "\"");
+                return reader.GetInt32(0); 
+            }
+        }
+
         public int CreateStatusEntry(StatusEntry statusEntry)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -372,7 +387,7 @@ namespace SEP4_Data.Data
                 
                 command.Parameters.AddWithValue("@entry_time", statusEntry.EntryTimeTsql);
                 command.Parameters.AddWithValue("@specimen_key", statusEntry.Specimen);
-                command.Parameters.AddWithValue("@stage_key", statusEntry.Stage);
+                command.Parameters.AddWithValue("@stage_key", statusEntry.StageKey);
                 try {
                     command.ExecuteNonQuery();
                 } catch {
