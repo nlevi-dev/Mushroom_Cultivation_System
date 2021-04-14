@@ -177,8 +177,7 @@ namespace SEP4_Data.Data
                 connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText = 
-                    "INSERT INTO _hardware (hardware_key, hardware_id, specimen_key,desired_air_temperature,desired_air_humidity,desired_air_co2) VALUES (@key, @id,@specimen,@airtemp,@airhumidity,@air_c02)";
-                command.Parameters.AddWithValue("@key", hardware.Key);
+                    "INSERT INTO _hardware (hardware_id, specimen_key,desired_air_temperature,desired_air_humidity,desired_air_co2) VALUES (@key, @id,@specimen,@airtemp,@airhumidity,@air_c02)";
                 command.Parameters.AddWithValue("@id", hardware.Id);
                 command.Parameters.AddWithValue("@specimen", hardware.SpecimenKey);
                 command.Parameters.AddWithValue("@airtemp", hardware.DesiredAirTemperature);
@@ -191,7 +190,7 @@ namespace SEP4_Data.Data
                 }
                 var reader = command.ExecuteReader();
                 reader.Read();
-                return reader.GetInt32(0);
+                return reader.GetInt32(0); 
             }
             
         }
@@ -263,7 +262,7 @@ namespace SEP4_Data.Data
                     command.ExecuteNonQuery();
                 } catch (Exception e) {
                     if (e.Message.Contains("duplicate key"))
-                        throw new ConflictException("liking already exists");
+                        throw new ConflictException("hardware already exists");
                     throw;
                 }
             }
@@ -367,8 +366,21 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "";
-                throw new NotImplementedException();
+                
+                command.CommandText = 
+                    "INSERT INTO _status_entry (entry_time, stage_key,specimen_key) VALUES (@entry, @stage,@specimen)";
+                
+                command.Parameters.AddWithValue("@entry_time", statusEntry.EntryTimeTsql);
+                command.Parameters.AddWithValue("@specimen_key", statusEntry.Specimen);
+                command.Parameters.AddWithValue("@stage_key", statusEntry.Stage);
+                try {
+                    command.ExecuteNonQuery();
+                } catch {
+                    throw new ConflictException("hardware already registered");
+                }
+                var reader = command.ExecuteReader();
+                reader.Read();
+                return reader.GetInt32(0); 
             }
         }
 

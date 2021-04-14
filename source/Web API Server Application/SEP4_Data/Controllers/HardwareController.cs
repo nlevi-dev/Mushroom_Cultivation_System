@@ -23,6 +23,9 @@ namespace SEP4_Data.Controllers
         {
             try
             {
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                hardware.UserKey = ((User) HttpContext.Items["User"]).Key;
                 _persistence.CreateHardware(hardware);
                 return StatusCode(200);
             }
@@ -46,7 +49,10 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                Hardware[] hardwares = _persistence.GetAllHardware((int) ((User) HttpContext.Items["User"]).Key);
+                return StatusCode(200, hardwares);
             }
             catch (UnauthorizedException e)
             {
@@ -64,6 +70,12 @@ namespace SEP4_Data.Controllers
         {
             try
             {
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                if (_persistence.GetHardware(hardwareKey).UserKey != ((User) HttpContext.Items["User"]).Key)
+                {
+                    throw new UnauthorizedException("You do not own the hardware!");
+                }
                 var temp = _persistence.GetHardware(hardwareKey);
                 return StatusCode(200, temp);
             }
@@ -87,6 +99,12 @@ namespace SEP4_Data.Controllers
         {
             try
             {
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                if (_persistence.GetHardware(hardwareKey).UserKey != ((User) HttpContext.Items["User"]).Key)
+                {
+                    throw new UnauthorizedException("You do not own the hardware!");
+                }
                 _persistence.DeleteHardware(hardwareKey);
                 return StatusCode(200);
             }
@@ -110,6 +128,14 @@ namespace SEP4_Data.Controllers
         {
             try
             {
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                hardware.Key = hardwareKey;
+                if (_persistence.GetHardware(hardwareKey).UserKey != ((User) HttpContext.Items["User"]).Key)
+                {
+                    throw new UnauthorizedException("You do not own the hardware!");
+                }
+                hardware.UserKey = ((User) HttpContext.Items["User"]).Key;
                _persistence.UpdateHardware(hardware);
                return StatusCode(200);
             }
@@ -137,7 +163,7 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException("Because Levente is a weetard");
             }
             catch (UnauthorizedException e)
             {
