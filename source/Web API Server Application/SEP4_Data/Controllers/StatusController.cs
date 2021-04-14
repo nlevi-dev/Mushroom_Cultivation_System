@@ -23,7 +23,16 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                if (_persistence.GetHardware((_persistence.GetSpecimen(specimenKey).Hardware) != ((User) HttpContext.Items["User"]).Key)
+                {
+                    throw new UnauthorizedException("You do not own the hardware!");
+                }
+                statusEntry.Specimen = specimenKey;
+                statusEntry.StageKey = _persistence.GetMushroomStageKey(statusEntry.Stage);
+                _persistence.CreateStatusEntry(statusEntry);
+                return StatusCode(200);
             }
             catch (UnauthorizedException e)
             {

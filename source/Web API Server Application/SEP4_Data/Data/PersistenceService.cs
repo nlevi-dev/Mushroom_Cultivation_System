@@ -383,16 +383,13 @@ namespace SEP4_Data.Data
                 var command = connection.CreateCommand();
                 
                 command.CommandText = 
-                    "INSERT INTO _status_entry (entry_time, stage_key,specimen_key) VALUES (@entry, @stage,@specimen)";
+                    "INSERT INTO _status_entry (entry_time, stage_key,specimen_key) VALUES (@entry_time, @stage_key,@specimen_key)";
                 
                 command.Parameters.AddWithValue("@entry_time", statusEntry.EntryTimeTsql);
                 command.Parameters.AddWithValue("@specimen_key", statusEntry.Specimen);
                 command.Parameters.AddWithValue("@stage_key", statusEntry.StageKey);
-                try {
-                    command.ExecuteNonQuery();
-                } catch {
-                    throw new ConflictException("hardware already registered");
-                }
+                command.ExecuteNonQuery();
+               
                 var reader = command.ExecuteReader();
                 reader.Read();
                 return reader.GetInt32(0); 
