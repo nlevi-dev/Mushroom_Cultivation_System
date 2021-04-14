@@ -25,9 +25,9 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                if (_persistence.GetHardware((_persistence.GetSpecimen(specimenKey).Hardware) != ((User) HttpContext.Items["User"]).Key)
+                if (_persistence.GetHardwareById((_persistence.GetSpecimen(specimenKey).Hardware)).UserKey != ((User) HttpContext.Items["User"]).Key)
                 {
-                    throw new UnauthorizedException("You do not own the hardware!");
+                    throw new UnauthorizedException("You do not own the specimen");
                 }
                 statusEntry.Specimen = specimenKey;
                 statusEntry.StageKey = _persistence.GetMushroomStageKey(statusEntry.Stage);
@@ -44,7 +44,7 @@ namespace SEP4_Data.Controllers
             }
             catch (ConflictException e)
             {
-                return StatusCode(409, e.Message);
+                return StatusCode(409, "Help me I'm stuck!");
             }
             catch (Exception e)
             {

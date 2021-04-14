@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.AspNetCore.Routing.Template;
 using Microsoft.Data.SqlClient;
 using SEP4_Data.Model;
 using SEP4_Data.Model.Exception;
@@ -285,13 +286,8 @@ namespace SEP4_Data.Data
                 var command = connection.CreateCommand();
                 command.CommandText = "DELETE * FROM _hardware WHERE hardware_key = @key";
                 command.Parameters.AddWithValue("@key", hardwareKey);
-                try {
-                    command.ExecuteNonQuery();
-                } catch (Exception e) {
-                    if (e.Message.Contains("duplicate key"))
-                        throw new ConflictException("hardware already exists");
-                    throw;
-                }
+                command.ExecuteNonQuery();
+             
             }
         }
 
@@ -429,20 +425,51 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "";
-                throw new NotImplementedException();
+                command.CommandText = "SELECT * from _status_entry WHERE specimen_key = @specimen_key";
+                command.Parameters.AddWithValue("@specimen_key", specimenKey);
+                var reader = command.ExecuteReader();
+                var temp = new List<StatusEntry>();
+                while (reader.Read())
+                {
+                    StatusEntry item = new StatusEntry()
+                    {
+                        Key = (int) reader["entry_key"],
+                        EntryTimeTsql = (string) reader["entry_time"],
+                        StageKey = (int) reader["stage_key"],
+                        Specimen = (int) reader["specimen_key"],
+                    };
+                    temp.Add(item);
+                }
+
+                return temp.ToArray();
             }
         }
+        
 
-        public StatusEntry GetStatusEntry(int entryKey)
+    public StatusEntry GetStatusEntry(int entryKey)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "";
-                throw new NotImplementedException();
+                command.CommandText = "SELECT * from _status_entry WHERE entry_key = @key";
+                command.Parameters.AddWithValue("@key", entryKey);
+                var reader = command.ExecuteReader();
+                
+                if (reader.Read())
+                { 
+                    StatusEntry temp = new StatusEntry()
+                    {
+                        Key = (int) reader["entry_key"],
+                        EntryTimeTsql = (string) reader["entry_time"],
+                        StageKey = (int) reader["stage_key"],
+                        Specimen = (int) reader["specimen_key"],
+                        
+                    };
+                    return temp;
+                }
             }
+            throw new NotFoundException("Entry \"" + entryKey + "\" not found!");
         }
 
         public void DeleteStatusEntry(int entryKey)
@@ -451,8 +478,10 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "";
-                throw new NotImplementedException();
+                command.CommandText = "DELETE * FROM __status_entry WHERE entry_key = @key";
+                command.Parameters.AddWithValue("@key", entryKey);
+                command.ExecuteNonQuery();
+                
             }
         }
 
@@ -460,10 +489,15 @@ namespace SEP4_Data.Data
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText = "";
-                throw new NotImplementedException();
+                // connection.Open();
+                // var command = connection.CreateCommand();
+                // command.CommandText =
+                //     "UPDATE _hardware SET desired_air_temperature = @field1, desired_air_humidity = @field2, desired_air_co2 = @field3 WHERE id = @id";
+                // command.Parameters.AddWithValue("@Field1", hardware.DesiredAirTemperature);
+                // command.Parameters.AddWithValue("@Field2", hardware.DesiredAirHumidity);
+                // command.Parameters.AddWithValue("@Field1", hardware.DesiredAirCo2);
+                // command.ExecuteNonQuery();
+                //not done pls don't be angery
             }
         }
     }
