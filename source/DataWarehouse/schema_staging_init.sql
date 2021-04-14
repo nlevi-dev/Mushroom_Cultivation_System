@@ -1,4 +1,4 @@
-USE MushroomPP
+USE MushroomDWH
 GO
 
 CREATE SCHEMA [staging]

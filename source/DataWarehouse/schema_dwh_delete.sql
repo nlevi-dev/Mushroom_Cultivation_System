@@ -1,25 +1,25 @@
-USE MushroomPP
+USE MushroomDWH
 GO
 
-IF OBJECT_ID('dwh.dim_sensor_entry') IS NOT NULL
-	TRUNCATE TABLE dwh.dim_sensor_entry
-IF OBJECT_ID('dwh.dim_sensor_entry') IS NOT NULL
-	DROP TABLE dwh.dim_sensor_entry
-IF OBJECT_ID('dwh.dim_status_entry') IS NOT NULL
-	TRUNCATE TABLE dwh.dim_status_entry
-IF OBJECT_ID('dwh.dim_status_entry') IS NOT NULL
-	DROP TABLE dwh.dim_status_entry
-IF OBJECT_ID('dwh.fact_specimen') IS NOT NULL
-	TRUNCATE TABLE dwh.fact_specimen
-IF OBJECT_ID('dwh.fact_specimen') IS NOT NULL
-	DROP TABLE dwh.fact_specimen
-IF OBJECT_ID('dwh.bridge_entry') IS NOT NULL
-	TRUNCATE TABLE dwh.bridge_entry
-IF OBJECT_ID('dwh.bridge_entry') IS NOT NULL
-	DROP TABLE dwh.bridge_entry
-IF OBJECT_ID('dwh.dim_mushroom') IS NOT NULL
-	TRUNCATE TABLE dwh.dim_mushroom
-IF OBJECT_ID('dwh.dim_mushroom') IS NOT NULL
-	DROP TABLE dwh.dim_mushroom
-DROP SCHEMA [dwh]
+IF OBJECT_ID('dbo.dim_sensor_entry') IS NOT NULL
+	TRUNCATE TABLE dbo.dim_sensor_entry
+IF OBJECT_ID('dbo.dim_sensor_entry') IS NOT NULL
+	DROP TABLE dbo.dim_sensor_entry
+IF OBJECT_ID('dbo.dim_status_entry') IS NOT NULL
+	TRUNCATE TABLE dbo.dim_status_entry
+IF OBJECT_ID('dbo.dim_status_entry') IS NOT NULL
+	DROP TABLE dbo.dim_status_entry
+IF OBJECT_ID('dbo.fact_specimen') IS NOT NULL
+	TRUNCATE TABLE dbo.fact_specimen
+IF OBJECT_ID('dbo.fact_specimen') IS NOT NULL
+	DROP TABLE dbo.fact_specimen
+IF OBJECT_ID('dbo.bridge_entry') IS NOT NULL
+	TRUNCATE TABLE dbo.bridge_entry
+IF OBJECT_ID('dbo.bridge_entry') IS NOT NULL
+	DROP TABLE dbo.bridge_entry
+IF OBJECT_ID('dbo.dim_mushroom') IS NOT NULL
+	TRUNCATE TABLE dbo.dim_mushroom
+IF OBJECT_ID('dbo.dim_mushroom') IS NOT NULL
+	DROP TABLE dbo.dim_mushroom
+
 GO

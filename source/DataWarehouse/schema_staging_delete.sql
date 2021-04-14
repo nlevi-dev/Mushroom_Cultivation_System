@@ -1,4 +1,4 @@
-USE MushroomPP
+USE MushroomDWH
 GO
 
 IF OBJECT_ID('staging.dim_sensor_entry') IS NOT NULL
