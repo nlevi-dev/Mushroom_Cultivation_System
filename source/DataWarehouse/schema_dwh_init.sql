@@ -1,18 +1,16 @@
-USE MushroomPP
+USE MushroomDWH
 GO
 
-CREATE SCHEMA [dwh]
-GO
 
 /* Create Tables */
 
-CREATE TABLE dwh.[bridge_entry]
+CREATE TABLE dbo.[bridge_entry]
 (
 	[bridge_key] int NOT NULL
 )
 GO
 
-CREATE TABLE dwh.[dim_mushroom]
+CREATE TABLE dbo.[dim_mushroom]
 (
 	[type_key] int NOT NULL,
 	[mushroom_name] nvarchar(32) NOT NULL,
@@ -20,7 +18,7 @@ CREATE TABLE dwh.[dim_mushroom]
 )
 GO
 
-CREATE TABLE dwh.[dim_sensor_entry]
+CREATE TABLE dbo.[dim_sensor_entry]
 (
 	[entry_key] int NOT NULL,
 	[entry_time] datetime2 NOT NULL,
@@ -37,7 +35,7 @@ CREATE TABLE dwh.[dim_sensor_entry]
 )
 GO
 
-CREATE TABLE dwh.[dim_status_entry]
+CREATE TABLE dbo.[dim_status_entry]
 (
 	[entry_key] int NOT NULL,
 	[entry_time] datetime2 NOT NULL,
@@ -46,7 +44,7 @@ CREATE TABLE dwh.[dim_status_entry]
 )
 GO
 
-CREATE TABLE dwh.[fact_specimen]
+CREATE TABLE dbo.[fact_specimen]
 (
 	[specimen_key] int NOT NULL,
 	[active] bit NOT NULL,
@@ -59,45 +57,45 @@ GO
 
 /* Create Primary Keys, Indexes, Uniques, Checks */
 
-ALTER TABLE dwh.[bridge_entry] 
+ALTER TABLE dbo.[bridge_entry] 
  ADD CONSTRAINT [PK_bridge_entry]
 	PRIMARY KEY CLUSTERED ([bridge_key] ASC)
 GO
 
-ALTER TABLE dwh.[dim_mushroom] 
+ALTER TABLE dbo.[dim_mushroom] 
  ADD CONSTRAINT [PK_dim_mushroom]
 	PRIMARY KEY CLUSTERED ([type_key] ASC)
 GO
 
-ALTER TABLE dwh.[dim_sensor_entry] 
+ALTER TABLE dbo.[dim_sensor_entry] 
  ADD CONSTRAINT [PK_dim_sensor_entry]
 	PRIMARY KEY CLUSTERED ([entry_key] ASC)
 GO
 
-ALTER TABLE dwh.[dim_status_entry] 
+ALTER TABLE dbo.[dim_status_entry] 
  ADD CONSTRAINT [PK_dim_status_entry]
 	PRIMARY KEY CLUSTERED ([entry_key] ASC)
 GO
 
-ALTER TABLE dwh.[fact_specimen] 
+ALTER TABLE dbo.[fact_specimen] 
  ADD CONSTRAINT [PK_fact_specimen]
 	PRIMARY KEY CLUSTERED ([specimen_key] ASC)
 GO
 
 /* Create Foreign Key Constraints */
 
-ALTER TABLE dwh.[dim_sensor_entry] ADD CONSTRAINT [FK_dim_sensor_entry_bridge_entry]
-	FOREIGN KEY ([specimen_key]) REFERENCES dwh.[bridge_entry] ([bridge_key]) ON DELETE No Action ON UPDATE No Action
+ALTER TABLE dbo.[dim_sensor_entry] ADD CONSTRAINT [FK_dim_sensor_entry_bridge_entry]
+	FOREIGN KEY ([specimen_key]) REFERENCES dbo.[bridge_entry] ([bridge_key]) ON DELETE No Action ON UPDATE No Action
 GO
 
-ALTER TABLE dwh.[dim_status_entry] ADD CONSTRAINT [FK_dim_status_entry_bridge_entry]
-	FOREIGN KEY ([specimen_key]) REFERENCES dwh.[bridge_entry] ([bridge_key]) ON DELETE No Action ON UPDATE No Action
+ALTER TABLE dbo.[dim_status_entry] ADD CONSTRAINT [FK_dim_status_entry_bridge_entry]
+	FOREIGN KEY ([specimen_key]) REFERENCES dbo.[bridge_entry] ([bridge_key]) ON DELETE No Action ON UPDATE No Action
 GO
 
-ALTER TABLE dwh.[fact_specimen] ADD CONSTRAINT [FK_fact_specimen_bridge_entry]
-	FOREIGN KEY ([bridge_key]) REFERENCES dwh.[bridge_entry] ([bridge_key]) ON DELETE No Action ON UPDATE No Action
+ALTER TABLE dbo.[fact_specimen] ADD CONSTRAINT [FK_fact_specimen_bridge_entry]
+	FOREIGN KEY ([bridge_key]) REFERENCES dbo.[bridge_entry] ([bridge_key]) ON DELETE No Action ON UPDATE No Action
 GO
 
-ALTER TABLE dwh.[fact_specimen] ADD CONSTRAINT [FK_fact_specimen_dim_mushroom]
-	FOREIGN KEY ([type_key]) REFERENCES dwh.[dim_mushroom] ([type_key]) ON DELETE No Action ON UPDATE No Action
+ALTER TABLE dbo.[fact_specimen] ADD CONSTRAINT [FK_fact_specimen_dim_mushroom]
+	FOREIGN KEY ([type_key]) REFERENCES dbo.[dim_mushroom] ([type_key]) ON DELETE No Action ON UPDATE No Action
 GO
