@@ -5,7 +5,9 @@ namespace SEP4_Data.Data
     public interface IPersistenceService
     {
         public string[] GetMushroomStages();
+        public int GetMushroomStageKey(string name);
         public string[] GetMushroomTypes();
+        public int GetMushroomTypeKey(string name);
         public bool CheckUserPassword(string username, string password);
         public int CreateUser(User user);
         public User GetUserByName(string username);
@@ -26,7 +28,6 @@ namespace SEP4_Data.Data
         public void UpdateSpecimen(Specimen specimen);
         public int CreateSensorEntry(SensorEntry sensorEntry);
         public SensorEntry[] GetSensorHistory(int specimenKey, long? unixTimeFrom, long? unixTimeUntil);
-        public int GetMushroomStageKey(string name);
         public int CreateStatusEntry(StatusEntry statusEntry);
         public StatusEntry[] GetAllStatusEntries(int specimenKey);
         public StatusEntry GetStatusEntry(int entryKey);

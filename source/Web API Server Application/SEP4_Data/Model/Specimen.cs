@@ -36,6 +36,8 @@ namespace SEP4_Data.Model
         public string Name { get; set; }
         [JsonPropertyName("specimen_type")]
         public string MushroomType { get; set; }
+        [JsonIgnore]
+        public int? TypeKey { get; set; }
         [JsonPropertyName("specimen_description")]
         public string Description { get; set; }
         [JsonPropertyName("desired_air_temperature")]
@@ -46,5 +48,9 @@ namespace SEP4_Data.Model
         public float? DesiredAirCo2 { get; set; }
         [JsonPropertyName("hardware_id")]
         public string Hardware { get; set; }
+        [JsonIgnore]
+        public int? HardwareKey { get; set; }
+        [JsonIgnore]
+        public int? UserKey { get; set; }
     }
 }
