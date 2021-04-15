@@ -6,6 +6,7 @@ using SEP4_Data.Model.Exception;
 
 namespace SEP4_Data.Data
 {
+    //methods do not support updating entities' associated user
     public class PersistenceService : IPersistenceService
     {
         private readonly IConfigService _config;
@@ -119,9 +120,10 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "INSERT INTO _user (username, password_hashed) VALUES (@name, @password)";
+                command.CommandText = "INSERT INTO _user (username, password_hashed, permission_key) VALUES (@name, @password, @permission)";
                 command.Parameters.AddWithValue("@name", user.Name ?? throw new ConflictException("username can't be null"));
                 command.Parameters.AddWithValue("@password", user.Password ?? throw new ConflictException("password can't be null"));
+                command.Parameters.AddWithValue("@permission", user.PermissionLevel);
                 try {
                     command.ExecuteNonQuery();
                 } catch {

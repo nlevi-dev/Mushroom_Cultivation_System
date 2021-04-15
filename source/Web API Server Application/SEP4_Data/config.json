@@ -8,7 +8,7 @@
   "DbPassword": "mssql",
   "JwtKey": "eG7tjlgnSMFDqcr1hmsP0A==",
   "Salt": "6JXU7TQdR9DkiKgR96liAQ==",
-  "CheckIntegrityOnStartup": false,
+  "UserPostPermissionLevel": 0,
   "TokenExpire": 0,
   "Swagger": true
 }

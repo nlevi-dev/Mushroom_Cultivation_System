@@ -11,7 +11,7 @@ namespace SEP4_Data.Model
         [JsonPropertyName("password")]
         public string Password { get; set; }
         [JsonIgnore]
-        public int PermissionLevel { get; set; }
+        public int? PermissionLevel { get; set; }
         [JsonPropertyName("user_type")]
         public string Permission { get; set; }
     }

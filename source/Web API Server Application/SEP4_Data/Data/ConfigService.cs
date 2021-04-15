@@ -140,21 +140,21 @@ namespace SEP4_Data.Data
             }
         }
         private static byte[] _salt;
-        public bool CheckIntegrityOnStartup
+        public int UserPostPermissionLevel
         {
-            get {
+            get { 
                 if (!_initialized)
                     Initialize();
-                return _checkIntegrityOnStartup ?? false;
+                return _userPostPermissionLevel ?? 1;
             }
             set {
                 if (!_initialized)
                     Initialize();
-                _checkIntegrityOnStartup = value;
+                _userPostPermissionLevel = value;
                 SaveConfig();
             }
         }
-        private static bool? _checkIntegrityOnStartup;
+        private static int? _userPostPermissionLevel;
         public int TokenExpire
         {
             get {

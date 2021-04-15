@@ -25,16 +25,18 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                if (_persistence.GetHardwareById((_persistence.GetSpecimen(specimenKey).Hardware)).UserKey != ((User) HttpContext.Items["User"]).Key)
-                {
-                    throw new UnauthorizedException("You do not own the specimen");
-                }
+                if (_persistence.GetSpecimen(specimenKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
                 statusEntry.Specimen = specimenKey;
                 statusEntry.StageKey = _persistence.GetMushroomStageKey(statusEntry.Stage);
                 _persistence.CreateStatusEntry(statusEntry);
                 return StatusCode(200);
             }
             catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
             {
                 return StatusCode(403, e.Message);
             }
@@ -44,7 +46,7 @@ namespace SEP4_Data.Controllers
             }
             catch (ConflictException e)
             {
-                return StatusCode(409, "Help me I'm stuck!");
+                return StatusCode(409, e.Message);
             }
             catch (Exception e)
             {
@@ -58,9 +60,18 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                if (_persistence.GetSpecimen(specimenKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                var temp = _persistence.GetAllStatusEntries(specimenKey);
+                return StatusCode(200, temp);
             }
             catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
             {
                 return StatusCode(403, e.Message);
             }
@@ -80,9 +91,18 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                if (_persistence.GetSpecimen((int) _persistence.GetStatusEntry(statusKey).Specimen).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                var temp = _persistence.GetStatusEntry(statusKey);
+                return StatusCode(200, temp);
             }
             catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
             {
                 return StatusCode(403, e.Message);
             }
@@ -98,13 +118,22 @@ namespace SEP4_Data.Controllers
         
         [HttpDelete]
         [Route("status/key/{statusKey}")]
-        public IActionResult DeleteStatus([FromRoute] int specimenKey)
+        public IActionResult DeleteStatus([FromRoute] int statusKey)
         {
             try
             {
-                throw new NotImplementedException();
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                if (_persistence.GetSpecimen(statusKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                _persistence.DeleteStatusEntry(statusKey);
+                return StatusCode(200);
             }
             catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
             {
                 return StatusCode(403, e.Message);
             }
@@ -120,13 +149,24 @@ namespace SEP4_Data.Controllers
         
         [HttpPut]
         [Route("status/key/{statusKey}")]
-        public IActionResult PutStatus([FromRoute] int specimenKey, [FromBody] StatusEntry statusEntry)
+        public IActionResult PutStatus([FromRoute] int statusKey, [FromBody] StatusEntry statusEntry)
         {
             try
             {
-                throw new NotImplementedException();
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                if (_persistence.GetSpecimen((int) _persistence.GetStatusEntry(statusKey).Specimen).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                statusEntry.Key = statusKey;
+                statusEntry.StageKey = _persistence.GetMushroomStageKey(statusEntry.Stage);
+                _persistence.UpdateStatusEntry(statusEntry);
+                return StatusCode(200);
             }
             catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
             {
                 return StatusCode(403, e.Message);
             }

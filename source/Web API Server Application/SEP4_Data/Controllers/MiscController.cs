@@ -71,7 +71,7 @@ namespace SEP4_Data.Controllers
             }
             catch (UnauthorizedException e)
             {
-                return StatusCode(403, e.Message);
+                return StatusCode(401, e.Message);
             }
             catch (Exception e)
             {

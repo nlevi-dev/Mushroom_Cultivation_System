@@ -23,11 +23,24 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                specimen.UserKey = ((User) HttpContext.Items["User"]).Key;
+                specimen.TypeKey = _persistence.GetMushroomTypeKey(specimen.MushroomType);
+                if (specimen.Hardware != null)
+                    specimen.HardwareKey = _persistence.GetHardwareById(specimen.Hardware).Key;
+                _persistence.CreateSpecimen(specimen);
+                if (specimen.Hardware != null)
+                {
+                    //send data to IoT interface
+                    //wait for ack
+                    _persistence.UpdateHardware(new Hardware{Key = specimen.HardwareKey, DesiredAirTemperature = specimen.DesiredAirTemperature, DesiredAirHumidity = specimen.DesiredAirHumidity, DesiredAirCo2 = specimen.DesiredAirCo2});
+                }
+                return StatusCode(200);
             }
             catch (UnauthorizedException e)
             {
-                return StatusCode(403, e.Message);
+                return StatusCode(401, e.Message);
             }
             catch (ConflictException e)
             {
@@ -45,11 +58,14 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                var temp = _persistence.GetAllSpecimen((int) ((User) HttpContext.Items["User"]).Key);
+                return StatusCode(200, temp);
             }
             catch (UnauthorizedException e)
             {
-                return StatusCode(403, e.Message);
+                return StatusCode(401, e.Message);
             }
             catch (Exception e)
             {
@@ -63,9 +79,18 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                if (_persistence.GetSpecimen(specimenKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                var temp = _persistence.GetSpecimen(specimenKey);
+                return StatusCode(200, temp);
             }
             catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
             {
                 return StatusCode(403, e.Message);
             }
@@ -85,9 +110,18 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                if (_persistence.GetSpecimen(specimenKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                _persistence.DiscardSpecimen(specimenKey);
+                return StatusCode(200);
             }
             catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
             {
                 return StatusCode(403, e.Message);
             }
@@ -107,9 +141,28 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                if (_persistence.GetSpecimen(specimenKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                specimen.UserKey = ((User) HttpContext.Items["User"]).Key;
+                specimen.TypeKey = _persistence.GetMushroomTypeKey(specimen.MushroomType);
+                if (specimen.Hardware != null)
+                    specimen.HardwareKey = _persistence.GetHardwareById(specimen.Hardware).Key;
+                _persistence.UpdateSpecimen(specimen);
+                if (specimen.Hardware != null)
+                {
+                    //send data to IoT interface
+                    //wait for ack
+                    _persistence.UpdateHardware(new Hardware{Key = specimen.HardwareKey, DesiredAirTemperature = specimen.DesiredAirTemperature, DesiredAirHumidity = specimen.DesiredAirHumidity, DesiredAirCo2 = specimen.DesiredAirCo2});
+                }
+                return StatusCode(200);
             }
             catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
             {
                 return StatusCode(403, e.Message);
             }
@@ -133,9 +186,18 @@ namespace SEP4_Data.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                if (_persistence.GetSpecimen(specimenKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                var temp = _persistence.GetSensorHistory(specimenKey, filterFrom, filterUntil);
+                return StatusCode(200, temp);
             }
             catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
             {
                 return StatusCode(403, e.Message);
             }
