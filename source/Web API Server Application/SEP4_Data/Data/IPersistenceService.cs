@@ -9,6 +9,7 @@ namespace SEP4_Data.Data
         public string[] GetMushroomTypes();
         public int GetMushroomTypeKey(string name);
         public bool CheckUserPassword(string username, string password);
+        public int GetPermissionKey(string name);
         public int CreateUser(User user);
         public User GetUserByName(string username);
         public User GetUserByKey(int userKey);

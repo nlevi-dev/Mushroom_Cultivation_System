@@ -25,8 +25,17 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                if (_persistence.GetSpecimen(specimenKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
-                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                var check = _persistence.GetSpecimen(specimenKey);
+                if (check.UserKey == null)
+                {
+                    if (((User) HttpContext.Items["User"]).PermissionLevel < 3)
+                        throw new NotFoundException("You don't have high enough clearance for this operation!");
+                }
+                else
+                {
+                    if (check.UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                        throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                }
                 statusEntry.Specimen = specimenKey;
                 statusEntry.StageKey = _persistence.GetMushroomStageKey(statusEntry.Stage);
                 _persistence.CreateStatusEntry(statusEntry);
@@ -62,8 +71,17 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                if (_persistence.GetSpecimen(specimenKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
-                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                var check = _persistence.GetSpecimen(specimenKey);
+                if (check.UserKey == null)
+                {
+                    if (((User) HttpContext.Items["User"]).PermissionLevel < 3)
+                        throw new NotFoundException("You don't have high enough clearance for this operation!");
+                }
+                else
+                {
+                    if (check.UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                        throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                }
                 var temp = _persistence.GetAllStatusEntries(specimenKey);
                 return StatusCode(200, temp);
             }
@@ -93,8 +111,17 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                if (_persistence.GetSpecimen((int) _persistence.GetStatusEntry(statusKey).Specimen).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
-                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                var check = _persistence.GetSpecimen((int) _persistence.GetStatusEntry(statusKey).Specimen);
+                if (check.UserKey == null)
+                {
+                    if (((User) HttpContext.Items["User"]).PermissionLevel < 3)
+                        throw new NotFoundException("You don't have high enough clearance for this operation!");
+                }
+                else
+                {
+                    if (check.UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                        throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                }
                 var temp = _persistence.GetStatusEntry(statusKey);
                 return StatusCode(200, temp);
             }
@@ -124,8 +151,17 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                if (_persistence.GetSpecimen(statusKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
-                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                var check = _persistence.GetSpecimen((int) _persistence.GetStatusEntry(statusKey).Specimen);
+                if (check.UserKey == null)
+                {
+                    if (((User) HttpContext.Items["User"]).PermissionLevel < 3)
+                        throw new NotFoundException("You don't have high enough clearance for this operation!");
+                }
+                else
+                {
+                    if (check.UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                        throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                }
                 _persistence.DeleteStatusEntry(statusKey);
                 return StatusCode(200);
             }
@@ -155,8 +191,17 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                if (_persistence.GetSpecimen((int) _persistence.GetStatusEntry(statusKey).Specimen).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
-                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                var check = _persistence.GetSpecimen((int) _persistence.GetStatusEntry(statusKey).Specimen);
+                if (check.UserKey == null)
+                {
+                    if (((User) HttpContext.Items["User"]).PermissionLevel < 3)
+                        throw new NotFoundException("You don't have high enough clearance for this operation!");
+                }
+                else
+                {
+                    if (check.UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                        throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                }
                 statusEntry.Key = statusKey;
                 statusEntry.StageKey = _persistence.GetMushroomStageKey(statusEntry.Stage);
                 _persistence.UpdateStatusEntry(statusEntry);

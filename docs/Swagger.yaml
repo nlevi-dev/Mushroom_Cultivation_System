@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   description: |
     Mushroom Cultivation System
-  version: pre-alpha-1.0
+  version: alpha-1.0
   title: Mushroom++
 paths:
   /defined/mushroom/stages:
@@ -30,7 +30,7 @@ paths:
             type: array
             items:
               type: string
-            example: ["Agaricus bisporus","Pleurotus","Lentinula edodes"]
+            example: ["Agaricus - bisporus","Lentinula - edodes","Auricularia - auricula-judae"]
   /token:
     get:
       summary: returns jwt, provided that the username and password is correct
@@ -47,14 +47,19 @@ paths:
           description: JSON Web Token using HS256 algorithm
           schema:
             example: Header.Payload.Signature
-        403:
+        401:
           description: Unauthorized
           schema:
-            example: Incorrect credentials
+            example: Authorization failed!
   /user:
     post:
-      summary: creates a new user
+      summary: creates a new user, based on configuration, authorization can be enabled and this method can be limited to certain user roles
       parameters:
+      - in: header
+        name: Authorization
+        required: false
+        type: string
+        description: Bearer Authorization
       - in: body
         name: User
         required: true
@@ -66,6 +71,14 @@ paths:
       responses:
         200:
           description: Created
+        401:
+          description: Unauthorized
+          schema:
+            example: Authorization failed!
+        403:
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         409:
           description: "Conflict, descriptive error message detailing if the username is taken or invalid, or if the password is too weak or invalid."
           schema:
@@ -91,8 +104,14 @@ paths:
           description: Ok
           schema:
             $ref: '#/definitions/user'
-        403:
+        401:
           description: Unauthorized
+          schema:
+            example: Authorization failed!
+        403:
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
   /user/name:
@@ -111,8 +130,10 @@ paths:
           description: Ok
           schema:
             $ref: '#/definitions/user'
-        403:
+        401:
           description: Unauthorized
+          schema:
+            example: Authorization failed!
   /user/key/{user_key}:
     delete:
       summary: deletes the user with the given key
@@ -132,8 +153,14 @@ paths:
       responses:
         200:
           description: Deleted
-        403:
+        401:
           description: Unauthorized
+          schema:
+            example: Authorization failed!
+        403:
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
   /user/key/{user_key}/username:
@@ -165,8 +192,14 @@ paths:
       responses:
         200:
           description: Username Changed
-        403:
+        401:
           description: Unauthorized
+          schema:
+            example: Authorization failed!
+        403:
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
         409:
@@ -202,8 +235,14 @@ paths:
       responses:
         200:
           description: Password Changed
-        403:
+        401:
           description: Unauthorized
+          schema:
+            example: Authorization failed!
+        403:
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
         409:
@@ -230,12 +269,18 @@ paths:
       responses:
         200:
           description: Registered
-        403:
+        401:
           description: Unauthorized
-        409:
-          description: "Conflict, descriptive error message detailing if the hardware_id is taken."
           schema:
-            example: "hardware_id \"bobs_test_hardware_1\" taken"
+            example: Authorization failed!
+        403:
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
+        409:
+          description: "Conflict, descriptive error message detailing if the hardware id is taken."
+          schema:
+            example: "hardware_id \"0123456789ABCDEF\" taken"
     get:
       summary: returns the list of hardwares associated with the user
       parameters:
@@ -253,8 +298,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/hardware'
-        403:
+        401:
           description: Unauthorized
+          schema:
+            example: Authorization failed!
   /hardware/key/{hardware_key}:
     get:
       summary: returns the hardware with the given key
@@ -276,8 +323,14 @@ paths:
           description: Ok
           schema:
             $ref: '#/definitions/hardware'
-        403:
+        401:
           description: Unauthorized
+          schema:
+            example: Authorization failed!
+        403:
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
     delete:
@@ -298,12 +351,18 @@ paths:
       responses:
         200:
           description: Deleted
-        403:
+        401:
           description: Unauthorized
+          schema:
+            example: Authorization failed!
+        403:
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
-    put:
-      summary: updates the hardware with the given key
+    patch:
+      summary: updates the hardware id with the given key
       parameters:
       - in: header
         name: Authorization
@@ -315,37 +374,47 @@ paths:
         description: key of the Hardware
         required: true
         type: integer
-      - in: body
-        name: Hardware
+      - name: hardware_id
+        in: body
+        description: "new hardware id\nHardware Model could be used as it has this field, while the other fields can be ignored."
         required: true
-        description: Hardware
         schema:
-          $ref: '#/definitions/hardware'
+          type: object
+          properties:
+            hardware_id:
+              type: string
+              example: "0123456789ABCDEF"
       produces:
       - text/plain
       responses:
         200:
           description: Updated
-        403:
+        401:
           description: Unauthorized
+          schema:
+            example: Authorization failed!
+        403:
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
         409:
-          description: "Conflict, descriptive error message detailing if the hardware_id is taken."
+          description: "Conflict, descriptive error message detailing if the hardware id is taken."
           schema:
-            example: "hardware_id \"bobs_test_hardware_1\" taken"
-  /hardware/key/{hardware_key}/sensor:
+            example: "hardware_id \"0123456789ABCDEF\" taken"
+  /hardware/id/{hardware_id}/sensor:
     get:
-      summary: returns the current sensor data of the hardware associated with the given hardware key (polls realtime)
+      summary: returns the current sensor data of the hardware associated with the given hardware id (polls realtime)
       parameters:
       - in: header
         name: Authorization
         required: true
         type: string
         description: Bearer Authorization
-      - name: hardware_key
+      - name: hardware_id
         in: path
-        description: key of the Hardware 
+        description: id of the Hardware 
         required: true
         type: integer
       produces:
@@ -355,8 +424,14 @@ paths:
           description: Ok
           schema:
             $ref: '#/definitions/sensor_entry'
-        403:
+        401:
           description: Unauthorized
+          schema:
+            example: Authorization failed!
+        403:
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
   /specimen:
@@ -379,14 +454,20 @@ paths:
       responses:
         200:
           description: Created
-        403:
+        401:
           description: Unauthorized
+          schema:
+            example: Authorization failed!
+        403:
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         409:
           description: "Conflict, descriptive error message detailing if the hardware_id is invalid, or the desired hardware_id already has an active specimen assigned, or if the specimen_type is invalid."
           schema:
             example: "hardware_id \"0123456789ABCDEF\" already has a specimen"
     get:
-      summary: returns the list of active specimens associated with the user
+      summary: returns the list specimens associated with the user
       parameters:
       - in: header
         name: Authorization
@@ -402,8 +483,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/specimen'
-        403:
+        401:
           description: Unauthorized
+          schema:
+            example: Authorization failed!
   /specimen/key/{specimen_key}:
     get:
       summary: returns the specimen with the given key
@@ -425,12 +508,18 @@ paths:
           description: Ok
           schema:
             $ref: '#/definitions/specimen'
+        401:
+          description: Unauthorized
+          schema:
+            example: Authorization failed!
         403:
-          description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
     delete:
-      summary: deletes (marks as inactive, aka discards) the specimen with the given key
+      summary: discards the specimen with the given key (from the user's perspective, it is deleted)
       parameters:
       - in: header
         name: Authorization
@@ -447,8 +536,14 @@ paths:
       responses:
         200:
           description: Deleted
+        401:
+          description: Unauthorized
+          schema:
+            example: Authorization failed!
         403:
-          description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
     put:
@@ -475,14 +570,20 @@ paths:
       responses:
         200:
           description: Updated
+        401:
+          description: Unauthorized
+          schema:
+            example: Authorization failed!
         403:
-          description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
         409:
           description: "Conflict, descriptive error message detailing if the hardware_id is invalid, or the desired hardware_id already has an active specimen assigned, or if the specimen_type is invalid."
           schema:
-            example: "hardware_id \"bobs_test_hardware_1\" not found"
+            example: "hardware_id \"0123456789ABCDEF\" not found"
   /specimen/key/{specimen_key}/sensor:
     get:
       summary: returns the sensor history associated with the given specimen key (can be filtered further with query strings)
@@ -516,8 +617,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/sensor_entry'
+        401:
+          description: Unauthorized
+          schema:
+            example: Authorization failed!
         403:
-          description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
   /specimen/key/{specimen_key}/status:
@@ -545,8 +652,14 @@ paths:
       responses:
         200:
           description: Created
+        401:
+          description: Unauthorized
+          schema:
+            example: Authorization failed!
         403:
-          description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
         409:
@@ -575,8 +688,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/status_entry'
+        401:
+          description: Unauthorized
+          schema:
+            example: Authorization failed!
         403:
-          description: Unauthorized (can be because of the Specimen is marked as inactive, aka discarded, aka deleted)
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
   /status/key/{status_key}:
@@ -600,8 +719,14 @@ paths:
           description: Ok
           schema:
             $ref: '#/definitions/status_entry'
+        401:
+          description: Unauthorized
+          schema:
+            example: Authorization failed!
         403:
-          description: Unauthorized (can be because of the associated Specimen is marked as inactive, aka discarded, aka deleted)
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
     delete:
@@ -622,8 +747,14 @@ paths:
       responses:
         200:
           description: Deleted
+        401:
+          description: Unauthorized
+          schema:
+            example: Authorization failed!
         403:
-          description: Unauthorized (can be because of the associated Specimen is marked as inactive, aka discarded, aka deleted)
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
     put:
@@ -650,8 +781,14 @@ paths:
       responses:
         200:
           description: Updated
+        401:
+          description: Unauthorized
+          schema:
+            example: Authorization failed!
         403:
-          description: Unauthorized (can be because of the associated Specimen is marked as inactive, aka discarded, aka deleted)
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
         409:
@@ -669,15 +806,15 @@ definitions:
         type: integer
         example: 0
       username:
-        description: ""
+        description: "Nullable (not used in password PATCH method)."
         type: string
         example: Bob
       password:
-        description: "Nullable (used only in POST method)."
+        description: "Nullable (used only in POST and password PATCH method)."
         type: string
         example: kolbiharcos1234
       user_type:
-        description: "Nullable.\nReadonly value.\nAdmin or User (or possibly other future roles)"
+        description: "Nullable.\nDefault value (in case of null) is \"user\"\nMust be \"user\", \"admin\", or \"developer\" (or possibly other future roles)"
         type: string
         example: User
   hardware:
@@ -715,19 +852,19 @@ definitions:
         type: integer
         example: 0
       planted_date:        
-        description: "Readonly value.\nUnix datetime format: number of milliseconds since the standard base time January 1, 1970, 00:00:00 GMT."
+        description: "Nullable.\nReadonly value. (automatically generated on POST method)\nUnix datetime format: number of milliseconds since the standard base time January 1, 1970, 00:00:00 GMT."
         type: integer
         example: 1492992000000
       specimen_name:
-        description: "User specified name."
+        description: "Nullable. (default value is empty string)\nUser specified name."
         type: string
         example: "Champignon Test Cultivation Instance 1"
       specimen_type:
         description: "Type of mushroom (must be from the predefined list)."
         type: string
-        example: "Champignon"
+        example: "Agaricus - bisporus"
       specimen_description:
-        description: "User specified description (notes)."
+        description: "Nullable. (default value is empty string)\nUser specified description (notes)."
         type: string
         example: "Seeds are from AliExpress."
       desired_air_temperature:

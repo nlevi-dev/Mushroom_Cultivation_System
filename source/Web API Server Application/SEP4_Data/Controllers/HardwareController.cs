@@ -179,7 +179,7 @@ namespace SEP4_Data.Controllers
                 //request data from IoT interface
                 var temp = new SensorEntry
                 {
-                    Key = 1,
+                    Key = null,
                     EntryTimeDotnet = DateTime.Now,
                     AirTemperature = 21.7f,
                     AirHumidity = 1.2f,

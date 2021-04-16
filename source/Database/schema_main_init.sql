@@ -57,7 +57,7 @@ CREATE TABLE [_specimen]
 (
 	[specimen_key] int IDENTITY (1, 1) NOT NULL,
 	[planted_date] datetime2(3) NOT NULL DEFAULT GETDATE(),
-	[discraded_date] datetime2(3) NULL,
+	[discarded_date] datetime2(3) NULL,
 	[specimen_name] nvarchar(32) NOT NULL,
 	[specimen_description] nvarchar(256) NOT NULL,
 	[desired_air_temperature] real NULL,

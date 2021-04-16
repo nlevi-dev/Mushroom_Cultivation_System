@@ -40,8 +40,7 @@ namespace SEP4_Data.Controllers
                 CheckPassword(user.Password);
                 //hash password
                 user.Password = Convert.ToBase64String(KeyDerivation.Pbkdf2(user.Password, _config.Salt, KeyDerivationPrf.HMACSHA1, 1000, 256 / 8));
-                if (user.PermissionLevel == null || user.PermissionLevel < 1)
-                    user.PermissionLevel = 1;
+                user.PermissionLevel = string.IsNullOrEmpty(user.Permission) ? 1 : _persistence.GetPermissionKey(user.Permission);
                 if (user.PermissionLevel > userLevel)
                     user.PermissionLevel = userLevel;
                 _persistence.CreateUser(user);

@@ -27,6 +27,7 @@ namespace SEP4_Data.Controllers
                     throw new UnauthorizedException("Authorization failed!");
                 specimen.UserKey = ((User) HttpContext.Items["User"]).Key;
                 specimen.TypeKey = _persistence.GetMushroomTypeKey(specimen.MushroomType);
+                specimen.PlantedUnix = null;
                 if (specimen.Hardware != null)
                     specimen.HardwareKey = _persistence.GetHardwareById(specimen.Hardware).Key;
                 _persistence.CreateSpecimen(specimen);
@@ -81,8 +82,17 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                if (_persistence.GetSpecimen(specimenKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
-                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                var check = _persistence.GetSpecimen(specimenKey);
+                if (check.UserKey == null)
+                {
+                    if (((User) HttpContext.Items["User"]).PermissionLevel < 3)
+                        throw new NotFoundException("You don't have high enough clearance for this operation!");
+                }
+                else
+                {
+                    if (check.UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                        throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                }
                 var temp = _persistence.GetSpecimen(specimenKey);
                 return StatusCode(200, temp);
             }
@@ -112,8 +122,17 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                if (_persistence.GetSpecimen(specimenKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
-                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                var check = _persistence.GetSpecimen(specimenKey);
+                if (check.UserKey == null)
+                {
+                    if (((User) HttpContext.Items["User"]).PermissionLevel < 3)
+                        throw new NotFoundException("You don't have high enough clearance for this operation!");
+                }
+                else
+                {
+                    if (check.UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                        throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                }
                 _persistence.DiscardSpecimen(specimenKey);
                 return StatusCode(200);
             }
@@ -143,10 +162,22 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                if (_persistence.GetSpecimen(specimenKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
-                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
-                specimen.UserKey = ((User) HttpContext.Items["User"]).Key;
-                specimen.TypeKey = _persistence.GetMushroomTypeKey(specimen.MushroomType);
+                var check = _persistence.GetSpecimen(specimenKey);
+                if (check.UserKey == null)
+                {
+                    if (((User) HttpContext.Items["User"]).PermissionLevel < 3)
+                        throw new NotFoundException("You don't have high enough clearance for this operation!");
+                }
+                else
+                {
+                    if (check.UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                        throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                }
+                specimen.Key = specimenKey;
+                specimen.UserKey = check.UserKey != null ? ((User) HttpContext.Items["User"]).Key : null;
+                if (specimen.MushroomType != null)
+                    specimen.TypeKey = _persistence.GetMushroomTypeKey(specimen.MushroomType);
+                specimen.PlantedUnix = null;
                 if (specimen.Hardware != null)
                     specimen.HardwareKey = _persistence.GetHardwareById(specimen.Hardware).Key;
                 _persistence.UpdateSpecimen(specimen);
@@ -188,8 +219,17 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                if (_persistence.GetSpecimen(specimenKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
-                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                var check = _persistence.GetSpecimen(specimenKey);
+                if (check.UserKey == null)
+                {
+                    if (((User) HttpContext.Items["User"]).PermissionLevel < 3)
+                        throw new NotFoundException("You don't have high enough clearance for this operation!");
+                }
+                else
+                {
+                    if (check.UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                        throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                }
                 var temp = _persistence.GetSensorHistory(specimenKey, filterFrom, filterUntil);
                 return StatusCode(200, temp);
             }
