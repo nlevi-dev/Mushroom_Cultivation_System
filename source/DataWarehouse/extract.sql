@@ -3,7 +3,6 @@ GO
 
 alter table staging.dim_mushroom alter column mushroom_genus nvarchar(32) null 
 
-
 insert into staging.dim_mushroom
 (
 type_key,
