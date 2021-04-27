@@ -57,6 +57,16 @@ CREATE TABLE staging.[fact_specimen]
 )
 GO
 
+CREATE TABLE staging.dim_calendar(
+date_key int not null,
+year int not null,
+month int not null,
+day int not null,
+season varchar(20),
+week_No int
+)
+
+
 /* Create Primary Keys, Indexes, Uniques, Checks */
 
 ALTER TABLE staging.[bridge_entry] 
@@ -84,6 +94,9 @@ ALTER TABLE staging.[fact_specimen]
 	PRIMARY KEY CLUSTERED ([specimen_key] ASC)
 GO
 
+ALTER TABLE staging.dim_calendar ADD CONSTRAINT PK_DimCalendar PRIMARY KEY (date_key);
+GO
+
 /* Create Foreign Key Constraints */
 
 ALTER TABLE staging.[dim_sensor_entry] ADD CONSTRAINT [FK_dim_sensor_entry_bridge_entry]
@@ -101,3 +114,4 @@ GO
 ALTER TABLE staging.[fact_specimen] ADD CONSTRAINT [FK_fact_specimen_dim_mushroom]
 	FOREIGN KEY ([type_key]) REFERENCES staging.[dim_mushroom] ([type_key]) ON DELETE No Action ON UPDATE No Action
 GO
+

@@ -26,12 +26,15 @@ namespace SEP4_Data.Controllers
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
                 hardware.UserKey = ((User) HttpContext.Items["User"]).Key;
+                hardware.DesiredAirTemperature = null;
+                hardware.DesiredAirHumidity = null;
+                hardware.DesiredAirCo2 = null;
                 _persistence.CreateHardware(hardware);
                 return StatusCode(200);
             }
             catch (UnauthorizedException e)
             {
-                return StatusCode(403, e.Message);
+                return StatusCode(401, e.Message);
             }
             catch (ConflictException e)
             {
@@ -51,12 +54,12 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                Hardware[] hardwares = _persistence.GetAllHardware((int) ((User) HttpContext.Items["User"]).Key);
-                return StatusCode(200, hardwares);
+                var temp = _persistence.GetAllHardware((int) ((User) HttpContext.Items["User"]).Key);
+                return StatusCode(200, temp);
             }
             catch (UnauthorizedException e)
             {
-                return StatusCode(403, e.Message);
+                return StatusCode(401, e.Message);
             }
             catch (Exception e)
             {
@@ -72,14 +75,16 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                if (_persistence.GetHardware(hardwareKey).UserKey != ((User) HttpContext.Items["User"]).Key)
-                {
-                    throw new UnauthorizedException("You do not own the hardware!");
-                }
+                if (_persistence.GetHardware(hardwareKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
                 var temp = _persistence.GetHardware(hardwareKey);
                 return StatusCode(200, temp);
             }
             catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
             {
                 return StatusCode(403, e.Message);
             }
@@ -101,14 +106,16 @@ namespace SEP4_Data.Controllers
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                if (_persistence.GetHardware(hardwareKey).UserKey != ((User) HttpContext.Items["User"]).Key)
-                {
-                    throw new UnauthorizedException("You do not own the hardware!");
-                }
+                if (_persistence.GetHardware(hardwareKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
                 _persistence.DeleteHardware(hardwareKey);
                 return StatusCode(200);
             }
             catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
             {
                 return StatusCode(403, e.Message);
             }
@@ -122,24 +129,25 @@ namespace SEP4_Data.Controllers
             }
         }
         
-        [HttpPut]
+        [HttpPatch]
         [Route("hardware/key/{hardwareKey}")]
-        public IActionResult PutHardware([FromRoute] int hardwareKey, [FromBody] Hardware hardware)
+        public IActionResult PatchHardwareId([FromRoute] int hardwareKey, [FromBody] Hardware hardware)
         {
             try
             {
                 if (HttpContext.Items["User"] == null)
                     throw new UnauthorizedException("Authorization failed!");
-                hardware.Key = hardwareKey;
-                if (_persistence.GetHardware(hardwareKey).UserKey != ((User) HttpContext.Items["User"]).Key)
-                {
-                    throw new UnauthorizedException("You do not own the hardware!");
-                }
-                hardware.UserKey = ((User) HttpContext.Items["User"]).Key;
-               _persistence.UpdateHardware(hardware);
+                hardware = new Hardware {Key = hardwareKey, Id = hardware.Id};
+                if (_persistence.GetHardware(hardwareKey).UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                _persistence.UpdateHardware(hardware);
                return StatusCode(200);
             }
             catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
             {
                 return StatusCode(403, e.Message);
             }
@@ -158,14 +166,39 @@ namespace SEP4_Data.Controllers
         }
         
         [HttpGet]
-        [Route("hardware/key/{hardwareKey}/sensor")]
-        public IActionResult GetCurrentSensorValues([FromRoute] int hardwareKey)
+        [Route("hardware/id/{hardwareId}/sensor")]
+        public IActionResult GetCurrentSensorValues([FromRoute] string hardwareId)
         {
             try
             {
-                throw new NotImplementedException("Because Levente is a weetard");
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                var hardware = _persistence.GetHardwareById(hardwareId);
+                if (hardware.UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                //request data from IoT interface
+                var temp = new SensorEntry
+                {
+                    Key = null,
+                    EntryTimeDotnet = DateTime.Now,
+                    AirTemperature = 21.7f,
+                    AirHumidity = 1.2f,
+                    AirCo2 = 1.2f,
+                    DesiredAirTemperature = 21.7f,
+                    DesiredAirHumidity = 1.2f,
+                    DesiredAirCo2 = 1.2f,
+                    AmbientAirTemperature = 21.7f,
+                    AmbientAirHumidity = 1.2f,
+                    AmbientAirCo2 = 1.2f,
+                    Specimen = null
+                };
+                return StatusCode(200, temp);
             }
             catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
             {
                 return StatusCode(403, e.Message);
             }

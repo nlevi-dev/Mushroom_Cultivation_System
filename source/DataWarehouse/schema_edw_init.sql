@@ -18,7 +18,7 @@ CREATE TABLE edw.[dim_mushroom]
     M_ID int IDENTITY(1,1) not null,
 	[type_key] int NOT NULL,
 	[mushroom_name] nvarchar(32) NOT NULL,
-	[mushroom_genus] nvarchar(32) NOT NULL
+	[mushroom_genus] nvarchar(32) NULL
 )
 
 

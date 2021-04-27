@@ -11,7 +11,7 @@
         public string DbPassword { get; set; }
         public byte[] JwtKey { get; set; }
         public byte[] Salt { get; set; }
-        public bool CheckIntegrityOnStartup { get; set; }
+        public int UserPostPermissionLevel { get; set; }
         public int TokenExpire { get; set; }
         public bool Swagger { get; set; }
     }

@@ -3,7 +3,6 @@ GO
 
 alter table staging.dim_mushroom alter column mushroom_genus nvarchar(32) null 
 
-
 insert into staging.dim_mushroom
 (
 type_key,
@@ -70,4 +69,38 @@ bridge_key
 select a.specimen_key,(Case when discraded_date is null then 1 else 0 end),planted_date,discraded_date,type_key,entry_key
 from MushroomPP.dbo._specimen as a inner join MushroomPP.dbo._status_entry as b on a.specimen_key=b.specimen_key;
  
+
+
+/* staging dim calendar */
+
+declare @StartDate DATETIME
+declare @EndDate DATETIME
+set @StartDate = '2021-04-14'
+set @EndDate = DATEADD(YEAR,10,@StartDate)
+declare @date_key int
+
+set @date_key = 1
+
+while @StartDate<@EndDate
+	begin
+		insert into staging.dim_calendar(date_key,year,month,day,season,week_No)
+		select @date_key as K,
+		DATEPART(YEAR,@StartDate) as Year,
+		DATEPART(MONTH,@StartDate) as Month,
+		DATEPART(DAY,@StartDate) as Day,
+		[season]= CASE 
+		 when DATEPART(MONTH,@StartDate) in (12,1,2)
+			then 'Winter' 
+		 when DATEPART(MONTH,@StartDate) in (3,4,5) 
+			then 'Spring' 
+		 when DATEPART(MONTH,@StartDate) in (6,7,8) 
+			then 'Summer' 
+		 when DATEPART(MONTH,@StartDate) in (9,10,11) 
+			then 'Autumn'
+		end,
+		[weekNo] = DATEPART(wk, @StartDate);
+
+		set @StartDate = DATEADD(DD,1,@StartDate)
+		set @date_key +=1
+	end
 
