@@ -46,11 +46,26 @@ namespace SEP4_Data.Model
         public float? DesiredAirHumidity { get; set; }
         [JsonPropertyName("desired_air_co2")]
         public float? DesiredAirCo2 { get; set; }
+        [JsonPropertyName("desired_light_level")]
+        public float? DesiredLightLevel { get; set; }
         [JsonPropertyName("hardware_id")]
         public string Hardware { get; set; }
         [JsonIgnore]
         public int? HardwareKey { get; set; }
         [JsonIgnore]
         public int? UserKey { get; set; }
+        
+        public override string ToString()
+        {
+            return "Specimen (key): " + Key;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is Specimen))
+                return false;
+            Specimen specimen = (Specimen) obj;
+            return Key == specimen.Key && PlantedUnix == specimen.PlantedUnix && Name == specimen.Name && MushroomType == specimen.MushroomType && Description == specimen.Description && DesiredAirTemperature == specimen.DesiredAirTemperature && DesiredAirHumidity == specimen.DesiredAirHumidity && DesiredAirCo2 == specimen.DesiredAirCo2 && DesiredLightLevel == specimen.DesiredLightLevel && Hardware == specimen.Hardware;
+        }
     }
 }

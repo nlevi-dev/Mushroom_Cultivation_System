@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,16 +19,29 @@ namespace SEP4_Data
 
         public IConfiguration Configuration { get; }
         
-        private ConfigService _configService;
+        private IConfigService _configService;
         
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             _configService = new ConfigService();
-            PersistenceService persistenceService = new PersistenceService(_configService);
-            services.AddSingleton<IConfigService, ConfigService>(init => _configService);
-            services.AddSingleton<IPersistenceService, PersistenceService>(init => persistenceService);
+            IPersistenceService persistenceService = new PersistenceService(_configService);
+            services.AddSingleton(init => _configService);
+            services.AddSingleton(init => persistenceService);
+            if (_configService.ReInitializeDb)
+            {
+                var bytes1 = new byte[128 / 8];
+                var bytes2 = new byte[128 / 8];
+                using var generator = RandomNumberGenerator.Create();
+                generator.GetBytes(bytes1);
+                generator.GetBytes(bytes2);
+                _configService.Salt = bytes1;
+                _configService.JwtKey = bytes2;
+                persistenceService.DropSchema();
+                persistenceService.InitSchema();
+            }
             services.AddSingleton<ILogService, LogService>();
+            services.AddSingleton<ISampleService, SampleService>();
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Mushroom++", Version = "v1"});
                 // add JWT Authentication
@@ -73,7 +87,7 @@ namespace SEP4_Data
             if (env.IsDevelopment() || _configService.Swagger)
             {
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AuthorAPI v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MushroomPP"));
             }
 
             app.UseRouting();

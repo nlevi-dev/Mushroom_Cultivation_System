@@ -185,6 +185,36 @@ namespace SEP4_Data.Data
             }
         }
         private static bool? _swagger;
+        public bool ReInitializeDb
+        {
+            get {
+                if (!_initialized)
+                    Initialize();
+                return _reInitializeDb ?? false;
+            }
+            set {
+                if (!_initialized)
+                    Initialize();
+                _reInitializeDb = value;
+                SaveConfig();
+            }
+        }
+        private static bool? _reInitializeDb;
+        public int SampleInterval
+        {
+            get {
+                if (!_initialized)
+                    Initialize();
+                return _sampleInterval ?? 10;
+            }
+            set {
+                if (!_initialized)
+                    Initialize();
+                _sampleInterval = value;
+                SaveConfig();
+            }
+        }
+        private static int? _sampleInterval;
 
         private static bool _initialized = false;
 

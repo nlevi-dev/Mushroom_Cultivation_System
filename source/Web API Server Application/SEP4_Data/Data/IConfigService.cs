@@ -14,5 +14,7 @@
         public int UserPostPermissionLevel { get; set; }
         public int TokenExpire { get; set; }
         public bool Swagger { get; set; }
+        public bool ReInitializeDb { get; set; }
+        public int SampleInterval { get; set; }
     }
 }

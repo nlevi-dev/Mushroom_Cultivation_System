@@ -2,35 +2,35 @@ USE MushroomPP
 GO
 
 IF OBJECT_ID('dbo._sensor_entry') IS NOT NULL
-	TRUNCATE TABLE dbo._sensor_entry
+	TRUNCATE TABLE dbo._sensor_entry;
 IF OBJECT_ID('dbo._sensor_entry') IS NOT NULL
-	DROP TABLE dbo._sensor_entry
+	DROP TABLE dbo._sensor_entry;
 IF OBJECT_ID('dbo._status_entry') IS NOT NULL
-	TRUNCATE TABLE dbo._status_entry
+	TRUNCATE TABLE dbo._status_entry;
 IF OBJECT_ID('dbo._status_entry') IS NOT NULL
-	DROP TABLE dbo._status_entry
+	DROP TABLE dbo._status_entry;
 IF OBJECT_ID('dbo._specimen') IS NOT NULL
-	TRUNCATE TABLE dbo._specimen
+	TRUNCATE TABLE dbo._specimen;
 IF OBJECT_ID('dbo._specimen') IS NOT NULL
-	DROP TABLE dbo._specimen
+	DROP TABLE dbo._specimen;
 IF OBJECT_ID('dbo._mushroom_type') IS NOT NULL
-	TRUNCATE TABLE dbo._mushroom_type
+	TRUNCATE TABLE dbo._mushroom_type;
 IF OBJECT_ID('dbo._mushroom_type') IS NOT NULL
-	DROP TABLE dbo._mushroom_type
+	DROP TABLE dbo._mushroom_type;
 IF OBJECT_ID('dbo._mushroom_stage') IS NOT NULL
-	TRUNCATE TABLE dbo._mushroom_stage
+	TRUNCATE TABLE dbo._mushroom_stage;
 IF OBJECT_ID('dbo._mushroom_stage') IS NOT NULL
-	DROP TABLE dbo._mushroom_stage
+	DROP TABLE dbo._mushroom_stage;
 IF OBJECT_ID('dbo._hardware') IS NOT NULL
-	TRUNCATE TABLE dbo._hardware
+	TRUNCATE TABLE dbo._hardware;
 IF OBJECT_ID('dbo._hardware') IS NOT NULL
-	DROP TABLE dbo._hardware
+	DROP TABLE dbo._hardware;
 IF OBJECT_ID('dbo._user') IS NOT NULL
-	TRUNCATE TABLE dbo._user
+	TRUNCATE TABLE dbo._user;
 IF OBJECT_ID('dbo._user') IS NOT NULL
-	DROP TABLE dbo._user
+	DROP TABLE dbo._user;
 IF OBJECT_ID('dbo._permission_level') IS NOT NULL
-	TRUNCATE TABLE dbo._permission_level
+	TRUNCATE TABLE dbo._permission_level;
 IF OBJECT_ID('dbo._permission_level') IS NOT NULL
-	DROP TABLE dbo._permission_level
+	DROP TABLE dbo._permission_level;
 GO

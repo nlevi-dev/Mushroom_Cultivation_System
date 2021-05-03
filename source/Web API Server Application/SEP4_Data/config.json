@@ -10,5 +10,7 @@
   "Salt": "6JXU7TQdR9DkiKgR96liAQ==",
   "UserPostPermissionLevel": 0,
   "TokenExpire": 0,
-  "Swagger": true
+  "Swagger": true,
+  "ReInitializeDb": true,
+  "SampleInterval": 10
 }

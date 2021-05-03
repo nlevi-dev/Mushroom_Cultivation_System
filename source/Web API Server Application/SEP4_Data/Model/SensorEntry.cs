@@ -38,19 +38,30 @@ namespace SEP4_Data.Model
         public float? AirHumidity { get; set; }
         [JsonPropertyName("air_co2")]
         public float? AirCo2 { get; set; }
+        [JsonPropertyName("light_level")]
+        public float? LightLevel { get; set; }
         [JsonPropertyName("desired_air_temperature")]
         public float? DesiredAirTemperature { get; set; }
         [JsonPropertyName("desired_air_humidity")]
         public float? DesiredAirHumidity { get; set; }
         [JsonPropertyName("desired_air_co2")]
         public float? DesiredAirCo2 { get; set; }
-        [JsonPropertyName("ambient_air_temperature")]
-        public float? AmbientAirTemperature { get; set; }
-        [JsonPropertyName("ambient_air_humidity")]
-        public float? AmbientAirHumidity { get; set; }
-        [JsonPropertyName("ambient_air_co2")]
-        public float? AmbientAirCo2 { get; set; }
+        [JsonPropertyName("desired_light_level")]
+        public float? DesiredLightLevel { get; set; }
         [JsonPropertyName("specimen_key")]
         public int? Specimen { get; set; }
+        
+        public override string ToString()
+        {
+            return "SensorEntry (key): " + Key;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is SensorEntry))
+                return false;
+            SensorEntry sensorEntry = (SensorEntry) obj;
+            return Key == sensorEntry.Key && EntryTimeUnix == sensorEntry.EntryTimeUnix && AirTemperature == sensorEntry.AirTemperature && AirHumidity == sensorEntry.AirHumidity && AirCo2 == sensorEntry.AirCo2 && LightLevel == sensorEntry.LightLevel && DesiredAirTemperature == sensorEntry.DesiredAirTemperature && DesiredAirHumidity == sensorEntry.DesiredAirHumidity && DesiredAirCo2 == sensorEntry.DesiredAirCo2 && DesiredLightLevel == sensorEntry.DesiredLightLevel && Specimen == sensorEntry.Specimen;
+        }
     }
 }

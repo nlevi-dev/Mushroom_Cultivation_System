@@ -16,7 +16,22 @@ namespace SEP4_Data.Model
         public float? DesiredAirHumidity { get; set; }
         [JsonPropertyName("desired_air_co2")]
         public float? DesiredAirCo2 { get; set; }
+        [JsonPropertyName("desired_light_level")]
+        public float? DesiredLightLevel { get; set; }
         [JsonIgnore]
         public int? UserKey { get; set; }
+
+        public override string ToString()
+        {
+            return "Hardware (key): " + Key;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is Hardware))
+                return false;
+            Hardware hardware = (Hardware) obj;
+            return Key == hardware.Key && Id == hardware.Id && SpecimenKey == hardware.SpecimenKey && DesiredAirTemperature == hardware.DesiredAirTemperature && DesiredAirHumidity == hardware.DesiredAirHumidity && DesiredAirCo2 == hardware.DesiredAirCo2 && DesiredLightLevel == hardware.DesiredLightLevel;
+        }
     }
 }

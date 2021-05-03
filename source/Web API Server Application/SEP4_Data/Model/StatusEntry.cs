@@ -38,5 +38,18 @@ namespace SEP4_Data.Model
         public int? StageKey { get; set; }
         [JsonPropertyName("specimen_key")]
         public int? Specimen { get; set; }
+        
+        public override string ToString()
+        {
+            return "StatusEntry (key): " + Key;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is StatusEntry))
+                return false;
+            StatusEntry statusEntry = (StatusEntry) obj;
+            return Key == statusEntry.Key && EntryTimeUnix == statusEntry.EntryTimeUnix && Stage == statusEntry.Stage && Specimen == statusEntry.Specimen;
+        }
     }
 }

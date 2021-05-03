@@ -35,7 +35,7 @@ namespace SEP4_Data.Controllers
                 {
                     //send data to IoT interface
                     //wait for ack
-                    _persistence.UpdateHardware(new Hardware{Key = specimen.HardwareKey, DesiredAirTemperature = specimen.DesiredAirTemperature, DesiredAirHumidity = specimen.DesiredAirHumidity, DesiredAirCo2 = specimen.DesiredAirCo2});
+                    _persistence.UpdateHardware(new Hardware{Key = specimen.HardwareKey, DesiredAirTemperature = specimen.DesiredAirTemperature, DesiredAirHumidity = specimen.DesiredAirHumidity, DesiredAirCo2 = specimen.DesiredAirCo2, DesiredLightLevel = specimen.DesiredLightLevel});
                 }
                 return StatusCode(200);
             }
@@ -185,7 +185,7 @@ namespace SEP4_Data.Controllers
                 {
                     //send data to IoT interface
                     //wait for ack
-                    _persistence.UpdateHardware(new Hardware{Key = specimen.HardwareKey, DesiredAirTemperature = specimen.DesiredAirTemperature, DesiredAirHumidity = specimen.DesiredAirHumidity, DesiredAirCo2 = specimen.DesiredAirCo2});
+                    _persistence.UpdateHardware(new Hardware{Key = specimen.HardwareKey, DesiredAirTemperature = specimen.DesiredAirTemperature, DesiredAirHumidity = specimen.DesiredAirHumidity, DesiredAirCo2 = specimen.DesiredAirCo2, DesiredLightLevel = specimen.DesiredLightLevel});
                 }
                 return StatusCode(200);
             }

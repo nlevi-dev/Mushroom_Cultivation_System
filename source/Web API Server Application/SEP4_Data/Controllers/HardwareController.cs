@@ -29,6 +29,7 @@ namespace SEP4_Data.Controllers
                 hardware.DesiredAirTemperature = null;
                 hardware.DesiredAirHumidity = null;
                 hardware.DesiredAirCo2 = null;
+                hardware.DesiredLightLevel = null;
                 _persistence.CreateHardware(hardware);
                 return StatusCode(200);
             }
@@ -184,12 +185,11 @@ namespace SEP4_Data.Controllers
                     AirTemperature = 21.7f,
                     AirHumidity = 1.2f,
                     AirCo2 = 1.2f,
+                    LightLevel = 1.2f,
                     DesiredAirTemperature = 21.7f,
                     DesiredAirHumidity = 1.2f,
                     DesiredAirCo2 = 1.2f,
-                    AmbientAirTemperature = 21.7f,
-                    AmbientAirHumidity = 1.2f,
-                    AmbientAirCo2 = 1.2f,
+                    DesiredLightLevel = 1.2f,
                     Specimen = null
                 };
                 return StatusCode(200, temp);

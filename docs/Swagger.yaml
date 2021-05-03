@@ -114,7 +114,7 @@ paths:
             example: You don't have high enough security clearance for this operation!
         404:
           description: Not Found
-  /user/name:
+  /user/me:
     get:
       summary: returns the authenticated user
       parameters:
@@ -844,6 +844,10 @@ definitions:
         description: "Nullable\nReadonly value."
         type: number
         example: 1.2
+      desired_light_level:
+        description: "Nullable\nReadonly value."
+        type: number
+        example: 1.2
   specimen:
     type: object
     properties:
@@ -879,6 +883,10 @@ definitions:
         description: "Nullable, User specified value, also changes the assigned hardware's value."
         type: number
         example: 1.2
+      desired_light_level:
+        description: "Nullable, User specified value, also changes the assigned hardware's value."
+        type: number
+        example: 1.2
       hardware_id:
         description: "Nullable.\nUser specified value, must be from the list of hardware ids associated with the user, or null."
         type: string
@@ -906,6 +914,10 @@ definitions:
         description: "Readonly value."
         type: number
         example: 1.2
+      light_level:
+        description: "Readonly value."
+        type: number
+        example: 1.2
       desired_air_temperature:
         description: "Nullable, Readonly value."
         type: number
@@ -918,16 +930,8 @@ definitions:
         description: "Nullable, Readonly value."
         type: number
         example: 1.2
-      ambient_air_temperature:
-        description: "Readonly value."
-        type: number
-        example: 21.7
-      ambient_air_humidity:
-        description: "Readonly value."
-        type: number
-        example: 1.2
-      ambient_air_co2:
-        description: "Readonly value."
+      desired_light_level:
+        description: "Nullable, Readonly value."
         type: number
         example: 1.2
       specimen_key:

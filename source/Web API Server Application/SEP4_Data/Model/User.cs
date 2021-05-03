@@ -14,5 +14,18 @@ namespace SEP4_Data.Model
         public int? PermissionLevel { get; set; }
         [JsonPropertyName("user_type")]
         public string Permission { get; set; }
+        
+        public override string ToString()
+        {
+            return "User (key): " + Key;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is User))
+                return false;
+            User user = (User) obj;
+            return Key == user.Key && Name == user.Name && Permission == user.Permission;
+        }
     }
 }

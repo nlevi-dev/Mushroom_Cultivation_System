@@ -34,5 +34,7 @@ namespace SEP4_Data.Data
         public StatusEntry GetStatusEntry(int entryKey);
         public void DeleteStatusEntry(int entryKey);
         public void UpdateStatusEntry(StatusEntry statusEntry);
+        public void DropSchema();
+        public void InitSchema();
     }
 }

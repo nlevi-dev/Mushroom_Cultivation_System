@@ -24,9 +24,11 @@
           <e p="IConfigService.cs" t="Include" />
           <e p="ILogService.cs" t="Include" />
           <e p="IPersistenceService.cs" t="Include" />
+          <e p="ISampleService.cs" t="Include" />
           <e p="JwtMiddleware.cs" t="Include" />
           <e p="LogService.cs" t="Include" />
           <e p="PersistenceService.cs" t="Include" />
+          <e p="SampleService.cs" t="Include" />
         </e>
         <e p="log.txt" t="Include" />
         <e p="Model" t="Include">

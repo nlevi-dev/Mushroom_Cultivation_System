@@ -296,11 +296,12 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "INSERT INTO _hardware (hardware_id, desired_air_temperature, desired_air_humidity, desired_air_co2, user_key) VALUES (@id, @airtemp, @airhum, @airco2, @user)";
+                command.CommandText = "INSERT INTO _hardware (hardware_id, desired_air_temperature, desired_air_humidity, desired_air_co2, desired_light_level, user_key) VALUES (@id, @airtemp, @airhum, @airco2, @light, @user)";
                 command.Parameters.AddWithValue("@id", hardware.Id ?? throw new ConflictException("hardware id can't be null"));
                 command.Parameters.AddWithValue("@airtemp", (object) hardware.DesiredAirTemperature ?? DBNull.Value);
                 command.Parameters.AddWithValue("@airhum", (object) hardware.DesiredAirHumidity ?? DBNull.Value);
                 command.Parameters.AddWithValue("@airco2", (object) hardware.DesiredAirCo2 ?? DBNull.Value);
+                command.Parameters.AddWithValue("@light", (object) hardware.DesiredLightLevel ?? DBNull.Value);
                 command.Parameters.AddWithValue("@user", hardware.UserKey ?? throw new ConflictException("user key can't be null"));
                 try {
                     command.ExecuteNonQuery();
@@ -326,7 +327,7 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "SELECT _hardware.hardware_key, _hardware.hardware_id, _hardware.desired_air_temperature, _hardware.desired_air_humidity, _hardware.desired_air_co2, _hardware.user_key, _specimen.specimen_key FROM _hardware LEFT JOIN _specimen ON (_hardware.hardware_key = _specimen.hardware_key) WHERE _hardware.user_key = @user_key";
+                command.CommandText = "SELECT _hardware.hardware_key, _hardware.hardware_id, _hardware.desired_air_temperature, _hardware.desired_air_humidity, _hardware.desired_air_co2, _hardware.desired_light_level, _hardware.user_key, _specimen.specimen_key FROM _hardware LEFT JOIN _specimen ON (_hardware.hardware_key = _specimen.hardware_key) WHERE _hardware.user_key = @user_key";
                 command.Parameters.AddWithValue("@user_key", userKey);
                 var reader = command.ExecuteReader();
                 var temp = new List<Hardware>();
@@ -336,7 +337,7 @@ namespace SEP4_Data.Data
                     {
                         Key = reader.GetInt32(0),
                         Id = reader.GetString(1),
-                        UserKey = reader.GetInt32(5)
+                        UserKey = reader.GetInt32(6)
                     };
                     if (!reader.IsDBNull(2))
                         item.DesiredAirTemperature = reader.GetFloat(2);
@@ -344,8 +345,10 @@ namespace SEP4_Data.Data
                         item.DesiredAirHumidity = reader.GetFloat(3);
                     if (!reader.IsDBNull(4))
                         item.DesiredAirCo2 = reader.GetFloat(4);
-                    if (!reader.IsDBNull(6))
-                        item.SpecimenKey = reader.GetInt32(6);
+                    if (!reader.IsDBNull(5))
+                        item.DesiredLightLevel = reader.GetFloat(5);
+                    if (!reader.IsDBNull(7))
+                        item.SpecimenKey = reader.GetInt32(7);
                     temp.Add(item);
                 }
                 reader.Close();
@@ -359,7 +362,7 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "SELECT _hardware.hardware_key, _hardware.hardware_id, _hardware.desired_air_temperature, _hardware.desired_air_humidity, _hardware.desired_air_co2, _hardware.user_key, _specimen.specimen_key FROM _hardware LEFT JOIN _specimen ON (_hardware.hardware_key = _specimen.hardware_key) WHERE _hardware.hardware_key = @key";
+                command.CommandText = "SELECT _hardware.hardware_key, _hardware.hardware_id, _hardware.desired_air_temperature, _hardware.desired_air_humidity, _hardware.desired_air_co2, _hardware.desired_light_level, _hardware.user_key, _specimen.specimen_key FROM _hardware LEFT JOIN _specimen ON (_hardware.hardware_key = _specimen.hardware_key) WHERE _hardware.hardware_key = @key";
                 command.Parameters.AddWithValue("@key", hardwareKey);
                 var reader = command.ExecuteReader();
                 if (!reader.Read())
@@ -371,7 +374,7 @@ namespace SEP4_Data.Data
                 {
                     Key = reader.GetInt32(0),
                     Id = reader.GetString(1),
-                    UserKey = reader.GetInt32(5)
+                    UserKey = reader.GetInt32(6)
                 };
                 if (!reader.IsDBNull(2))
                     item.DesiredAirTemperature = reader.GetFloat(2);
@@ -379,8 +382,10 @@ namespace SEP4_Data.Data
                     item.DesiredAirHumidity = reader.GetFloat(3);
                 if (!reader.IsDBNull(4))
                     item.DesiredAirCo2 = reader.GetFloat(4);
-                if (!reader.IsDBNull(6))
-                    item.SpecimenKey = reader.GetInt32(6);
+                if (!reader.IsDBNull(5))
+                    item.DesiredLightLevel = reader.GetFloat(5);
+                if (!reader.IsDBNull(7))
+                    item.SpecimenKey = reader.GetInt32(7);
                 reader.Close();
                 return item;
             }
@@ -392,7 +397,7 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "SELECT _hardware.hardware_key, _hardware.hardware_id, _hardware.desired_air_temperature, _hardware.desired_air_humidity, _hardware.desired_air_co2, _hardware.user_key, _specimen.specimen_key FROM _hardware LEFT JOIN _specimen ON (_hardware.hardware_key = _specimen.hardware_key) WHERE _hardware.hardware_id = @id";
+                command.CommandText = "SELECT _hardware.hardware_key, _hardware.hardware_id, _hardware.desired_air_temperature, _hardware.desired_air_humidity, _hardware.desired_air_co2, _hardware.desired_light_level, _hardware.user_key, _specimen.specimen_key FROM _hardware LEFT JOIN _specimen ON (_hardware.hardware_key = _specimen.hardware_key) WHERE _hardware.hardware_id = @id";
                 command.Parameters.AddWithValue("@id", hardwareId ?? throw new ConflictException("hardware id can't be null"));
                 var reader = command.ExecuteReader();
                 if (!reader.Read())
@@ -404,7 +409,7 @@ namespace SEP4_Data.Data
                 {
                     Key = reader.GetInt32(0),
                     Id = reader.GetString(1),
-                    UserKey = reader.GetInt32(5)
+                    UserKey = reader.GetInt32(6)
                 };
                 if (!reader.IsDBNull(2))
                     item.DesiredAirTemperature = reader.GetFloat(2);
@@ -412,8 +417,10 @@ namespace SEP4_Data.Data
                     item.DesiredAirHumidity = reader.GetFloat(3);
                 if (!reader.IsDBNull(4))
                     item.DesiredAirCo2 = reader.GetFloat(4);
-                if (!reader.IsDBNull(6))
-                    item.SpecimenKey = reader.GetInt32(6);
+                if (!reader.IsDBNull(5))
+                    item.DesiredLightLevel = reader.GetFloat(5);
+                if (!reader.IsDBNull(7))
+                    item.SpecimenKey = reader.GetInt32(7);
                 reader.Close();
                 return item;
             }
@@ -457,12 +464,13 @@ namespace SEP4_Data.Data
                 }
                 reader.Close();
                 command = connection.CreateCommand();
-                command.CommandText = "UPDATE _hardware SET hardware_id = @id, desired_air_temperature = @airtemp, desired_air_humidity = @airhum, desired_air_co2 = @airco2 WHERE hardware_key = @key";
+                command.CommandText = "UPDATE _hardware SET hardware_id = @id, desired_air_temperature = @airtemp, desired_air_humidity = @airhum, desired_air_co2 = @airco2, desired_light_level = @light WHERE hardware_key = @key";
                 var current = GetHardware((int) hardware.Key);
                 command.Parameters.AddWithValue("@id", hardware.Id ?? current.Id);
                 command.Parameters.AddWithValue("@airtemp", (object) hardware.DesiredAirTemperature ?? DBNull.Value);
                 command.Parameters.AddWithValue("@airhum", (object) hardware.DesiredAirHumidity ?? DBNull.Value);
                 command.Parameters.AddWithValue("@airco2", (object) hardware.DesiredAirCo2 ?? DBNull.Value);
+                command.Parameters.AddWithValue("@light", (object) hardware.DesiredLightLevel ?? DBNull.Value);
                 command.Parameters.AddWithValue("@key", hardware.Key);
                 try {
                     command.ExecuteNonQuery();
@@ -495,26 +503,28 @@ namespace SEP4_Data.Data
                     reader.Close();
                     command = connection.CreateCommand();
                 }
-                command.CommandText = "INSERT INTO _specimen (planted_date, specimen_name, specimen_description, desired_air_temperature, desired_air_humidity, desired_air_co2, type_key, hardware_key, user_key) VALUES (@planted, @name, @description, @airtemp, @airhum, @airco2, @type, @hardware, @user)";
-                command.Parameters.AddWithValue("@planted", (object) specimen.PlantedTsql ?? DateTime.Now.ToString("yyyy-MM-dd HH':'mm':'ss.fff"));
+                command.CommandText = "INSERT INTO _specimen (planted_date, specimen_name, specimen_description, desired_air_temperature, desired_air_humidity, desired_air_co2, desired_light_level, type_key, hardware_key, user_key) VALUES (@planted, @name, @description, @airtemp, @airhum, @airco2, @light, @type, @hardware, @user)";
+                command.Parameters.AddWithValue("@planted", specimen.PlantedTsql ?? DateTime.Now.ToString("yyyy-MM-dd HH':'mm':'ss.fff"));
                 command.Parameters.AddWithValue("@name", specimen.Name ?? "");
                 command.Parameters.AddWithValue("@description", specimen.Description ?? "");
                 command.Parameters.AddWithValue("@airtemp", (object) specimen.DesiredAirTemperature ?? DBNull.Value);
                 command.Parameters.AddWithValue("@airhum", (object) specimen.DesiredAirHumidity ?? DBNull.Value);
                 command.Parameters.AddWithValue("@airco2", (object) specimen.DesiredAirCo2 ?? DBNull.Value);
+                command.Parameters.AddWithValue("@light", (object) specimen.DesiredLightLevel ?? DBNull.Value);
                 command.Parameters.AddWithValue("@type", specimen.TypeKey ?? throw new ConflictException("type key can't be null"));
                 command.Parameters.AddWithValue("@hardware", (object) specimen.HardwareKey ?? DBNull.Value);
                 command.Parameters.AddWithValue("@user", specimen.UserKey ?? throw new ConflictException("user key can't be null"));
                 command.ExecuteNonQuery();
                 command = connection.CreateCommand();
-                command.CommandText = "SELECT TOP 1 specimen_key FROM _specimen WHERE specimen_name = @name AND specimen_description = @description AND desired_air_temperature = @airtemp AND desired_air_humidity = @airhum AND desired_air_co2 = @airco2 AND type_key = @type AND hardware_key = @hardware AND user_key = @user ORDER BY specimen_key DESC";
+                command.CommandText = "SELECT TOP 1 specimen_key FROM _specimen WHERE specimen_name = @name AND specimen_description = @description AND desired_air_temperature = @airtemp AND desired_air_humidity = @airhum AND desired_air_co2 = @airco2 AND desired_light_level = @light AND type_key = @type AND hardware_key = @hardware AND user_key = @user ORDER BY specimen_key DESC";
                 command.Parameters.AddWithValue("@name", specimen.Name ?? "");
                 command.Parameters.AddWithValue("@description", specimen.Description ?? "");
-                AddNullableSelectCondition(command, "@airtemp", specimen.DesiredAirTemperature);
-                AddNullableSelectCondition(command, "@airhum", specimen.DesiredAirHumidity);
-                AddNullableSelectCondition(command, "@airco2", specimen.DesiredAirCo2);
+                AddNullableCondition(command, "@airtemp", specimen.DesiredAirTemperature);
+                AddNullableCondition(command, "@airhum", specimen.DesiredAirHumidity);
+                AddNullableCondition(command, "@airco2", specimen.DesiredAirCo2);
+                AddNullableCondition(command, "@light", specimen.DesiredLightLevel);
                 command.Parameters.AddWithValue("@type", specimen.TypeKey);
-                AddNullableSelectCondition(command, "@hardware", specimen.HardwareKey);
+                AddNullableCondition(command, "@hardware", specimen.HardwareKey);
                 command.Parameters.AddWithValue("@user", specimen.UserKey);
                 reader = command.ExecuteReader();
                 reader.Read();
@@ -530,7 +540,7 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "SELECT _specimen.specimen_key, _specimen.planted_date, _specimen.specimen_name, _specimen.specimen_description, _specimen.desired_air_temperature, _specimen.desired_air_humidity, _specimen.desired_air_co2, _specimen.type_key, _specimen.hardware_key, _specimen.user_key, _hardware.hardware_id, _mushroom_type.mushroom_genus, _mushroom_type.mushroom_name FROM _specimen LEFT JOIN _hardware ON (_specimen.hardware_key = _hardware.hardware_key) LEFT JOIN _mushroom_type ON (_specimen.type_key = _mushroom_type.type_key) WHERE _specimen.user_key = @user_key";
+                command.CommandText = "SELECT _specimen.specimen_key, _specimen.planted_date, _specimen.specimen_name, _specimen.specimen_description, _specimen.desired_air_temperature, _specimen.desired_air_humidity, _specimen.desired_air_co2, _specimen.desired_light_level, _specimen.type_key, _specimen.hardware_key, _specimen.user_key, _hardware.hardware_id, _mushroom_type.mushroom_genus, _mushroom_type.mushroom_name FROM _specimen LEFT JOIN _hardware ON (_specimen.hardware_key = _hardware.hardware_key) LEFT JOIN _mushroom_type ON (_specimen.type_key = _mushroom_type.type_key) WHERE _specimen.user_key = @user_key";
                 command.Parameters.AddWithValue("@user_key", userKey);
                 var reader = command.ExecuteReader();
                 var temp = new List<Specimen>();
@@ -542,9 +552,9 @@ namespace SEP4_Data.Data
                         PlantedDotnet = reader.GetDateTime(1),
                         Name = reader.GetString(2),
                         Description = reader.GetString(3),
-                        TypeKey = reader.GetInt32(7),
-                        UserKey = reader.GetInt32(9),
-                        MushroomType = reader.GetString(11) + " - " + reader.GetString(12)
+                        TypeKey = reader.GetInt32(8),
+                        UserKey = reader.GetInt32(10),
+                        MushroomType = reader.GetString(12) + " - " + reader.GetString(13)
                     };
                     if (!reader.IsDBNull(4))
                         item.DesiredAirTemperature = reader.GetFloat(4);
@@ -552,10 +562,12 @@ namespace SEP4_Data.Data
                         item.DesiredAirHumidity = reader.GetFloat(5);
                     if (!reader.IsDBNull(6))
                         item.DesiredAirCo2 = reader.GetFloat(6);
-                    if (!reader.IsDBNull(8))
-                        item.HardwareKey = reader.GetInt32(8);
-                    if (!reader.IsDBNull(10))
-                        item.Hardware = reader.GetString(10);
+                    if (!reader.IsDBNull(7))
+                        item.DesiredLightLevel = reader.GetFloat(7);
+                    if (!reader.IsDBNull(9))
+                        item.HardwareKey = reader.GetInt32(9);
+                    if (!reader.IsDBNull(11))
+                        item.Hardware = reader.GetString(11);
                     temp.Add(item);
                 }
                 reader.Close();
@@ -569,7 +581,7 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "SELECT _specimen.specimen_key, _specimen.planted_date, _specimen.specimen_name, _specimen.specimen_description, _specimen.desired_air_temperature, _specimen.desired_air_humidity, _specimen.desired_air_co2, _specimen.type_key, _specimen.hardware_key, _specimen.user_key, _hardware.hardware_id, _mushroom_type.mushroom_genus, _mushroom_type.mushroom_name FROM _specimen LEFT JOIN _hardware ON (_specimen.hardware_key = _hardware.hardware_key) LEFT JOIN _mushroom_type ON (_specimen.type_key = _mushroom_type.type_key) WHERE _specimen.specimen_key = @key";
+                command.CommandText = "SELECT _specimen.specimen_key, _specimen.planted_date, _specimen.specimen_name, _specimen.specimen_description, _specimen.desired_air_temperature, _specimen.desired_air_humidity, _specimen.desired_air_co2, _specimen.desired_light_level, _specimen.type_key, _specimen.hardware_key, _specimen.user_key, _hardware.hardware_id, _mushroom_type.mushroom_genus, _mushroom_type.mushroom_name FROM _specimen LEFT JOIN _hardware ON (_specimen.hardware_key = _hardware.hardware_key) LEFT JOIN _mushroom_type ON (_specimen.type_key = _mushroom_type.type_key) WHERE _specimen.specimen_key = @key";
                 command.Parameters.AddWithValue("@key", specimenKey);
                 var reader = command.ExecuteReader();
                 if (!reader.Read())
@@ -583,8 +595,9 @@ namespace SEP4_Data.Data
                     PlantedDotnet = reader.GetDateTime(1),
                     Name = reader.GetString(2),
                     Description = reader.GetString(3),
-                    TypeKey = reader.GetInt32(7),
-                    MushroomType = reader.GetString(11) + " - " + reader.GetString(12)
+                    TypeKey = reader.GetInt32(8),
+                    UserKey = reader.GetInt32(10),
+                    MushroomType = reader.GetString(12) + " - " + reader.GetString(13)
                 };
                 if (!reader.IsDBNull(4))
                     item.DesiredAirTemperature = reader.GetFloat(4);
@@ -592,12 +605,12 @@ namespace SEP4_Data.Data
                     item.DesiredAirHumidity = reader.GetFloat(5);
                 if (!reader.IsDBNull(6))
                     item.DesiredAirCo2 = reader.GetFloat(6);
-                if (!reader.IsDBNull(8))
-                    item.HardwareKey = reader.GetInt32(8);
+                if (!reader.IsDBNull(7))
+                    item.DesiredLightLevel = reader.GetFloat(7);
                 if (!reader.IsDBNull(9))
-                    item.UserKey = reader.GetInt32(9);
-                if (!reader.IsDBNull(10))
-                    item.Hardware = reader.GetString(10);
+                    item.HardwareKey = reader.GetInt32(9);
+                if (!reader.IsDBNull(11))
+                    item.Hardware = reader.GetString(11);
                 reader.Close();
                 return item;
             }
@@ -658,13 +671,14 @@ namespace SEP4_Data.Data
                     reader.Close();
                     command = connection.CreateCommand();
                 }
-                command.CommandText = "UPDATE _specimen SET specimen_name = @name, specimen_description = @description, desired_air_temperature = @airtemp, desired_air_humidity = @airhum, desired_air_co2 = @airco2, type_key = @type, hardware_key = @hardware WHERE specimen_key = @key";
+                command.CommandText = "UPDATE _specimen SET specimen_name = @name, specimen_description = @description, desired_air_temperature = @airtemp, desired_air_humidity = @airhum, desired_air_co2 = @airco2, desired_light_level = @light, type_key = @type, hardware_key = @hardware WHERE specimen_key = @key";
                 var current = GetSpecimen((int) specimen.Key);
                 command.Parameters.AddWithValue("@name", specimen.Name ?? current.Name);
                 command.Parameters.AddWithValue("@description", specimen.Description ?? current.Description);
                 command.Parameters.AddWithValue("@airtemp", (object) specimen.DesiredAirTemperature ?? DBNull.Value);
                 command.Parameters.AddWithValue("@airhum", (object) specimen.DesiredAirHumidity ?? DBNull.Value);
                 command.Parameters.AddWithValue("@airco2", (object) specimen.DesiredAirCo2 ?? DBNull.Value);
+                command.Parameters.AddWithValue("@light", (object) specimen.DesiredLightLevel ?? DBNull.Value);
                 command.Parameters.AddWithValue("@type", specimen.TypeKey ?? current.TypeKey);
                 command.Parameters.AddWithValue("@hardware", (object) specimen.HardwareKey ?? DBNull.Value);
                 command.Parameters.AddWithValue("@key", specimen.Key);
@@ -678,17 +692,16 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "INSERT INTO _sensor_entry (entry_time, air_temperature, air_humidity, air_co2, desired_air_temperature, desired_air_humidity, desired_air_co2, ambient_air_temperature, ambient_air_humidity, ambient_air_co2, specimen_key) VALUES (@date, @airtemp, @airhum, @airc02, @desairtemp, @desairhum, @desairc02, @ambairtemp, @ambairhum, @ambairc02, @specimen)";
-                command.Parameters.AddWithValue("@date", (object) sensorEntry.EntryTimeTsql ?? DateTime.Now.ToString("yyyy-MM-dd HH':'mm':'ss.fff"));
+                command.CommandText = "INSERT INTO _sensor_entry (entry_time, air_temperature, air_humidity, air_co2, light_level, desired_air_temperature, desired_air_humidity, desired_air_co2, desired_light_level, specimen_key) VALUES (@date, @airtemp, @airhum, @airc02, @light, @desairtemp, @desairhum, @desairc02, @deslight, @specimen)";
+                command.Parameters.AddWithValue("@date", sensorEntry.EntryTimeTsql ?? DateTime.Now.ToString("yyyy-MM-dd HH':'mm':'ss.fff"));
                 command.Parameters.AddWithValue("@airtemp", sensorEntry.AirTemperature ?? throw new ConflictException("air temperature can't be null"));
                 command.Parameters.AddWithValue("@airhum", sensorEntry.AirHumidity ?? throw new ConflictException("air humidity can't be null"));
                 command.Parameters.AddWithValue("@airco2", sensorEntry.AirCo2 ?? throw new ConflictException("air co2 can't be null"));
+                command.Parameters.AddWithValue("@light", sensorEntry.LightLevel ?? throw new ConflictException("light level can't be null"));
                 command.Parameters.AddWithValue("@desairtemp", (object) sensorEntry.DesiredAirTemperature ?? DBNull.Value);
                 command.Parameters.AddWithValue("@desairhum", (object) sensorEntry.DesiredAirHumidity ?? DBNull.Value);
                 command.Parameters.AddWithValue("@desairco2", (object) sensorEntry.DesiredAirCo2 ?? DBNull.Value);
-                command.Parameters.AddWithValue("@ambairtemp", sensorEntry.AmbientAirTemperature ?? throw new ConflictException("ambient air temperature can't be null"));
-                command.Parameters.AddWithValue("@ambairhum", sensorEntry.AmbientAirHumidity ?? throw new ConflictException("ambient air humidity can't be null"));
-                command.Parameters.AddWithValue("@ambairco2", sensorEntry.AmbientAirCo2 ?? throw new ConflictException("ambient air co2 can't be null"));
+                command.Parameters.AddWithValue("@deslight", (object) sensorEntry.DesiredLightLevel ?? DBNull.Value);
                 command.Parameters.AddWithValue("@specimen", sensorEntry.Specimen ?? throw new ConflictException("specimen key can't be null"));
                 command.ExecuteNonQuery();
                 command = connection.CreateCommand();
@@ -708,7 +721,7 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "SELECT entry_key, entry_time, air_temperature, air_humidity, air_co2, desired_air_temperature, desired_air_humidity, desired_air_co2, ambient_air_temperature, ambient_air_humidity, ambient_air_co2, specimen_key FROM _sensor_entry WHERE specimen_key = @specimen";
+                command.CommandText = "SELECT entry_key, entry_time, air_temperature, air_humidity, air_co2, light_level, desired_air_temperature, desired_air_humidity, desired_air_co2, desired_light_level, specimen_key FROM _sensor_entry WHERE specimen_key = @specimen";
                 if (unixTimeFrom != null)
                 {
                     command.CommandText += " AND entry_time >= @from";
@@ -731,17 +744,17 @@ namespace SEP4_Data.Data
                         AirTemperature = reader.GetFloat(2),
                         AirHumidity = reader.GetFloat(3),
                         AirCo2 = reader.GetFloat(4),
-                        AmbientAirTemperature = reader.GetFloat(8),
-                        AmbientAirHumidity = reader.GetFloat(9),
-                        AmbientAirCo2 = reader.GetFloat(10),
-                        Specimen = reader.GetInt32(11)
+                        LightLevel = reader.GetFloat(5),
+                        Specimen = reader.GetInt32(10)
                     };
-                    if (!reader.IsDBNull(5))
-                        item.DesiredAirTemperature = reader.GetFloat(5);
                     if (!reader.IsDBNull(6))
-                        item.DesiredAirHumidity = reader.GetFloat(6);
+                        item.DesiredAirTemperature = reader.GetFloat(6);
                     if (!reader.IsDBNull(7))
-                        item.DesiredAirCo2 = reader.GetFloat(7);
+                        item.DesiredAirHumidity = reader.GetFloat(7);
+                    if (!reader.IsDBNull(8))
+                        item.DesiredAirCo2 = reader.GetFloat(8);
+                    if (!reader.IsDBNull(9))
+                        item.DesiredLightLevel = reader.GetFloat(9);
                     temp.Add(item);
                 }
                 reader.Close();
@@ -873,8 +886,36 @@ namespace SEP4_Data.Data
                 command.ExecuteNonQuery();
             }
         }
+
+        public void DropSchema()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "IF OBJECT_ID('dbo._sensor_entry') IS NOT NULL TRUNCATE TABLE dbo._sensor_entry; IF OBJECT_ID('dbo._sensor_entry') IS NOT NULL DROP TABLE dbo._sensor_entry; IF OBJECT_ID('dbo._status_entry') IS NOT NULL TRUNCATE TABLE dbo._status_entry; IF OBJECT_ID('dbo._status_entry') IS NOT NULL DROP TABLE dbo._status_entry; IF OBJECT_ID('dbo._specimen') IS NOT NULL TRUNCATE TABLE dbo._specimen; IF OBJECT_ID('dbo._specimen') IS NOT NULL DROP TABLE dbo._specimen; IF OBJECT_ID('dbo._mushroom_type') IS NOT NULL TRUNCATE TABLE dbo._mushroom_type; IF OBJECT_ID('dbo._mushroom_type') IS NOT NULL DROP TABLE dbo._mushroom_type; IF OBJECT_ID('dbo._mushroom_stage') IS NOT NULL TRUNCATE TABLE dbo._mushroom_stage; IF OBJECT_ID('dbo._mushroom_stage') IS NOT NULL DROP TABLE dbo._mushroom_stage; IF OBJECT_ID('dbo._hardware') IS NOT NULL TRUNCATE TABLE dbo._hardware; IF OBJECT_ID('dbo._hardware') IS NOT NULL DROP TABLE dbo._hardware; IF OBJECT_ID('dbo._user') IS NOT NULL TRUNCATE TABLE dbo._user; IF OBJECT_ID('dbo._user') IS NOT NULL DROP TABLE dbo._user; IF OBJECT_ID('dbo._permission_level') IS NOT NULL TRUNCATE TABLE dbo._permission_level; IF OBJECT_ID('dbo._permission_level') IS NOT NULL DROP TABLE dbo._permission_level;";
+                command.ExecuteNonQuery();
+            }
+        }
         
-        private static void AddNullableSelectCondition(SqlCommand command, string parameterName, object value)
+        public void InitSchema()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "CREATE TABLE [_hardware]( [hardware_key] int IDENTITY (1, 1) NOT NULL, [hardware_id] nvarchar(16) NOT NULL, [desired_air_temperature] real NULL, [desired_air_humidity] real NULL, [desired_air_co2] real NULL, [desired_light_level] real NULL, [user_key] int NOT NULL); CREATE TABLE [_mushroom_stage] ( [stage_key] int IDENTITY (1, 1) NOT NULL, [stage_name] nvarchar(32) NOT NULL ); CREATE TABLE [_mushroom_type] ( [type_key] int IDENTITY (1, 1) NOT NULL, [mushroom_name] nvarchar(32) NOT NULL, [mushroom_genus] nvarchar(32) NOT NULL ); CREATE TABLE [_permission_level] ( [permission_key] int IDENTITY (1, 1) NOT NULL, [permission_type] nvarchar(16) NOT NULL ); CREATE TABLE [_sensor_entry] ( [entry_key] int IDENTITY (1, 1) NOT NULL, [entry_time] datetime2(3) NOT NULL DEFAULT GETDATE(), [air_temperature] real NOT NULL, [air_humidity] real NOT NULL, [air_co2] real NOT NULL, [light_level] real NOT NULL, [desired_air_temperature] real NULL, [desired_air_humidity] real NULL, [desired_air_co2] real NULL, [desired_light_level] real NULL, [specimen_key] int NULL ); CREATE TABLE [_specimen] ( [specimen_key] int IDENTITY (1, 1) NOT NULL, [planted_date] datetime2(3) NOT NULL DEFAULT GETDATE(), [discarded_date] datetime2(3) NULL, [specimen_name] nvarchar(32) NOT NULL, [specimen_description] nvarchar(256) NOT NULL, [desired_air_temperature] real NULL, [desired_air_humidity] real NULL, [desired_air_co2] real NULL, [desired_light_level] real NULL, [type_key] int NOT NULL, [hardware_key] int NULL, [user_key] int NULL ); CREATE TABLE [_status_entry] ( [entry_key] int IDENTITY (1, 1) NOT NULL, [entry_time] datetime2(3) NOT NULL DEFAULT GETDATE(), [stage_key] int NOT NULL, [specimen_key] int NOT NULL ); CREATE TABLE [_user] ( [user_key] int IDENTITY (1, 1) NOT NULL, [username] nvarchar(32) NOT NULL, [password_hashed] nvarchar(64) NOT NULL, [permission_key] int NOT NULL DEFAULT 1 ); ALTER TABLE [_hardware] ADD CONSTRAINT [PK_hardware] PRIMARY KEY CLUSTERED ([hardware_key] ASC); ALTER TABLE [_hardware] ADD CONSTRAINT [hardware_id] UNIQUE NONCLUSTERED ([hardware_id] ASC); ALTER TABLE [_mushroom_stage] ADD CONSTRAINT [PK_mushroom_stage] PRIMARY KEY CLUSTERED ([stage_key] ASC); ALTER TABLE [_mushroom_stage] ADD CONSTRAINT [mushroom_stage] UNIQUE NONCLUSTERED ([stage_name] ASC); ALTER TABLE [_mushroom_type] ADD CONSTRAINT [PK_mushroom_type] PRIMARY KEY CLUSTERED ([type_key] ASC); ALTER TABLE [_permission_level] ADD CONSTRAINT [PK_permission_level] PRIMARY KEY CLUSTERED ([permission_key] ASC); ALTER TABLE [_sensor_entry] ADD CONSTRAINT [PK_sensor_entry] PRIMARY KEY CLUSTERED ([entry_key] ASC); ALTER TABLE [_specimen] ADD CONSTRAINT [PK_specimen] PRIMARY KEY CLUSTERED ([specimen_key] ASC); ALTER TABLE [_status_entry] ADD CONSTRAINT [PK_status_entry] PRIMARY KEY CLUSTERED ([entry_key] ASC); ALTER TABLE [_user] ADD CONSTRAINT [PK_user] PRIMARY KEY CLUSTERED ([user_key] ASC); ALTER TABLE [_user] ADD CONSTRAINT [username] UNIQUE NONCLUSTERED ([username] ASC); ALTER TABLE [_hardware] ADD CONSTRAINT [FK_hardware_user] FOREIGN KEY ([user_key]) REFERENCES [_user] ([user_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_sensor_entry] ADD CONSTRAINT [FK_sensor_entry_specimen] FOREIGN KEY ([specimen_key]) REFERENCES [_specimen] ([specimen_key]) ON DELETE Cascade ON UPDATE No Action; ALTER TABLE [_specimen] ADD CONSTRAINT [FK_specimen_hardware] FOREIGN KEY ([hardware_key]) REFERENCES [_hardware] ([hardware_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_specimen] ADD CONSTRAINT [FK_specimen_mushroom_type] FOREIGN KEY ([type_key]) REFERENCES [_mushroom_type] ([type_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_specimen] ADD CONSTRAINT [FK_specimen_user] FOREIGN KEY ([user_key]) REFERENCES [_user] ([user_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_status_entry] ADD CONSTRAINT [FK_status_entry_mushroom_stage] FOREIGN KEY ([stage_key]) REFERENCES [_mushroom_stage] ([stage_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_status_entry] ADD CONSTRAINT [FK_status_entry_specimen] FOREIGN KEY ([specimen_key]) REFERENCES [_specimen] ([specimen_key]) ON DELETE Cascade ON UPDATE No Action; ALTER TABLE [_user] ADD CONSTRAINT [FK_user_permission_level] FOREIGN KEY ([permission_key]) REFERENCES [_permission_level] ([permission_key]) ON DELETE Set Default ON UPDATE No Action;";
+                command.ExecuteNonQuery();
+                command.CommandText = "CREATE TRIGGER dbo._user_delete_cascade ON dbo._user INSTEAD OF DELETE AS BEGIN SET NOCOUNT ON; UPDATE dbo._specimen SET user_key = NULL WHERE user_key IN(SELECT user_key FROM DELETED); DELETE FROM dbo._hardware WHERE user_key IN (SELECT user_key FROM DELETED); DELETE FROM dbo._user WHERE user_key IN (SELECT user_key FROM DELETED); END";
+                command.ExecuteNonQuery();
+                command.CommandText = "CREATE TRIGGER dbo._hardware_delete_cascade ON dbo._hardware INSTEAD OF DELETE AS BEGIN SET NOCOUNT ON; UPDATE dbo._specimen SET hardware_key = NULL WHERE hardware_key IN(SELECT hardware_key FROM DELETED); DELETE FROM dbo._hardware WHERE hardware_key IN (SELECT hardware_key FROM DELETED); END";
+                command.ExecuteNonQuery();
+                command.CommandText = "INSERT INTO dbo._permission_level(permission_type) VALUES ('user'); INSERT INTO dbo._permission_level (permission_type) VALUES ('admin'); INSERT INTO dbo._permission_level (permission_type) VALUES ('developer'); INSERT INTO dbo._mushroom_stage (stage_name) VALUES ('Inoculation'); INSERT INTO dbo._mushroom_stage (stage_name) VALUES ('Casing'); INSERT INTO dbo._mushroom_stage (stage_name) VALUES ('Spawn Run'); INSERT INTO dbo._mushroom_stage (stage_name) VALUES ('Pinning'); INSERT INTO dbo._mushroom_stage (stage_name) VALUES ('Fruiting'); INSERT INTO dbo._mushroom_stage (stage_name) VALUES ('Dead'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Agaricus','bisporus'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Lentinula','edodes'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Auricularia','auricula-judae'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Volvariella','volvacea'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Flammulina','velutipes'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Tremella','fuciformis'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Hypsizygus','tessellatus'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Stropharia','rugosoannulata'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Cyclocybe','aegerita'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Hericium','erinaceus'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Phallus','indusiatus'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Boletus','edulis'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Calbovista','subsculpta'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Calvatia','gigantea'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Cantharellus','cibarius'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Craterellus','tubaeformis'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Clitocybe','nuda'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Cortinarius','caperatus'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Craterellus','cornucopioides'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Grifola','frondosa'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Gyromitra','esculenta'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Hericium','erinaceus'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Hydnum','repandum'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Lactarius','deliciosus'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Morchella','conica'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Morchella','esculenta'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Tricholoma','matsutake'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Tuber','aestivum'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Tuber','borchii'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Tuber','brumale'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Tuber','indicum'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Tuber','macrosporum'); INSERT INTO dbo._mushroom_type (mushroom_genus, mushroom_name) VALUES ('Tuber','mesentericum'); ";
+                command.ExecuteNonQuery();
+            }
+        }
+        
+        private static void AddNullableCondition(SqlCommand command, string parameterName, object value)
         {
             if (value == null)
                 command.CommandText = command.CommandText.Replace("= " + parameterName, "IS NULL");

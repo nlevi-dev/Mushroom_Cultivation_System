@@ -96,8 +96,8 @@ namespace SEP4_Data.Controllers
         }
         
         [HttpGet]
-        [Route("user/name")]
-        public IActionResult GetUser()
+        [Route("user/me")]
+        public IActionResult GetAuthenticatedUser()
         {
             try
             {
