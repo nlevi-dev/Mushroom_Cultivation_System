@@ -1,82 +1,119 @@
-/* Create Tables */
-USE MushroomDWH
+USE [MushroomDWH]
 GO
-
 
 CREATE SCHEMA [edw]
 GO
 
-CREATE TABLE edw.[bridge_entry]
+/* Create Tables */
+
+CREATE TABLE [edw].[dim_age]
 (
-    B_ID int IDENTITY(1,1) not null,
-	[bridge_key] int NOT NULL
+	[age_key] int NOT NULL,
+	[minute] int NOT NULL
 )
 GO
 
-CREATE TABLE edw.[dim_mushroom]
+CREATE TABLE [edw].[dim_date]
 (
-    M_ID int IDENTITY(1,1) not null,
-	[type_key] int NOT NULL,
-	[mushroom_name] nvarchar(32) NOT NULL,
-	[mushroom_genus] nvarchar(32) NULL
+	[date_key] int NOT NULL,
+	[year] int NOT NULL,
+	[season] nvarchar(6) NOT NULL,
+	[month] int NOT NULL,
+	[month_name] nvarchar(9) NOT NULL,
+	[week] int NOT NULL,
+	[day] int NOT NULL
 )
+GO
 
-
-CREATE TABLE edw.[dim_sensor_entry]
+CREATE TABLE [edw].[dim_specimen]
 (
-    Sensor_ID int IDENTITY(1,1) not null,
-	[entry_key] int NOT NULL,
-	[entry_time] datetime2 NOT NULL,
+	[specimen_key] int NOT NULL,
+	[mushroom_name] nvarchar(32) NOT NULL,
+	[mushroom_genus] nvarchar(32) NOT NULL,
+	[stage_name] nvarchar(32) NOT NULL,
+	[business_key] int NOT NULL
+)
+GO
+
+CREATE TABLE [edw].[dim_time]
+(
+	[time_key] int NOT NULL,
+	[time_of_day] nvarchar(16) NOT NULL,
+	[hour] int NOT NULL,
+	[minute] int NOT NULL
+)
+GO
+
+CREATE TABLE [edw].[fact_cultivation]
+(
 	[air_temperature] real NOT NULL,
 	[air_humidity] real NOT NULL,
 	[air_co2] real NOT NULL,
-	[desired_air_temperature] real NULL,
-	[desired_air_humidity] real NULL,
-	[desired_air_co2] real NULL,
-	[ambient_air_temperature] real NOT NULL,
-	[ambient_air_humidity] real NOT NULL,
-	[ambient_air_co2] real NOT NULL,
-	[specimen_key] int NOT NULL
-)
-
-
-CREATE TABLE edw.[dim_status_entry]
-(
-    Status_ID int IDENTITY(1,1) not null,
-	[entry_key] int NOT NULL,
-	[entry_time] datetime2 NOT NULL,
-	[mushroom_stage] nvarchar(32) NOT NULL,
-	[specimen_key] int NOT NULL
-)
-
-
-
-
-
-
-
-
-CREATE TABLE edw.[fact_specimen]
-(
-    B_ID int NOT NULL,
-    M_ID int NOT NULL,
-    Sensor_ID int NOT NULL,
-    Status_ID int NOT NULL,
-    Specimen_ID int IDENTITY(1,1) NOT NULL,
-	[specimen_key] int NOT NULL,
-	[active] bit NOT NULL,
-	[planted_date] date NOT NULL,
-	[discraded_date] date NOT NULL,
-	[type_key] int NOT NULL,
-	[bridge_key] int NOT NULL
+	[light_level] real NOT NULL,
+	[planted_date] int NOT NULL,
+	[planted_time] int NOT NULL,
+	[entry_date] int NOT NULL,
+	[entry_time] int NOT NULL,
+	[specimen] int NOT NULL,
+	[mushroom_age] int NOT NULL,
+	[stage_age] int NOT NULL,
+	[business_key] int NOT NULL
 )
 GO
 
-USE MushroomDWH
-GO 
-ALTER TABLE  edw.[bridge_entry] ADD CONSTRAINT PK_DimBridgeKey PRIMARY KEY (B_ID);
-ALTER TABLE  edw.[dim_mushroom] ADD CONSTRAINT PK_DimMushroomKey PRIMARY KEY (M_ID);
-ALTER TABLE  edw.[dim_sensor_entry] ADD CONSTRAINT PK_DimSensor_Entry_Key PRIMARY KEY (Sensor_ID);
-ALTER TABLE  edw.[dim_status_entry] ADD CONSTRAINT PK_DimStatus_Entry_Key PRIMARY KEY (Status_ID);
+/* Create Primary Keys, Indexes, Uniques, Checks */
 
+ALTER TABLE [edw].[dim_age] 
+ ADD CONSTRAINT [PK_dim_age]
+	PRIMARY KEY CLUSTERED ([age_key] ASC)
+GO
 
+ALTER TABLE [edw].[dim_date] 
+ ADD CONSTRAINT [PK_dim_date]
+	PRIMARY KEY CLUSTERED ([date_key] ASC)
+GO
+
+ALTER TABLE [edw].[dim_specimen] 
+ ADD CONSTRAINT [PK_dim_specimen]
+	PRIMARY KEY CLUSTERED ([specimen_key] ASC)
+GO
+
+ALTER TABLE [edw].[dim_time] 
+ ADD CONSTRAINT [PK_dim_time]
+	PRIMARY KEY CLUSTERED ([time_key] ASC)
+GO
+
+ALTER TABLE [edw].[fact_cultivation] 
+ ADD CONSTRAINT [PK_fact_cultivation]
+	PRIMARY KEY CLUSTERED ([planted_date] ASC,[planted_time] ASC,[entry_date] ASC,[entry_time] ASC,[specimen] ASC,[mushroom_age] ASC,[stage_age] ASC)
+GO
+
+/* Create Foreign Key Constraints */
+
+ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_dim_mushroom_age]
+	FOREIGN KEY ([mushroom_age]) REFERENCES [edw].[dim_age] ([age_key]) ON DELETE No Action ON UPDATE No Action
+GO
+
+ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_dim_specimen]
+	FOREIGN KEY ([specimen]) REFERENCES [edw].[dim_specimen] ([specimen_key]) ON DELETE No Action ON UPDATE No Action
+GO
+
+ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_dim_stage_age]
+	FOREIGN KEY ([stage_age]) REFERENCES [edw].[dim_age] ([age_key]) ON DELETE No Action ON UPDATE No Action
+GO
+
+ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_entry_date]
+	FOREIGN KEY ([entry_date]) REFERENCES [edw].[dim_date] ([date_key]) ON DELETE No Action ON UPDATE No Action
+GO
+
+ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_entry_time]
+	FOREIGN KEY ([entry_time]) REFERENCES [edw].[dim_time] ([time_key]) ON DELETE No Action ON UPDATE No Action
+GO
+
+ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_planted_date]
+	FOREIGN KEY ([planted_date]) REFERENCES [edw].[dim_date] ([date_key]) ON DELETE No Action ON UPDATE No Action
+GO
+
+ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_planted_time]
+	FOREIGN KEY ([planted_time]) REFERENCES [edw].[dim_time] ([time_key]) ON DELETE No Action ON UPDATE No Action
+GO

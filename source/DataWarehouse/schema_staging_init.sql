@@ -1,4 +1,4 @@
-USE MushroomDWH
+USE [MushroomDWH]
 GO
 
 CREATE SCHEMA [staging]
@@ -6,112 +6,116 @@ GO
 
 /* Create Tables */
 
-CREATE TABLE staging.[bridge_entry]
+CREATE TABLE [staging].[dim_age]
 (
-	[bridge_key] int NOT NULL
+	[age_key] int IDENTITY (1, 1) NOT NULL,
+	[minute] int NOT NULL
 )
 GO
 
-CREATE TABLE staging.[dim_mushroom]
+CREATE TABLE [staging].[dim_date]
 (
-	[type_key] int NOT NULL,
-	[mushroom_name] nvarchar(32) NOT NULL,
-	[mushroom_genus] nvarchar(32) NOT NULL
+	[date_key] int IDENTITY (1, 1) NOT NULL,
+	[year] int NOT NULL,
+	[season] nvarchar(6) NOT NULL,
+	[month] int NOT NULL,
+	[month_name] nvarchar(9) NOT NULL,
+	[week] int NOT NULL,
+	[day] int NOT NULL
 )
 GO
 
-CREATE TABLE staging.[dim_sensor_entry]
+CREATE TABLE [staging].[dim_specimen]
 (
-	[entry_key] int NOT NULL,
-	[entry_time] datetime2 NOT NULL,
+	[specimen_key] int IDENTITY (1, 1) NOT NULL,
+	[mushroom_name] nvarchar(32) NULL,
+	[mushroom_genus] nvarchar(32) NULL,
+	[stage_name] nvarchar(32) NULL,
+	[business_key] int NOT NULL
+)
+GO
+
+CREATE TABLE [staging].[dim_time]
+(
+	[time_key] int IDENTITY (1, 1) NOT NULL,
+	[time_of_day] nvarchar(16) NOT NULL,
+	[hour] int NOT NULL,
+	[minute] int NOT NULL
+)
+GO
+
+CREATE TABLE [staging].[fact_cultivation]
+(
 	[air_temperature] real NOT NULL,
 	[air_humidity] real NOT NULL,
 	[air_co2] real NOT NULL,
-	[desired_air_temperature] real NULL,
-	[desired_air_humidity] real NULL,
-	[desired_air_co2] real NULL,
-	[ambient_air_temperature] real NOT NULL,
-	[ambient_air_humidity] real NOT NULL,
-	[ambient_air_co2] real NOT NULL,
-	[specimen_key] int NOT NULL
+	[light_level] real NOT NULL,
+	[planted_date] int NOT NULL,
+	[planted_time] int NOT NULL,
+	[entry_date] int NOT NULL,
+	[entry_time] int NOT NULL,
+	[specimen] int NOT NULL,
+	[mushroom_age] int NOT NULL,
+	[stage_age] int NOT NULL,
+	[business_key] int NOT NULL,
+	[old_entry_time] datetime2(3) NOT NULL,
+	[old_planted_date] datetime2(3) NULL
 )
 GO
-
-CREATE TABLE staging.[dim_status_entry]
-(
-	[entry_key] int NOT NULL,
-	[entry_time] datetime2 NOT NULL,
-	[mushroom_stage] nvarchar(32) NOT NULL,
-	[specimen_key] int NOT NULL
-)
-GO
-
-CREATE TABLE staging.[fact_specimen]
-(
-	[specimen_key] int NOT NULL,
-	[active] bit NOT NULL,
-	[planted_date] date NOT NULL,
-	[discraded_date] date NOT NULL,
-	[type_key] int NOT NULL,
-	[bridge_key] int NOT NULL
-)
-GO
-
-CREATE TABLE staging.dim_calendar(
-date_key int not null,
-year int not null,
-month int not null,
-day int not null,
-season varchar(20),
-week_No int
-)
-
 
 /* Create Primary Keys, Indexes, Uniques, Checks */
 
-ALTER TABLE staging.[bridge_entry] 
- ADD CONSTRAINT [PK_bridge_entry]
-	PRIMARY KEY CLUSTERED ([bridge_key] ASC)
+ALTER TABLE [staging].[dim_age] 
+ ADD CONSTRAINT [PK_dim_age]
+	PRIMARY KEY CLUSTERED ([age_key] ASC)
 GO
 
-ALTER TABLE staging.[dim_mushroom] 
- ADD CONSTRAINT [PK_dim_mushroom]
-	PRIMARY KEY CLUSTERED ([type_key] ASC)
+ALTER TABLE [staging].[dim_date] 
+ ADD CONSTRAINT [PK_dim_date]
+	PRIMARY KEY CLUSTERED ([date_key] ASC)
 GO
 
-ALTER TABLE staging.[dim_sensor_entry] 
- ADD CONSTRAINT [PK_dim_sensor_entry]
-	PRIMARY KEY CLUSTERED ([entry_key] ASC)
-GO
-
-ALTER TABLE staging.[dim_status_entry] 
- ADD CONSTRAINT [PK_dim_status_entry]
-	PRIMARY KEY CLUSTERED ([entry_key] ASC)
-GO
-
-ALTER TABLE staging.[fact_specimen] 
- ADD CONSTRAINT [PK_fact_specimen]
+ALTER TABLE [staging].[dim_specimen] 
+ ADD CONSTRAINT [PK_dim_specimen]
 	PRIMARY KEY CLUSTERED ([specimen_key] ASC)
 GO
 
-ALTER TABLE staging.dim_calendar ADD CONSTRAINT PK_DimCalendar PRIMARY KEY (date_key);
+ALTER TABLE [staging].[dim_time] 
+ ADD CONSTRAINT [PK_dim_time]
+	PRIMARY KEY CLUSTERED ([time_key] ASC)
+GO
+
+ALTER TABLE [staging].[fact_cultivation] 
+ ADD CONSTRAINT [PK_fact_cultivation]
+	PRIMARY KEY CLUSTERED ([planted_date] ASC,[planted_time] ASC,[entry_date] ASC,[entry_time] ASC,[specimen] ASC,[mushroom_age] ASC,[stage_age] ASC)
 GO
 
 /* Create Foreign Key Constraints */
 
-ALTER TABLE staging.[dim_sensor_entry] ADD CONSTRAINT [FK_dim_sensor_entry_bridge_entry]
-	FOREIGN KEY ([specimen_key]) REFERENCES staging.[bridge_entry] ([bridge_key]) ON DELETE No Action ON UPDATE No Action
+ALTER TABLE [staging].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_dim_mushroom_age]
+	FOREIGN KEY ([mushroom_age]) REFERENCES [staging].[dim_age] ([age_key]) ON DELETE No Action ON UPDATE No Action
 GO
 
-ALTER TABLE staging.[dim_status_entry] ADD CONSTRAINT [FK_dim_status_entry_bridge_entry]
-	FOREIGN KEY ([specimen_key]) REFERENCES staging.[bridge_entry] ([bridge_key]) ON DELETE No Action ON UPDATE No Action
+ALTER TABLE [staging].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_dim_specimen]
+	FOREIGN KEY ([specimen]) REFERENCES [staging].[dim_specimen] ([specimen_key]) ON DELETE No Action ON UPDATE No Action
 GO
 
-ALTER TABLE staging.[fact_specimen] ADD CONSTRAINT [FK_fact_specimen_bridge_entry]
-	FOREIGN KEY ([bridge_key]) REFERENCES staging.[bridge_entry] ([bridge_key]) ON DELETE No Action ON UPDATE No Action
+ALTER TABLE [staging].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_dim_stage_age]
+	FOREIGN KEY ([stage_age]) REFERENCES [staging].[dim_age] ([age_key]) ON DELETE No Action ON UPDATE No Action
 GO
 
-ALTER TABLE staging.[fact_specimen] ADD CONSTRAINT [FK_fact_specimen_dim_mushroom]
-	FOREIGN KEY ([type_key]) REFERENCES staging.[dim_mushroom] ([type_key]) ON DELETE No Action ON UPDATE No Action
+ALTER TABLE [staging].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_entry_date]
+	FOREIGN KEY ([entry_date]) REFERENCES [staging].[dim_date] ([date_key]) ON DELETE No Action ON UPDATE No Action
 GO
 
+ALTER TABLE [staging].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_entry_time]
+	FOREIGN KEY ([entry_time]) REFERENCES [staging].[dim_time] ([time_key]) ON DELETE No Action ON UPDATE No Action
+GO
+
+ALTER TABLE [staging].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_planted_date]
+	FOREIGN KEY ([planted_date]) REFERENCES [staging].[dim_date] ([date_key]) ON DELETE No Action ON UPDATE No Action
+GO
+
+ALTER TABLE [staging].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_planted_time]
+	FOREIGN KEY ([planted_time]) REFERENCES [staging].[dim_time] ([time_key]) ON DELETE No Action ON UPDATE No Action
+GO
