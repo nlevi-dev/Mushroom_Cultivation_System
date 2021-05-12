@@ -16,6 +16,7 @@ namespace SEP4_Data.Data
         public void DeleteUser(int userKey);
         public void UpdateUsername(int userKey, string username);
         public void UpdateUserPassword(int userKey, string password);
+        public void UpdateUserToken(int userKey, string token);
         public int CreateHardware(Hardware hardware);
         public Hardware[] GetAllHardware(int userKey);
         public Hardware GetHardwareById(string hardwareId);

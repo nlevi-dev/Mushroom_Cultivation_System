@@ -77,7 +77,8 @@ CREATE TABLE [_user]
 	[user_key] int IDENTITY (1, 1) NOT NULL,
 	[username] nvarchar(32) NOT NULL,
 	[password_hashed] nvarchar(64) NOT NULL,
-	[permission_key] int NOT NULL DEFAULT 1
+	[permission_key] int NOT NULL DEFAULT 1,
+	[user_token] nvarchar(64) NULL
 );
 
 /* Create Primary Keys, Indexes, Uniques, Checks */
@@ -85,9 +86,6 @@ CREATE TABLE [_user]
 ALTER TABLE [_hardware] 
  ADD CONSTRAINT [PK_hardware]
 	PRIMARY KEY CLUSTERED ([hardware_key] ASC);
-
-ALTER TABLE [_hardware] 
- ADD CONSTRAINT [hardware_id] UNIQUE NONCLUSTERED ([hardware_id] ASC);
 
 ALTER TABLE [_mushroom_stage] 
  ADD CONSTRAINT [PK_mushroom_stage]

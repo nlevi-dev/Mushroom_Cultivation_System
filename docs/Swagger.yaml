@@ -249,6 +249,45 @@ paths:
           description: "Conflict, descriptive error message detailing if the password is too weak or invalid."
           schema:
             example: "the password is too short"
+  /user/key/{user_key}/usertoken:
+    patch:
+      summary: changes the user_token of the user with the given key
+      parameters:
+      - in: header
+        name: Authorization
+        required: true
+        type: string
+        description: Bearer Authorization
+      - name: user_key
+        in: path
+        description: key of the User
+        required: true
+        type: integer
+      - name: user_token
+        in: body
+        description: "new user_token\nUser Model could be used as it has this field, while the other fields can be ignored."
+        required: true
+        schema:
+          type: object
+          properties:
+            username:
+              type: string
+              example: asdf1234
+      produces:
+      - text/plain
+      responses:
+        200:
+          description: user_token Changed
+        401:
+          description: Unauthorized
+          schema:
+            example: Authorization failed!
+        403:
+          description: Forbidden
+          schema:
+            example: You don't have high enough security clearance for this operation!
+        404:
+          description: Not Found
   /hardware:
     post:
       summary: registers a new hardware
@@ -817,6 +856,10 @@ definitions:
         description: "Nullable.\nDefault value (in case of null) is \"user\"\nMust be \"user\", \"admin\", or \"developer\" (or possibly other future roles)"
         type: string
         example: User
+      user_token:
+        description: "Nullable\nstring, representing LoRaWAN user token"
+        type: string
+        example: asdf1234
   hardware:
     type: object
     properties:

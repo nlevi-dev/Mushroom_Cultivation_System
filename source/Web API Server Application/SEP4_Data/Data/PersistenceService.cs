@@ -140,10 +140,11 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "INSERT INTO _user (username, password_hashed, permission_key) VALUES (@name, @password, @permission)";
+                command.CommandText = "INSERT INTO _user (username, password_hashed, permission_key, user_token) VALUES (@name, @password, @permission, @token)";
                 command.Parameters.AddWithValue("@name", user.Name ?? throw new ConflictException("username can't be null"));
                 command.Parameters.AddWithValue("@password", user.Password ?? throw new ConflictException("password can't be null"));
                 command.Parameters.AddWithValue("@permission", (object) user.PermissionLevel ?? DateTime.Now.ToString("yyyy-MM-dd HH':'mm':'ss.fff"));
+                command.Parameters.AddWithValue("@token", (object) user.Token ?? DBNull.Value);
                 try {
                     command.ExecuteNonQuery();
                 } catch (SqlException e) {
@@ -169,7 +170,7 @@ namespace SEP4_Data.Data
                 connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText =
-                    "SELECT _user.user_key, _user.username, _user.permission_key, _permission_level.permission_type FROM _user LEFT JOIN _permission_level ON (_user.permission_key = _permission_level.permission_key) WHERE _user.username = @name";
+                    "SELECT _user.user_key, _user.username, _user.permission_key, _permission_level.permission_type, _user.user_token FROM _user LEFT JOIN _permission_level ON (_user.permission_key = _permission_level.permission_key) WHERE _user.username = @name";
                 command.Parameters.AddWithValue("@name", username ?? throw new ConflictException("username can't be null"));
                 var reader = command.ExecuteReader();
                 if (reader.Read())
@@ -181,6 +182,8 @@ namespace SEP4_Data.Data
                         PermissionLevel = reader.GetInt32(2),
                         Permission = reader.GetString(3)
                     };
+                    if (!reader.IsDBNull(4))
+                        temp.Token = reader.GetString(4);
                     reader.Close();
                     return temp;
                 }
@@ -196,7 +199,7 @@ namespace SEP4_Data.Data
                 connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText =
-                    "SELECT _user.user_key, _user.username, _user.permission_key, _permission_level.permission_type FROM _user LEFT JOIN _permission_level ON (_user.permission_key = _permission_level.permission_key) WHERE _user.user_key = @key";
+                    "SELECT _user.user_key, _user.username, _user.permission_key, _permission_level.permission_type, _user.user_token FROM _user LEFT JOIN _permission_level ON (_user.permission_key = _permission_level.permission_key) WHERE _user.user_key = @key";
                 command.Parameters.AddWithValue("@key", userKey);
                 var reader = command.ExecuteReader();
                 if (reader.Read())
@@ -208,6 +211,8 @@ namespace SEP4_Data.Data
                         PermissionLevel = reader.GetInt32(2),
                         Permission = reader.GetString(3)
                     };
+                    if (!reader.IsDBNull(4))
+                        temp.Token = reader.GetString(4);
                     reader.Close();
                     return temp;
                 }
@@ -286,6 +291,29 @@ namespace SEP4_Data.Data
                 command.CommandText = "UPDATE _user SET password_hashed = @pw WHERE user_key = @key";
                 command.Parameters.AddWithValue("@key", userKey);
                 command.Parameters.AddWithValue("@pw", password ?? throw new ConflictException("username can't be null"));
+                command.ExecuteNonQuery();
+            }
+        }
+        
+        public void UpdateUserToken(int userKey, string token)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT user_key FROM _user WHERE user_key = @key";
+                command.Parameters.AddWithValue("@key", userKey);
+                var reader = command.ExecuteReader();
+                if (!reader.Read())
+                {
+                    reader.Close();
+                    throw new NotFoundException("user \"" + userKey + "\" (key) not found");
+                }
+                reader.Close();
+                command = connection.CreateCommand();
+                command.CommandText = "UPDATE _user SET user_token = @token WHERE user_key = @key";
+                command.Parameters.AddWithValue("@key", userKey);
+                command.Parameters.AddWithValue("@token", (object) token ?? DBNull.Value);
                 command.ExecuteNonQuery();
             }
         }
@@ -904,7 +932,7 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "CREATE TABLE [_hardware]( [hardware_key] int IDENTITY (1, 1) NOT NULL, [hardware_id] nvarchar(16) NOT NULL, [desired_air_temperature] real NULL, [desired_air_humidity] real NULL, [desired_air_co2] real NULL, [desired_light_level] real NULL, [user_key] int NOT NULL); CREATE TABLE [_mushroom_stage] ( [stage_key] int IDENTITY (1, 1) NOT NULL, [stage_name] nvarchar(32) NOT NULL ); CREATE TABLE [_mushroom_type] ( [type_key] int IDENTITY (1, 1) NOT NULL, [mushroom_name] nvarchar(32) NOT NULL, [mushroom_genus] nvarchar(32) NOT NULL ); CREATE TABLE [_permission_level] ( [permission_key] int IDENTITY (1, 1) NOT NULL, [permission_type] nvarchar(16) NOT NULL ); CREATE TABLE [_sensor_entry] ( [entry_key] int IDENTITY (1, 1) NOT NULL, [entry_time] datetime2(3) NOT NULL DEFAULT GETDATE(), [air_temperature] real NOT NULL, [air_humidity] real NOT NULL, [air_co2] real NOT NULL, [light_level] real NOT NULL, [desired_air_temperature] real NULL, [desired_air_humidity] real NULL, [desired_air_co2] real NULL, [desired_light_level] real NULL, [specimen_key] int NULL ); CREATE TABLE [_specimen] ( [specimen_key] int IDENTITY (1, 1) NOT NULL, [planted_date] datetime2(3) NOT NULL DEFAULT GETDATE(), [discarded_date] datetime2(3) NULL, [specimen_name] nvarchar(32) NOT NULL, [specimen_description] nvarchar(256) NOT NULL, [desired_air_temperature] real NULL, [desired_air_humidity] real NULL, [desired_air_co2] real NULL, [desired_light_level] real NULL, [type_key] int NOT NULL, [hardware_key] int NULL, [user_key] int NULL ); CREATE TABLE [_status_entry] ( [entry_key] int IDENTITY (1, 1) NOT NULL, [entry_time] datetime2(3) NOT NULL DEFAULT GETDATE(), [stage_key] int NOT NULL, [specimen_key] int NOT NULL ); CREATE TABLE [_user] ( [user_key] int IDENTITY (1, 1) NOT NULL, [username] nvarchar(32) NOT NULL, [password_hashed] nvarchar(64) NOT NULL, [permission_key] int NOT NULL DEFAULT 1 ); ALTER TABLE [_hardware] ADD CONSTRAINT [PK_hardware] PRIMARY KEY CLUSTERED ([hardware_key] ASC); ALTER TABLE [_hardware] ADD CONSTRAINT [hardware_id] UNIQUE NONCLUSTERED ([hardware_id] ASC); ALTER TABLE [_mushroom_stage] ADD CONSTRAINT [PK_mushroom_stage] PRIMARY KEY CLUSTERED ([stage_key] ASC); ALTER TABLE [_mushroom_stage] ADD CONSTRAINT [mushroom_stage] UNIQUE NONCLUSTERED ([stage_name] ASC); ALTER TABLE [_mushroom_type] ADD CONSTRAINT [PK_mushroom_type] PRIMARY KEY CLUSTERED ([type_key] ASC); ALTER TABLE [_permission_level] ADD CONSTRAINT [PK_permission_level] PRIMARY KEY CLUSTERED ([permission_key] ASC); ALTER TABLE [_sensor_entry] ADD CONSTRAINT [PK_sensor_entry] PRIMARY KEY CLUSTERED ([entry_key] ASC); ALTER TABLE [_specimen] ADD CONSTRAINT [PK_specimen] PRIMARY KEY CLUSTERED ([specimen_key] ASC); ALTER TABLE [_status_entry] ADD CONSTRAINT [PK_status_entry] PRIMARY KEY CLUSTERED ([entry_key] ASC); ALTER TABLE [_user] ADD CONSTRAINT [PK_user] PRIMARY KEY CLUSTERED ([user_key] ASC); ALTER TABLE [_user] ADD CONSTRAINT [username] UNIQUE NONCLUSTERED ([username] ASC); ALTER TABLE [_hardware] ADD CONSTRAINT [FK_hardware_user] FOREIGN KEY ([user_key]) REFERENCES [_user] ([user_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_sensor_entry] ADD CONSTRAINT [FK_sensor_entry_specimen] FOREIGN KEY ([specimen_key]) REFERENCES [_specimen] ([specimen_key]) ON DELETE Cascade ON UPDATE No Action; ALTER TABLE [_specimen] ADD CONSTRAINT [FK_specimen_hardware] FOREIGN KEY ([hardware_key]) REFERENCES [_hardware] ([hardware_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_specimen] ADD CONSTRAINT [FK_specimen_mushroom_type] FOREIGN KEY ([type_key]) REFERENCES [_mushroom_type] ([type_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_specimen] ADD CONSTRAINT [FK_specimen_user] FOREIGN KEY ([user_key]) REFERENCES [_user] ([user_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_status_entry] ADD CONSTRAINT [FK_status_entry_mushroom_stage] FOREIGN KEY ([stage_key]) REFERENCES [_mushroom_stage] ([stage_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_status_entry] ADD CONSTRAINT [FK_status_entry_specimen] FOREIGN KEY ([specimen_key]) REFERENCES [_specimen] ([specimen_key]) ON DELETE Cascade ON UPDATE No Action; ALTER TABLE [_user] ADD CONSTRAINT [FK_user_permission_level] FOREIGN KEY ([permission_key]) REFERENCES [_permission_level] ([permission_key]) ON DELETE Set Default ON UPDATE No Action;";
+                command.CommandText = "CREATE TABLE [_hardware]( [hardware_key] int IDENTITY (1, 1) NOT NULL, [hardware_id] nvarchar(16) NOT NULL, [desired_air_temperature] real NULL, [desired_air_humidity] real NULL, [desired_air_co2] real NULL, [desired_light_level] real NULL, [user_key] int NOT NULL); CREATE TABLE [_mushroom_stage] ( [stage_key] int IDENTITY (1, 1) NOT NULL, [stage_name] nvarchar(32) NOT NULL ); CREATE TABLE [_mushroom_type] ( [type_key] int IDENTITY (1, 1) NOT NULL, [mushroom_name] nvarchar(32) NOT NULL, [mushroom_genus] nvarchar(32) NOT NULL ); CREATE TABLE [_permission_level] ( [permission_key] int IDENTITY (1, 1) NOT NULL, [permission_type] nvarchar(16) NOT NULL ); CREATE TABLE [_sensor_entry] ( [entry_key] int IDENTITY (1, 1) NOT NULL, [entry_time] datetime2(3) NOT NULL DEFAULT GETDATE(), [air_temperature] real NOT NULL, [air_humidity] real NOT NULL, [air_co2] real NOT NULL, [light_level] real NOT NULL, [desired_air_temperature] real NULL, [desired_air_humidity] real NULL, [desired_air_co2] real NULL, [desired_light_level] real NULL, [specimen_key] int NULL ); CREATE TABLE [_specimen] ( [specimen_key] int IDENTITY (1, 1) NOT NULL, [planted_date] datetime2(3) NOT NULL DEFAULT GETDATE(), [discarded_date] datetime2(3) NULL, [specimen_name] nvarchar(32) NOT NULL, [specimen_description] nvarchar(256) NOT NULL, [desired_air_temperature] real NULL, [desired_air_humidity] real NULL, [desired_air_co2] real NULL, [desired_light_level] real NULL, [type_key] int NOT NULL, [hardware_key] int NULL, [user_key] int NULL ); CREATE TABLE [_status_entry] ( [entry_key] int IDENTITY (1, 1) NOT NULL, [entry_time] datetime2(3) NOT NULL DEFAULT GETDATE(), [stage_key] int NOT NULL, [specimen_key] int NOT NULL ); CREATE TABLE [_user] ( [user_key] int IDENTITY (1, 1) NOT NULL, [username] nvarchar(32) NOT NULL, [password_hashed] nvarchar(64) NOT NULL, [permission_key] int NOT NULL DEFAULT 1, [user_token] nvarchar(64) NULL ); ALTER TABLE [_hardware] ADD CONSTRAINT [PK_hardware] PRIMARY KEY CLUSTERED ([hardware_key] ASC); ALTER TABLE [_mushroom_stage] ADD CONSTRAINT [PK_mushroom_stage] PRIMARY KEY CLUSTERED ([stage_key] ASC); ALTER TABLE [_mushroom_stage] ADD CONSTRAINT [mushroom_stage] UNIQUE NONCLUSTERED ([stage_name] ASC); ALTER TABLE [_mushroom_type] ADD CONSTRAINT [PK_mushroom_type] PRIMARY KEY CLUSTERED ([type_key] ASC); ALTER TABLE [_permission_level] ADD CONSTRAINT [PK_permission_level] PRIMARY KEY CLUSTERED ([permission_key] ASC); ALTER TABLE [_sensor_entry] ADD CONSTRAINT [PK_sensor_entry] PRIMARY KEY CLUSTERED ([entry_key] ASC); ALTER TABLE [_specimen] ADD CONSTRAINT [PK_specimen] PRIMARY KEY CLUSTERED ([specimen_key] ASC); ALTER TABLE [_status_entry] ADD CONSTRAINT [PK_status_entry] PRIMARY KEY CLUSTERED ([entry_key] ASC); ALTER TABLE [_user] ADD CONSTRAINT [PK_user] PRIMARY KEY CLUSTERED ([user_key] ASC); ALTER TABLE [_user] ADD CONSTRAINT [username] UNIQUE NONCLUSTERED ([username] ASC); ALTER TABLE [_hardware] ADD CONSTRAINT [FK_hardware_user] FOREIGN KEY ([user_key]) REFERENCES [_user] ([user_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_sensor_entry] ADD CONSTRAINT [FK_sensor_entry_specimen] FOREIGN KEY ([specimen_key]) REFERENCES [_specimen] ([specimen_key]) ON DELETE Cascade ON UPDATE No Action; ALTER TABLE [_specimen] ADD CONSTRAINT [FK_specimen_hardware] FOREIGN KEY ([hardware_key]) REFERENCES [_hardware] ([hardware_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_specimen] ADD CONSTRAINT [FK_specimen_mushroom_type] FOREIGN KEY ([type_key]) REFERENCES [_mushroom_type] ([type_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_specimen] ADD CONSTRAINT [FK_specimen_user] FOREIGN KEY ([user_key]) REFERENCES [_user] ([user_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_status_entry] ADD CONSTRAINT [FK_status_entry_mushroom_stage] FOREIGN KEY ([stage_key]) REFERENCES [_mushroom_stage] ([stage_key]) ON DELETE No Action ON UPDATE No Action; ALTER TABLE [_status_entry] ADD CONSTRAINT [FK_status_entry_specimen] FOREIGN KEY ([specimen_key]) REFERENCES [_specimen] ([specimen_key]) ON DELETE Cascade ON UPDATE No Action; ALTER TABLE [_user] ADD CONSTRAINT [FK_user_permission_level] FOREIGN KEY ([permission_key]) REFERENCES [_permission_level] ([permission_key]) ON DELETE Set Default ON UPDATE No Action;";
                 command.ExecuteNonQuery();
                 command.CommandText = "CREATE TRIGGER dbo._user_delete_cascade ON dbo._user INSTEAD OF DELETE AS BEGIN SET NOCOUNT ON; UPDATE dbo._specimen SET user_key = NULL WHERE user_key IN(SELECT user_key FROM DELETED); DELETE FROM dbo._hardware WHERE user_key IN (SELECT user_key FROM DELETED); DELETE FROM dbo._user WHERE user_key IN (SELECT user_key FROM DELETED); END";
                 command.ExecuteNonQuery();
