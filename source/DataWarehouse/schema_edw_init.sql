@@ -8,14 +8,14 @@ GO
 
 CREATE TABLE [edw].[dim_age]
 (
-	[age_key] int IDENTITY (1, 1) NOT NULL,
+	[age_ID] int IDENTITY (1, 1) NOT NULL,
 	[minute] int NOT NULL
 )
 GO
 
 CREATE TABLE [edw].[dim_date]
 (
-	[date_key] int IDENTITY (1, 1) NOT NULL,
+	[date_ID] int IDENTITY (1, 1) NOT NULL,
 	[year] int NOT NULL,
 	[season] nvarchar(6) NOT NULL,
 	[month] int NOT NULL,
@@ -27,17 +27,17 @@ GO
 
 CREATE TABLE [edw].[dim_specimen]
 (
-	[specimen_key] int IDENTITY (1, 1) NOT NULL,
+	[spe_ID] int IDENTITY (1, 1) NOT NULL,
 	[mushroom_name] nvarchar(32) NOT NULL,
 	[mushroom_genus] nvarchar(32) NOT NULL,
 	[stage_name] nvarchar(32) NOT NULL,
-	[business_key] int NOT NULL
+	[specimen_key] int NOT NULL
 )
 GO
 
 CREATE TABLE [edw].[dim_time]
 (
-	[time_key] int IDENTITY (1, 1) NOT NULL,
+	[time_ID] int IDENTITY (1, 1) NOT NULL,
 	[time_of_day] nvarchar(16) NOT NULL,
 	[hour] int NOT NULL,
 	[minute] int NOT NULL
@@ -64,22 +64,22 @@ GO
 
 ALTER TABLE [edw].[dim_age] 
  ADD CONSTRAINT [PK_dim_age]
-	PRIMARY KEY CLUSTERED ([age_key] ASC)
+	PRIMARY KEY CLUSTERED ([age_ID] ASC)
 GO
 
 ALTER TABLE [edw].[dim_date] 
  ADD CONSTRAINT [PK_dim_date]
-	PRIMARY KEY CLUSTERED ([date_key] ASC)
+	PRIMARY KEY CLUSTERED ([date_ID] ASC)
 GO
 
 ALTER TABLE [edw].[dim_specimen] 
  ADD CONSTRAINT [PK_dim_specimen]
-	PRIMARY KEY CLUSTERED ([specimen_key] ASC)
+	PRIMARY KEY CLUSTERED ([spe_ID] ASC)
 GO
 
 ALTER TABLE [edw].[dim_time] 
  ADD CONSTRAINT [PK_dim_time]
-	PRIMARY KEY CLUSTERED ([time_key] ASC)
+	PRIMARY KEY CLUSTERED ([time_ID] ASC)
 GO
 
 ALTER TABLE [edw].[fact_cultivation] 
@@ -90,29 +90,29 @@ GO
 /* Create Foreign Key Constraints */
 
 ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_dim_mushroom_age]
-	FOREIGN KEY ([mushroom_age]) REFERENCES [edw].[dim_age] ([age_key]) ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ([mushroom_age]) REFERENCES [edw].[dim_age] ([age_ID]) ON DELETE No Action ON UPDATE No Action
 GO
 
 ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_dim_specimen]
-	FOREIGN KEY ([specimen]) REFERENCES [edw].[dim_specimen] ([specimen_key]) ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ([specimen]) REFERENCES [edw].[dim_specimen] ([spe_ID]) ON DELETE No Action ON UPDATE No Action
 GO
 
 ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_dim_stage_age]
-	FOREIGN KEY ([stage_age]) REFERENCES [edw].[dim_age] ([age_key]) ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ([stage_age]) REFERENCES [edw].[dim_age] ([age_ID]) ON DELETE No Action ON UPDATE No Action
 GO
 
 ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_entry_date]
-	FOREIGN KEY ([entry_date]) REFERENCES [edw].[dim_date] ([date_key]) ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ([entry_date]) REFERENCES [edw].[dim_date] ([date_ID]) ON DELETE No Action ON UPDATE No Action
 GO
 
 ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_entry_time]
-	FOREIGN KEY ([entry_time]) REFERENCES [edw].[dim_time] ([time_key]) ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ([entry_time]) REFERENCES [edw].[dim_time] ([time_ID]) ON DELETE No Action ON UPDATE No Action
 GO
 
 ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_planted_date]
-	FOREIGN KEY ([planted_date]) REFERENCES [edw].[dim_date] ([date_key]) ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ([planted_date]) REFERENCES [edw].[dim_date] ([date_ID]) ON DELETE No Action ON UPDATE No Action
 GO
 
 ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_planted_time]
-	FOREIGN KEY ([planted_time]) REFERENCES [edw].[dim_time] ([time_key]) ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ([planted_time]) REFERENCES [edw].[dim_time] ([time_ID]) ON DELETE No Action ON UPDATE No Action
 GO
