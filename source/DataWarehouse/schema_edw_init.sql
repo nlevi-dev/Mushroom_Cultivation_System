@@ -8,14 +8,14 @@ GO
 
 CREATE TABLE [edw].[dim_age]
 (
-	[age_key] int NOT NULL,
+	[age_key] int IDENTITY (1, 1) NOT NULL,
 	[minute] int NOT NULL
 )
 GO
 
 CREATE TABLE [edw].[dim_date]
 (
-	[date_key] int NOT NULL,
+	[date_key] int IDENTITY (1, 1) NOT NULL,
 	[year] int NOT NULL,
 	[season] nvarchar(6) NOT NULL,
 	[month] int NOT NULL,
@@ -27,7 +27,7 @@ GO
 
 CREATE TABLE [edw].[dim_specimen]
 (
-	[specimen_key] int NOT NULL,
+	[specimen_key] int IDENTITY (1, 1) NOT NULL,
 	[mushroom_name] nvarchar(32) NOT NULL,
 	[mushroom_genus] nvarchar(32) NOT NULL,
 	[stage_name] nvarchar(32) NOT NULL,
@@ -37,7 +37,7 @@ GO
 
 CREATE TABLE [edw].[dim_time]
 (
-	[time_key] int NOT NULL,
+	[time_key] int IDENTITY (1, 1) NOT NULL,
 	[time_of_day] nvarchar(16) NOT NULL,
 	[hour] int NOT NULL,
 	[minute] int NOT NULL
@@ -56,8 +56,7 @@ CREATE TABLE [edw].[fact_cultivation]
 	[entry_time] int NOT NULL,
 	[specimen] int NOT NULL,
 	[mushroom_age] int NOT NULL,
-	[stage_age] int NOT NULL,
-	[business_key] int NOT NULL
+	[stage_age] int NOT NULL
 )
 GO
 
