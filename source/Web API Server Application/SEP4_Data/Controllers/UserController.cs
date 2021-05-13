@@ -218,6 +218,41 @@ namespace SEP4_Data.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+        
+        [HttpPatch]
+        [Route("user/key/{userKey}/usertoken")]
+        public IActionResult PatchUsertoken([FromRoute] int userKey, [FromBody] User user)
+        {
+            try
+            {
+                if (HttpContext.Items["User"] == null)
+                    throw new UnauthorizedException("Authorization failed!");
+                if (userKey != (int) ((User)HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
+                    throw new ForbiddenException("You don't have high enough clearance for this operation!");
+                _persistence.UpdateUserToken(userKey, user.Token);
+                return StatusCode(200);
+            }
+            catch (UnauthorizedException e)
+            {
+                return StatusCode(401, e.Message);
+            }
+            catch (ForbiddenException e)
+            {
+                return StatusCode(403, e.Message);
+            }
+            catch (NotFoundException e)
+            {
+                return StatusCode(404, e.Message);
+            }
+            catch (ConflictException e)
+            {
+                return StatusCode(409, e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
 
         private static void CheckPassword(string password)
         {

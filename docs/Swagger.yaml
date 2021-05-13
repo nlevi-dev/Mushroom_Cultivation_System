@@ -270,7 +270,7 @@ paths:
         schema:
           type: object
           properties:
-            username:
+            user_token:
               type: string
               example: asdf1234
       produces:

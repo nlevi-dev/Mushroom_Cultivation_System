@@ -520,8 +520,197 @@ namespace Test
             Assert.AreEqual(specimen, PersistenceService.GetSpecimen(3));
             Assert.Throws(typeof(NotFoundException), () => PersistenceService.GetSpecimen(4));
         }
+
+        [Test, Order(12)]
+        public void UpdateSpecimen()
+        {
+            Specimen specimen = new Specimen
+            {
+                Key = 1,
+                PlantedUnix = 1492992000000,
+                Name = "updated 1",
+                MushroomType = "Agaricus - bisporus",
+                TypeKey = 1,
+                Description = "dsc1",
+                DesiredAirTemperature = 1.1f,
+                DesiredAirHumidity = 1.2f,
+                DesiredAirCo2 = null,
+                DesiredLightLevel = 1.4f,
+                UserKey = 1
+            };
+            PersistenceService.UpdateSpecimen(specimen);
+            Assert.AreEqual(specimen, PersistenceService.GetSpecimen(1));
+            Assert.Throws(typeof(NotFoundException), () => PersistenceService.UpdateSpecimen(new Specimen { Key = 4 }));
+            specimen = new Specimen
+            {
+                Key = 1,
+                PlantedUnix = 1492992000000,
+                Name = "spe1",
+                MushroomType = "Agaricus - bisporus",
+                TypeKey = 1,
+                Description = "dsc1",
+                DesiredAirTemperature = 1.1f,
+                DesiredAirHumidity = 1.2f,
+                DesiredAirCo2 = 1.3f,
+                DesiredLightLevel = 1.4f,
+                UserKey = 1
+            };
+            PersistenceService.UpdateSpecimen(specimen);
+        }
+
+        [Test, Order(13)]
+        public void DiscardSpecimen()
+        {
+            Specimen specimen = new Specimen
+            {
+                PlantedUnix = 1492992000000,
+                Name = "spe4",
+                MushroomType = "Agaricus - bisporus",
+                TypeKey = 1,
+                Description = "dsc1",
+                DesiredAirTemperature = 4.1f,
+                DesiredAirHumidity = 4.2f,
+                DesiredAirCo2 = 4.3f,
+                DesiredLightLevel = 4.4f,
+                UserKey = 1
+            };
+            int key = PersistenceService.CreateSpecimen(specimen);
+            PersistenceService.GetSpecimen(key);
+            PersistenceService.DiscardSpecimen(key);
+            Assert.IsNull(PersistenceService.GetSpecimen(key).UserKey);
+        }
         
-        
+        [Test, Order(13)]
+        public void CreateSensorEntry()
+        {
+            SensorEntry sensorEntry = new SensorEntry
+            {
+                EntryTimeUnix = 1492992000000,
+                AirTemperature = 21.7f,
+                AirHumidity = 1.2f,
+                AirCo2 = 1.2f,
+                LightLevel = 1.2f,
+                DesiredAirTemperature = 21.7f,
+                DesiredAirHumidity = 1.2f,
+                DesiredAirCo2 = 1.2f,
+                DesiredLightLevel = 1.2f,
+                Specimen = 1
+            };
+            Assert.AreEqual(1,PersistenceService.CreateSensorEntry(sensorEntry));
+            sensorEntry.Specimen = 2;
+            Assert.AreEqual(2,PersistenceService.CreateSensorEntry(sensorEntry));
+            sensorEntry.EntryTimeUnix = 2492992000000;
+            Assert.AreEqual(3,PersistenceService.CreateSensorEntry(sensorEntry));
+        }
+
+        [Test, Order(14)]
+        public void GetSensorHistory()
+        {
+            Assert.AreEqual(1,PersistenceService.GetSensorHistory(1, null, null).Length);
+            Assert.AreEqual(2,PersistenceService.GetSensorHistory(2, null, null).Length);
+            Assert.AreEqual(1,PersistenceService.GetSensorHistory(2, 1592992000000, null).Length);
+            Assert.AreEqual(1,PersistenceService.GetSensorHistory(2, null, 1592992000000).Length);
+            SensorEntry sensorEntry = new SensorEntry
+            {
+                Key = 3,
+                EntryTimeUnix = 2492992000000,
+                AirTemperature = 21.7f,
+                AirHumidity = 1.2f,
+                AirCo2 = 1.2f,
+                LightLevel = 1.2f,
+                DesiredAirTemperature = 21.7f,
+                DesiredAirHumidity = 1.2f,
+                DesiredAirCo2 = 1.2f,
+                DesiredLightLevel = 1.2f,
+                Specimen = 2
+            };
+            Assert.AreEqual(sensorEntry,PersistenceService.GetSensorHistory(2, 1592992000000, null)[0]);
+            Assert.AreEqual(0, PersistenceService.GetSensorHistory(5, null, null).Length);
+        }
+
+        [Test, Order(13)]
+        public void CreateStatusEntry()
+        {
+            StatusEntry statusEntry = new StatusEntry
+            {
+                EntryTimeUnix = 1492992000000,
+                Stage = "Dead",
+                StageKey = PersistenceService.GetMushroomStageKey("Dead"),
+                Specimen = 1
+            };
+            Assert.AreEqual(1,PersistenceService.CreateStatusEntry(statusEntry));
+            statusEntry.Specimen = 2;
+            Assert.AreEqual(2,PersistenceService.CreateStatusEntry(statusEntry));
+            statusEntry.EntryTimeUnix = 2492992000000;
+            Assert.AreEqual(3,PersistenceService.CreateStatusEntry(statusEntry));
+        }
+
+        [Test, Order(14)]
+        public void GetAllStatusEntries()
+        {
+            Assert.AreEqual(1,PersistenceService.GetAllStatusEntries(1).Length);
+            Assert.AreEqual(2,PersistenceService.GetAllStatusEntries(2).Length);
+            StatusEntry statusEntry = new StatusEntry
+            {
+                Key = 1,
+                EntryTimeUnix = 1492992000000,
+                Stage = "Dead",
+                StageKey = PersistenceService.GetMushroomStageKey("Dead"),
+                Specimen = 1
+            };
+            Assert.AreEqual(statusEntry,PersistenceService.GetAllStatusEntries(1)[0]);
+            Assert.AreEqual(0,PersistenceService.GetAllStatusEntries(5).Length);
+        }
+
+        [Test, Order(14)]
+        public void GetStatusEntry()
+        {
+            StatusEntry statusEntry = new StatusEntry
+            {
+                Key = 1,
+                EntryTimeUnix = 1492992000000,
+                Stage = "Dead",
+                StageKey = PersistenceService.GetMushroomStageKey("Dead"),
+                Specimen = 1
+            };
+            Assert.AreEqual(statusEntry,PersistenceService.GetStatusEntry(1));
+            Assert.Throws(typeof(NotFoundException), () => PersistenceService.GetStatusEntry(4));
+        }
+
+        [Test, Order(15)]
+        public void UpdateStatusEntry()
+        {
+            StatusEntry statusEntry = new StatusEntry
+            {
+                Key = 1,
+                EntryTimeUnix = 2492992000000,
+                Stage = "Dead",
+                StageKey = PersistenceService.GetMushroomStageKey("Dead"),
+                Specimen = 1
+            };
+            PersistenceService.UpdateStatusEntry(statusEntry);
+            Assert.AreEqual(statusEntry,PersistenceService.GetStatusEntry(1));
+            statusEntry.EntryTimeUnix = 1492992000000;
+            PersistenceService.UpdateStatusEntry(statusEntry);
+            Assert.Throws(typeof(NotFoundException), () => PersistenceService.UpdateStatusEntry(new StatusEntry { Key = 4 }));
+        }
+
+        [Test, Order(16)]
+        public void DeleteStatusEntry()
+        {
+            StatusEntry statusEntry = new StatusEntry
+            {
+                EntryTimeUnix = 1492992000000,
+                Stage = "Dead",
+                StageKey = PersistenceService.GetMushroomStageKey("Dead"),
+                Specimen = 1
+            };
+            int key = PersistenceService.CreateStatusEntry(statusEntry);
+            PersistenceService.GetStatusEntry(key);
+            PersistenceService.DeleteStatusEntry(key);
+            Assert.Throws(typeof(NotFoundException), () => PersistenceService.GetStatusEntry(key));
+            Assert.Throws(typeof(NotFoundException), () => PersistenceService.DeleteStatusEntry(key));
+        }
     }
 
     public class Config : IConfigService

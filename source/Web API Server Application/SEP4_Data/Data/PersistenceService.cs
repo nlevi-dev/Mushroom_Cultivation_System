@@ -624,7 +624,6 @@ namespace SEP4_Data.Data
                     Name = reader.GetString(2),
                     Description = reader.GetString(3),
                     TypeKey = reader.GetInt32(8),
-                    UserKey = reader.GetInt32(10),
                     MushroomType = reader.GetString(12) + " - " + reader.GetString(13)
                 };
                 if (!reader.IsDBNull(4))
@@ -637,6 +636,8 @@ namespace SEP4_Data.Data
                     item.DesiredLightLevel = reader.GetFloat(7);
                 if (!reader.IsDBNull(9))
                     item.HardwareKey = reader.GetInt32(9);
+                if (!reader.IsDBNull(10))
+                    item.UserKey = reader.GetInt32(10);
                 if (!reader.IsDBNull(11))
                     item.Hardware = reader.GetString(11);
                 reader.Close();
@@ -720,7 +721,7 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "INSERT INTO _sensor_entry (entry_time, air_temperature, air_humidity, air_co2, light_level, desired_air_temperature, desired_air_humidity, desired_air_co2, desired_light_level, specimen_key) VALUES (@date, @airtemp, @airhum, @airc02, @light, @desairtemp, @desairhum, @desairc02, @deslight, @specimen)";
+                command.CommandText = "INSERT INTO _sensor_entry (entry_time, air_temperature, air_humidity, air_co2, light_level, desired_air_temperature, desired_air_humidity, desired_air_co2, desired_light_level, specimen_key) VALUES (@date, @airtemp, @airhum, @airco2, @light, @desairtemp, @desairhum, @desairco2, @deslight, @specimen)";
                 command.Parameters.AddWithValue("@date", sensorEntry.EntryTimeTsql ?? DateTime.Now.ToString("yyyy-MM-dd HH':'mm':'ss.fff"));
                 command.Parameters.AddWithValue("@airtemp", sensorEntry.AirTemperature ?? throw new ConflictException("air temperature can't be null"));
                 command.Parameters.AddWithValue("@airhum", sensorEntry.AirHumidity ?? throw new ConflictException("air humidity can't be null"));
