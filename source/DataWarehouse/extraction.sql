@@ -8,7 +8,8 @@ insert into staging.dim_specimen(
 specimen_key,
 mushroom_name,
 mushroom_genus,
-stage_name
+stage_name,
+entry_time
 )
 select a.specimen_key,b.mushroom_name,b.mushroom_genus,d.stage_name 
 from MushroomPP.dbo._specimen as a
@@ -33,10 +34,6 @@ b.air_temperature,
 b.air_humidity,
 b.air_co2,
 b.light_level,
-a.specimen_name
+a.specimen_key
 from MushroomPP.dbo._specimen as a
 inner join MushroomPP.dbo._sensor_entry as b on a.specimen_key=b.specimen_key
-
-
-
-

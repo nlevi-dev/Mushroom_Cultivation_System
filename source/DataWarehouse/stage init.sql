@@ -1,3 +1,4 @@
+
 USE [MushroomDWH]
 GO
 
@@ -11,7 +12,8 @@ CREATE TABLE [staging].[dim_specimen]
 	[specimen_key] int NOT NULL,
 	[mushroom_name] nvarchar(32) NULL,
 	[mushroom_genus] nvarchar(32) NULL,
-	[stage_name] nvarchar(32) NULL
+	[stage_name] nvarchar(32) NOT NULL,
+	[entry_time] datetime2 NOT NULL
 )
 GO
 
@@ -30,8 +32,8 @@ GO
 /* Create Primary Keys, Indexes, Uniques, Checks */
 
 ALTER TABLE [staging].[dim_specimen] 
- ADD CONSTRAINT [PK_dim_specimen]
-	PRIMARY KEY CLUSTERED ([specimen_key] ASC)
+    ADD CONSTRAINT [PK_dim_specimen] 
+	PRIMARY KEY ([specimen_key],[entry_time])
 GO
 
 ALTER TABLE [staging].[fact_cultivation] 

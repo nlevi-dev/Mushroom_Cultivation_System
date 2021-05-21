@@ -1,4 +1,4 @@
- USE MushroomDWH
+USE MushroomDWH
 go
 
 /*---load----*/
@@ -7,10 +7,12 @@ insert into edw.dim_specimen(
 mushroom_name,
 mushroom_genus,
 stage_name,
-specimen_key
+specimen_key,
+entry_time
 )
-select mushroom_name,mushroom_genus,stage_name,specimen_key
-from staging.dim_specimen
+select a.mushroom_name,a.mushroom_genus,a.stage_name,a.specimen_key,b.entry_time
+from staging.dim_specimen as a inner join staging.fact_cultivation as b 
+on a.specimen_key = b.specimen
 
 
 /* ---- dim date ---- */
@@ -82,14 +84,19 @@ end
 
 declare @timeStamp1 as datetime2
 declare @planted_date as datetime2
+declare @incrementMinute as datetime2
 select @timeStamp1 =  planted_date from staging.fact_cultivation
 select @planted_date =  planted_date from staging.fact_cultivation
-while @timeStamp1 < DATEADD(MINUTE,525949,@timeStamp1)
+select @incrementMinute =  planted_date from staging.fact_cultivation
+set @incrementMinute=DATEADD(MINUTE,259200,@incrementMinute)
+while @timeStamp1 < @incrementMinute
+begin
 insert into edw.dim_age(
 minute
 )
-select DATEDIFF(MINUTE, @planted_date, @timeStamp1 );
-
+select DATEDIFF(MINUTE, @planted_date, @timeStamp1) AS TARGET
+SET @timeStamp1 = DATEADD(MINUTE,1,@timeStamp1)
+end
 
 
 /*--- dim fact table ---*/
@@ -126,5 +133,3 @@ from  staging.dim_specimen as a inner join staging.fact_cultivation as b
 on a.specimen_key = b.specimen
 left join MushroomPP.dbo._status_entry as c
 on a.specimen_key = c.specimen_key
-
-
