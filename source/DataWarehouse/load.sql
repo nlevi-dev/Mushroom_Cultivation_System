@@ -7,13 +7,10 @@ insert into edw.dim_specimen(
 mushroom_name,
 mushroom_genus,
 stage_name,
-specimen_key,
-entry_time
+specimen_key
 )
-select a.mushroom_name,a.mushroom_genus,a.stage_name,a.specimen_key,b.entry_time
-from staging.dim_specimen as a inner join staging.fact_cultivation as b 
-on a.specimen_key = b.specimen
-
+select a.mushroom_name,a.mushroom_genus,a.stage_name,a.specimen_key
+from staging.dim_specimen as a
 
 /* ---- dim date ---- */
 
@@ -116,7 +113,8 @@ entry_date,
 entry_time,
 specimen,
 mushroom_age,
-stage_age
+stage_age,
+stage_name
 )
 select air_temperature,
 air_humidity,
@@ -128,7 +126,8 @@ light_level,
 (select convert(time,@entry_time_all)) as entry_time,
 specimen,
 (select DATEDIFF(MINUTE,planted_date,GETDATE())) as mushroom_age,
-(select DATEDIFF(MINUTE,c.entry_time,GETDATE())) as stage_age
+(select DATEDIFF(MINUTE,c.entry_time,GETDATE())) as stage_age,
+b.stage_name
 from  staging.dim_specimen as a inner join staging.fact_cultivation as b
 on a.specimen_key = b.specimen
 left join MushroomPP.dbo._status_entry as c

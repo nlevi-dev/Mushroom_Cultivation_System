@@ -17,8 +17,8 @@ a.day= day(edw.fact_cultivation.planted_date)
 UPDATE [edw].[fact_cultivation] 
 set PT_ID = (
 select time_ID from edw.dim_time as a
-where a.hour = datepart(hour,edw.fact_cultivation.planted_date) and
-a.minute = datepart(minute,edw.fact_cultivation.planted_date)
+where a.hour = datepart(hour,edw.fact_cultivation.planted_time) and
+a.minute = datepart(minute,edw.fact_cultivation.planted_time)
 )
 
 UPDATE [edw].[fact_cultivation] 
@@ -32,8 +32,8 @@ a.day= day(edw.fact_cultivation.entry_date)
 UPDATE [edw].[fact_cultivation] 
 set ET_ID = (
 select time_ID from edw.dim_time as a
-where a.hour = datepart(hour,edw.fact_cultivation.entry_date) and
-a.minute = datepart(minute,edw.fact_cultivation.entry_date)
+where a.hour = datepart(hour,edw.fact_cultivation.entry_time) and
+a.minute = datepart(minute,edw.fact_cultivation.entry_time)
 )
 
 UPDATE [edw].[fact_cultivation] 
