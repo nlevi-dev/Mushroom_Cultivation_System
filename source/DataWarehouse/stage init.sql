@@ -25,7 +25,8 @@ CREATE TABLE [staging].[fact_cultivation]
 	[air_humidity] real NOT NULL,
 	[air_co2] real NOT NULL,
 	[light_level] real NOT NULL,
-	[specimen] int NOT NULL
+	[specimen] int NOT NULL,
+	[stage_name] nvarchar(32) NOT NULL
 )
 GO
 
@@ -46,3 +47,4 @@ GO
 ALTER TABLE [staging].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_dim_specimen]
 	FOREIGN KEY ([specimen]) REFERENCES [staging].[dim_specimen] ([specimen_key]) ON DELETE No Action ON UPDATE No Action
 GO
+

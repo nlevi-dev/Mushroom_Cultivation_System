@@ -3,7 +3,7 @@
 UPDATE [edw].[fact_cultivation] 
 set SPE_ID = (
 select spe_ID from edw.dim_specimen as a
-where a.specimen_key= edw.fact_cultivation.specimen
+where a.specimen_key = edw.fact_cultivation.specimen and a.stage_name = edw.fact_cultivation.stage_name
 )
 
 UPDATE [edw].[fact_cultivation] 

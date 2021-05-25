@@ -63,7 +63,8 @@ CREATE TABLE [edw].[fact_cultivation]
 	[entry_time] time NOT NULL,
 	[specimen] int NOT NULL,
 	[mushroom_age] int NOT NULL,
-	[stage_age] int NOT NULL
+	[stage_age] int NOT NULL,
+	[stage_name] nvarchar(32) NOT NULL
 )
 GO
 
