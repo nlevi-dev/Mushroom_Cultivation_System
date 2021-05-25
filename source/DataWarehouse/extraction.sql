@@ -53,3 +53,6 @@ where b.entry_time >= c.entry_time
 group by b.specimen_key, b.entry_time
 )
 as h on h.entry_time=b.entry_time and h.stage_time=c.entry_time and h.specimen_key=b.specimen_key
+order by b.entry_time asc
+
+

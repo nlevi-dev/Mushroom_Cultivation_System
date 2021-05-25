@@ -1,4 +1,6 @@
 /* update fact table add keys */
+USE MushroomDWH
+go
 
 UPDATE [edw].[fact_cultivation] 
 set SPE_ID = (
@@ -11,22 +13,23 @@ set PD_ID = (
 select date_ID from edw.dim_date as a
 where a.year = year(edw.fact_cultivation.planted_date) and
 a.month = month(edw.fact_cultivation.planted_date) and 
-a.day= day(edw.fact_cultivation.planted_date)
+a.day_of_month= day(edw.fact_cultivation.planted_date)
 )
+
 
 UPDATE [edw].[fact_cultivation] 
 set PT_ID = (
-select time_ID from edw.dim_time as a
-where a.hour = datepart(hour,edw.fact_cultivation.planted_time) and
-a.minute = datepart(minute,edw.fact_cultivation.planted_time)
+select time_ID from edw.dim_time  as a
+where a.hour = datepart(hour,[edw].[fact_cultivation].[planted_time] ) and
+a.minute = datepart(minute,[edw].[fact_cultivation].[planted_time])
 )
 
 UPDATE [edw].[fact_cultivation] 
 set ED_ID = (
-select date_ID from edw.dim_date as a
+select top 1 date_ID from edw.dim_date as a
 where a.year = year(edw.fact_cultivation.entry_date) and
 a.month = month(edw.fact_cultivation.entry_date) and 
-a.day= day(edw.fact_cultivation.entry_date)
+a.day_of_month = day(edw.fact_cultivation.entry_date)
 )
 
 UPDATE [edw].[fact_cultivation] 

@@ -20,8 +20,9 @@ CREATE TABLE [edw].[dim_date]
 	[season] nvarchar(6) NOT NULL,
 	[month] int NOT NULL,
 	[month_name] nvarchar(9) NOT NULL,
+	[day_of_month] int NOT NULL,
 	[week] int NOT NULL,
-	[day] int NOT NULL
+	[day_of_week] int NOT NULL
 )
 GO
 
