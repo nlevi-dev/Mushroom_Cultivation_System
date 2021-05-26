@@ -8,15 +8,13 @@ TRUNCATE TABLE staging.dim_specimen;
 GO
 
 /*нн-нн------extraction--------*/
-
 insert into staging.dim_specimen(
 specimen_key,
 mushroom_name,
 mushroom_genus,
-stage_name,
-entry_time
+stage_name
 )
-select a.specimen_key,b.mushroom_name,b.mushroom_genus,d.stage_name,c.entry_time
+select a.specimen_key,b.mushroom_name,b.mushroom_genus,d.stage_name
 from MushroomPP.dbo._specimen as a
 inner join MushroomPP.dbo._mushroom_type as b on a.type_key=b.type_key
 inner join MushroomPP.dbo._status_entry as c on a.specimen_key=c.specimen_key
