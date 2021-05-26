@@ -16,7 +16,6 @@ a.month = month(edw.fact_cultivation.planted_date) and
 a.day_of_month= day(edw.fact_cultivation.planted_date)
 )
 
-
 UPDATE [edw].[fact_cultivation] 
 set PT_ID = (
 select time_ID from edw.dim_time  as a
@@ -50,7 +49,6 @@ set STA_ID = (
 select age_ID from edw.dim_age as a
 where a.minute= edw.fact_cultivation.stage_age
 )
-
 
 /* Create Foreign Key Constraints */
 
@@ -102,10 +100,6 @@ GO
 ALTER TABLE [edw].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_planted_time]
 	FOREIGN KEY ([PT_ID]) REFERENCES [edw].[dim_time] ([time_ID]) ON DELETE No Action ON UPDATE No Action
 GO
-
-
-
-
 
 /*---- ADD KEYS TO FACT TABLE -----*/
 
