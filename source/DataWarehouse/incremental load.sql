@@ -11,7 +11,7 @@ specimen_key
 )
 select a.mushroom_name,a.mushroom_genus,a.stage_name,a.specimen_key
 from staging.dim_specimen as a
-WHERE NOT EXISTS (SELECT stage_name, specimen_key FROM edw.dim_specimen)
+where concat(specimen_key, stage_name) not in (select concat(specimen_key, stage_name) from edw.dim_specimen)
 
 /*--- dim fact table ---*/
 
@@ -42,6 +42,8 @@ a.specimen,
 (select DATEDIFF(MINUTE,b.entry_time,a.entry_time)) as stage_age,
 a.stage_name
 from  staging.fact_cultivation as a 
-left join staging.dim_specimen as b on a.specimen = b.specimen_key and a.stage_name = b.stage_name
+left join 
+staging.dim_specimen as b 
+on a.specimen = b.specimen_key and a.stage_name = b.stage_name
 where a.entry_time > b.entry_time 
-and NOT EXISTS (SELECT specimen_key, entry_time FROM edw.fact_cultivation)
+and concat(specimen_key, a.entry_time) not in (select concat(specimen_key, entry_time) from edw.fact_cultivation)
