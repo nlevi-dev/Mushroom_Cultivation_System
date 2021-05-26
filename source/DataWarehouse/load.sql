@@ -7,9 +7,10 @@ insert into edw.dim_specimen(
 mushroom_name,
 mushroom_genus,
 stage_name,
-specimen_key
+specimen_key,
+entry_time
 )
-select a.mushroom_name,a.mushroom_genus,a.stage_name,a.specimen_key
+select a.mushroom_name,a.mushroom_genus,a.stage_name,a.specimen_key,a.entry_time
 from staging.dim_specimen as a
 
 /* ---- dim date ---- */

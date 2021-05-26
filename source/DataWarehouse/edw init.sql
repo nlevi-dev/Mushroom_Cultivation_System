@@ -32,7 +32,8 @@ CREATE TABLE [edw].[dim_specimen]
 	[mushroom_name] nvarchar(32) NOT NULL,
 	[mushroom_genus] nvarchar(32) NOT NULL,
 	[stage_name] nvarchar(32) NOT NULL,
-	[specimen_key] int NOT NULL
+	[specimen_key] int NOT NULL,
+	[entry_time] datetime2(3) NOT NULL
 )
 GO
 
