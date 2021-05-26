@@ -1,8 +1,13 @@
 USE [MushroomDWH]
 GO
 
-/*нн-нн------extraction--------*/
+/*нн-нн------wipe staging--------*/
 
+TRUNCATE TABLE staging.fact_cultivation;
+TRUNCATE TABLE staging.dim_specimen;
+GO
+
+/*нн-нн------extraction--------*/
 
 insert into staging.dim_specimen(
 specimen_key,
