@@ -1,6 +1,21 @@
 USE MushroomDWH
 go
 
+CREATE SCHEMA etl;
+
+CREATE TABLE etl.[LogUpdate]
+(
+	[Table] nvarchar(50) NULL,
+	[LastLoadDate] int NULL
+) on [PRIMARY]
+
+
+--log for updates
+INSERT into etl.LogUpdate([Table],LastLoadDate)
+			VALUES  ('DimSpecimen',20210413)
+				
+
+
 /*---load----*/
 
 insert into edw.dim_specimen(
