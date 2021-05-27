@@ -2,7 +2,7 @@ USE MushroomDWH
 go
 
 
---log for updates		
+--log for updates
 CREATE SCHEMA etl;
 
 CREATE TABLE etl.[LogUpdate]
@@ -12,7 +12,8 @@ CREATE TABLE etl.[LogUpdate]
 ) on [PRIMARY]
 
 
-/*---dim specimen----*/
+
+/*---load into dim_specimen----*/
 
 insert into edw.dim_specimen(
 mushroom_name,
@@ -30,13 +31,9 @@ and b.stage_name = a.stage_name)
 INSERT into etl.LogUpdate([Table],LastLoadDate)
 			VALUES  ('dim_specimen',convert(char(8),GETDATE(),112)
 )
-		
+				
 
-
-
-
-/*--- dim fact table ---*/
-
+/*--- load into dim fact table ---*/
 insert into edw.fact_cultivation(
 air_temperature,
 air_humidity,
@@ -63,10 +60,10 @@ a.air_temperature,
 a.air_humidity,
 a.air_co2,
 a.light_level,
-d.date_ID as PD_ID,
-e.time_ID as PT_ID,
+e.date_ID as PD_ID,
+f.time_ID as PT_ID,
 c.date_ID as ED_ID,
-f.time_ID as ET_ID,
+d.time_ID as ET_ID,
 b.spe_ID as SPE_ID,
 g.age_ID as MUA_ID,
 h.age_ID as STA_ID,
@@ -79,47 +76,47 @@ g.minute as mushroom_age,
 h.minute as stage_age,
 a.stage_name
 from  staging.fact_cultivation as a 
-left join 
+inner join 
 edw.dim_specimen as b 
 on a.specimen = b.specimen_key and a.stage_name = b.stage_name
 left join 
 edw.dim_date as c
-on datepart(day,a.planted_date) = c.day_of_month and 
-datepart(month,a.planted_date) = c.month and 
-datepart(year,a.planted_date) = c.year
-left join 
-edw.dim_date as d 
-on datepart(day,a.entry_time) = d.day_of_month and 
-datepart(month,a.entry_time) = d.month and 
-datepart(year,a.entry_time) = d.year
-left join 
-edw.dim_time as e
-on datepart(hour,a.planted_date) = e.hour and 
-datepart(minute,a.planted_date) = e.minute 
-left join 
+on DATEPART(month,a.entry_time)
+= c.month
+and DATEPART(year,a.entry_time)
+= c.year
+and DATEPART(day,a.entry_time)
+= c.day_of_month
+inner join 
+edw.dim_time as d
+on datepart(hour,a.entry_time) = d.hour and 
+datepart(minute,a.entry_time) = d.minute 
+inner join 
+edw.dim_date as e
+on datepart(day,a.planted_date) = e.day_of_month and 
+datepart(month,a.planted_date) = e.month and 
+datepart(year,a.planted_date) = e.year
+inner join 
 edw.dim_time as f
-on datepart(hour,a.entry_time) = f.hour and 
-datepart(minute,a.entry_time) = f.minute 
+on datepart(hour,a.planted_date) = f.hour and 
+datepart(minute,a.planted_date) = f.minute 
 left join
 edw.dim_age as g
 on DATEDIFF(MINUTE,a.planted_date,a.entry_time) = g.minute
 left join
 edw.dim_age as h
 on DATEDIFF(MINUTE,b.entry_time,a.entry_time) = h.minute
-where concat(specimen_key, a.entry_time) not in (select concat(specimen_key, entry_time) from edw.fact_cultivation)
+where not exists (select 1 from edw.fact_cultivation as b where b.specimen =a.specimen
+and convert(time,a.entry_time) = b.entry_time
+and convert(date,a.entry_time) = b.entry_date
+)
 
------improvements below----
---where not exists (select * from edw.fact_cultivation as i where specimen = i.specimen 
---and entry_date = i.entry_date
---and entry_time = i.entry_time)
 
 
 -----add changes into log table------
-INSERT INTO etl.LogUpdate ([Table], LastLoadDate) 
-VALUES ('fact_cultivation', convert(char(8),GETDATE(),112)
+insert into etl.LogUpdate ([Table], LastLoadDate) 
+VALUES ('fact_cultivation', convert(char(8),GETDATE(),112))
 ------------
-
-
 
 
 

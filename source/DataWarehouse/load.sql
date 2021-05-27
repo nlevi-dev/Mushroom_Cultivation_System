@@ -132,6 +132,6 @@ from  staging.fact_cultivation as a
 left join 
 staging.dim_specimen as b 
 on a.specimen = b.specimen_key and a.stage_name = b.stage_name
-where a.entry_time > b.entry_time 
+where a.entry_time >= b.entry_time 
 
 
