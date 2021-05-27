@@ -10,12 +10,12 @@ schema_staging_init.sql
 
 to do the initial ETL run the following scripts:
 extract.sql
-(WIP; missing) transform.sql		NOTE: check for possible nulls, replace with default shit idk include smthing
+transform.sql
 load.sql
 (WIP; temporary) temp_finalize_load.sql	NOTE: when finalized apped to the end of both load.sql and incremental_load.sql
 
 to do the incremental ETL run the following scripts:
 extract.sql
-(WIP; missing) transform.sql		NOTE: check for possible nulls, replace with default shit idk include smthing
+transform.sql
 incremental_load.sql
 (WIP; temporary) temp_finalize_load.sql	NOTE: when finalized apped to the end of both load.sql and incremental_load.sql
