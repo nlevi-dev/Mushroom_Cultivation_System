@@ -49,6 +49,8 @@ GO
 CREATE TABLE [edw].[fact_cultivation]
 (
 	[air_temperature] real NOT NULL,
+	[air_humidity] real NOT NULL,
+	[air_co2] real NOT NULL,
 	[light_level] real NOT NULL,
 	PD_ID INT NULL,
 	PT_ID INT NULL,

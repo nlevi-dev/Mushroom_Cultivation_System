@@ -104,6 +104,8 @@ end
 
 insert into edw.fact_cultivation(
 air_temperature,
+air_humidity,
+air_co2,
 light_level,
 planted_date,
 planted_time,
@@ -115,6 +117,8 @@ stage_age,
 stage_name
 )
 select a.air_temperature,
+a.air_humidity,
+a.air_co2,
 a.light_level,
 (select convert(date,a.planted_date)) as planted_date,
 (select convert(time,a.planted_date)) as planted_time,

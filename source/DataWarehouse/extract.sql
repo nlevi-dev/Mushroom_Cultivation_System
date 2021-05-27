@@ -27,6 +27,8 @@ planted_date,
 entry_time,
 air_temperature,
 light_level,
+air_humidity,
+air_co2,
 specimen
 )
 SELECT
@@ -34,6 +36,8 @@ a.planted_date,
 b.entry_time,
 b.air_temperature,
 b.light_level,
+b.air_humidity,
+b.air_co2,
 a.specimen_key
 FROM MushroomPP.dbo._sensor_entry AS b
 LEFT JOIN MushroomPP.dbo._specimen AS a ON a.specimen_key=b.specimen_key
