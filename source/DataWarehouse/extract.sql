@@ -26,8 +26,6 @@ INSERT INTO staging.fact_cultivation(
 planted_date,
 entry_time,
 air_temperature,
-air_humidity,
-air_co2,
 light_level,
 specimen
 )
@@ -35,8 +33,6 @@ SELECT
 a.planted_date,
 b.entry_time,
 b.air_temperature,
-b.air_humidity,
-b.air_co2,
 b.light_level,
 a.specimen_key
 FROM MushroomPP.dbo._sensor_entry AS b
