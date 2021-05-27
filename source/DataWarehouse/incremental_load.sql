@@ -13,7 +13,7 @@ CREATE TABLE etl.[LogUpdate]
 
 
 
-/*---load into dim_specimen----*/
+/*---add new data into dim_specimen----*/
 
 insert into edw.dim_specimen(
 mushroom_name,
@@ -33,7 +33,8 @@ INSERT into etl.LogUpdate([Table],LastLoadDate)
 )
 				
 
-/*--- load into dim fact table ---*/
+
+/*--- add new data into dim fact table ---*/
 insert into edw.fact_cultivation(
 air_temperature,
 air_humidity,
@@ -113,7 +114,7 @@ and convert(date,a.entry_time) = b.entry_date
 
 
 
------add changes into log table------
+-----note changes into log table------
 insert into etl.LogUpdate ([Table], LastLoadDate) 
 VALUES ('fact_cultivation', convert(char(8),GETDATE(),112))
 ------------
