@@ -1,18 +1,6 @@
 USE MushroomDWH
 go
 
-
---log for updates
-CREATE SCHEMA etl;
-
-CREATE TABLE etl.[LogUpdate]
-(
-	[Table] nvarchar(50) NULL,
-	[LastLoadDate] int NULL
-) on [PRIMARY]
-
-
-
 /*---add new data into dim_specimen----*/
 
 insert into edw.dim_specimen(
@@ -28,12 +16,10 @@ where not exists (select 1 from edw.dim_specimen as b where b.specimen_key =a.sp
 and b.stage_name = a.stage_name)
 
 --------note changes into log table-----------
-INSERT into etl.LogUpdate([Table],LastLoadDate)
-			VALUES  ('dim_specimen',convert(char(8),GETDATE(),112)
-)
+INSERT into [update_log].[edw_logs]([Table], [LastLoadDate])
+VALUES  ('dim_specimen',convert(char(8),GETDATE(),112))
+------------
 				
-
-
 /*--- add new data into dim fact table ---*/
 insert into edw.fact_cultivation(
 air_temperature,
@@ -112,15 +98,7 @@ and convert(time,a.entry_time) = b.entry_time
 and convert(date,a.entry_time) = b.entry_date
 )
 
-
-
 -----note changes into log table------
-insert into etl.LogUpdate ([Table], LastLoadDate) 
+insert into [update_log].[edw_logs]([Table], [LastLoadDate]) 
 VALUES ('fact_cultivation', convert(char(8),GETDATE(),112))
 ------------
-
-
-
-
-
-

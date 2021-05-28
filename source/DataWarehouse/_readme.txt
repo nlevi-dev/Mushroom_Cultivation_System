@@ -12,10 +12,8 @@ to do the initial ETL run the following scripts:
 extract.sql
 transform.sql
 load.sql
-(WIP; temporary) temp_finalize_load.sql	NOTE: when finalized apped to the end of both load.sql and incremental_load.sql
 
 to do the incremental ETL run the following scripts:
 extract.sql
 transform.sql
 incremental_load.sql
-(WIP; temporary) temp_finalize_load.sql	NOTE: when finalized apped to the end of both load.sql and incremental_load.sql

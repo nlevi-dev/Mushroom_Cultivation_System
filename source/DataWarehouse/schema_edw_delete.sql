@@ -21,6 +21,11 @@ IF OBJECT_ID('edw.dim_specimen') IS NOT NULL
 	TRUNCATE TABLE edw.dim_specimen;
 IF OBJECT_ID('edw.dim_specimen') IS NOT NULL
 	DROP TABLE edw.dim_specimen;
+IF OBJECT_ID('update_log.edw_logs') IS NOT NULL
+	TRUNCATE TABLE update_log.edw_logs;
+IF OBJECT_ID('update_log.edw_logs') IS NOT NULL
+	DROP TABLE update_log.edw_logs;
 GO
 DROP SCHEMA edw;
+DROP SCHEMA update_log;
 GO
