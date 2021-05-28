@@ -24,13 +24,13 @@ WHERE staging.fact_cultivation.entry_time = b.entry_time AND staging.fact_cultiv
 
 /* Add PK for dim_specimen */
 
-ALTER TABLE [staging].[dim_specimen] 
+/*ALTER TABLE [staging].[dim_specimen] 
     ADD CONSTRAINT [PK_dim_specimen] 
 	PRIMARY KEY CLUSTERED ([specimen_key] ASC,[stage_name] ASC)
-GO
+GO*/
 
 /* Add FK for fact_cultivation */
 
-ALTER TABLE [staging].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_dim_specimen]
+/*ALTER TABLE [staging].[fact_cultivation] ADD CONSTRAINT [FK_fact_cultivation_dim_specimen]
 	FOREIGN KEY ([specimen], [stage_name]) REFERENCES [staging].[dim_specimen] ([specimen_key], [stage_name]) ON DELETE No Action ON UPDATE No Action
-GO
+GO*/
