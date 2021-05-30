@@ -10,11 +10,13 @@ namespace SEP4_Data.Controllers
     {
         private readonly IPersistenceService _persistence;
         private readonly IConfigService _config;
+        private readonly ISampleService _sample;
         
-        public HardwareController(IPersistenceService persistence, IConfigService config)
+        public HardwareController(IPersistenceService persistence, IConfigService config, ISampleService sample)
         {
             _persistence = persistence;
             _config = config;
+            _sample = sample;
         }
         
         [HttpPost]
@@ -177,22 +179,21 @@ namespace SEP4_Data.Controllers
                 var hardware = _persistence.GetHardwareById(hardwareId);
                 if (hardware.UserKey != ((User) HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
                     throw new ForbiddenException("You don't have high enough clearance for this operation!");
-                //request data from IoT interface
-                var temp = new SensorEntry
-                {
-                    Key = null,
-                    EntryTimeDotnet = DateTime.Now,
-                    AirTemperature = 21.7f,
-                    AirHumidity = 1.2f,
-                    AirCo2 = 1.2f,
-                    LightLevel = 1.2f,
-                    DesiredAirTemperature = 21.7f,
-                    DesiredAirHumidity = 1.2f,
-                    DesiredAirCo2 = 1.2f,
-                    DesiredLightLevel = 1.2f,
-                    Specimen = null
-                };
-                return StatusCode(200, temp);
+                var temp = _sample.GetLatestEntry((int) ((User) HttpContext.Items["User"]).Key, hardwareId);
+                if (temp != null)
+                    return StatusCode(200, temp);
+                try {
+                    var specimenKey = _persistence.GetHardwareById(hardwareId).SpecimenKey;
+                    if (specimenKey != null)
+                    {
+                        temp = _persistence.GetLastEntry((int) specimenKey);
+                        return StatusCode(200, temp);
+                    }
+                } catch (NotFoundException) {/*ignored*/}
+                temp = _sample.GetCached(hardwareId);
+                if (temp != null)
+                    return StatusCode(200, temp);
+                throw new NotFoundException("hardware with id \"" + hardwareId + "\" not found");
             }
             catch (UnauthorizedException e)
             {

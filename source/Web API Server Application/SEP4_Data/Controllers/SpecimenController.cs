@@ -10,11 +10,13 @@ namespace SEP4_Data.Controllers
     {
         private readonly IPersistenceService _persistence;
         private readonly IConfigService _config;
+        private readonly ISampleService _sample;
         
-        public SpecimenController(IPersistenceService persistence, IConfigService config)
+        public SpecimenController(IPersistenceService persistence, IConfigService config, ISampleService sample)
         {
             _persistence = persistence;
             _config = config;
+            _sample = sample;
         }
         
         [HttpPost]
@@ -33,9 +35,8 @@ namespace SEP4_Data.Controllers
                 _persistence.CreateSpecimen(specimen);
                 if (specimen.Hardware != null)
                 {
-                    //send data to IoT interface
-                    //wait for ack
                     _persistence.UpdateHardware(new Hardware{Key = specimen.HardwareKey, DesiredAirTemperature = specimen.DesiredAirTemperature, DesiredAirHumidity = specimen.DesiredAirHumidity, DesiredAirCo2 = specimen.DesiredAirCo2, DesiredLightLevel = specimen.DesiredLightLevel});
+                    _sample.SetDesiredHardwareValues(_persistence.GetHardware((int) specimen.HardwareKey));
                 }
                 return StatusCode(200);
             }
@@ -183,9 +184,8 @@ namespace SEP4_Data.Controllers
                 _persistence.UpdateSpecimen(specimen);
                 if (specimen.Hardware != null)
                 {
-                    //send data to IoT interface
-                    //wait for ack
                     _persistence.UpdateHardware(new Hardware{Key = specimen.HardwareKey, DesiredAirTemperature = specimen.DesiredAirTemperature, DesiredAirHumidity = specimen.DesiredAirHumidity, DesiredAirCo2 = specimen.DesiredAirCo2, DesiredLightLevel = specimen.DesiredLightLevel});
+                    _sample.SetDesiredHardwareValues(_persistence.GetHardware((int) specimen.HardwareKey));
                 }
                 return StatusCode(200);
             }

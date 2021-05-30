@@ -11,6 +11,7 @@ namespace SEP4_Data.Data
         public bool CheckUserPassword(string username, string password);
         public int GetPermissionKey(string name);
         public int CreateUser(User user);
+        public User[] GetAllUser();
         public User GetUserByName(string username);
         public User GetUserByKey(int userKey);
         public void DeleteUser(int userKey);
@@ -30,6 +31,7 @@ namespace SEP4_Data.Data
         public void UpdateSpecimen(Specimen specimen);
         public int CreateSensorEntry(SensorEntry sensorEntry);
         public SensorEntry[] GetSensorHistory(int specimenKey, long? unixTimeFrom, long? unixTimeUntil);
+        public SensorEntry GetLastEntry(int specimenKey);
         public int CreateStatusEntry(StatusEntry statusEntry);
         public StatusEntry[] GetAllStatusEntries(int specimenKey);
         public StatusEntry GetStatusEntry(int entryKey);

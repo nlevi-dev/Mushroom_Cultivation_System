@@ -163,14 +163,40 @@ namespace SEP4_Data.Data
             }
         }
 
+        public User[] GetAllUser()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT _user.user_key, _user.username, _user.permission_key, _permission_level.permission_type, _user.user_token FROM _user LEFT JOIN _permission_level ON (_user.permission_key = _permission_level.permission_key)";
+                var reader = command.ExecuteReader();
+                var temp = new List<User>();
+                while (reader.Read())
+                {
+                    User item = new User
+                    {
+                        Key = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        PermissionLevel = reader.GetInt32(2),
+                        Permission = reader.GetString(3)
+                    };
+                    if (!reader.IsDBNull(4))
+                        item.Token = reader.GetString(4);
+                    temp.Add(item);
+                }
+                reader.Close();
+                return temp.ToArray();
+            }
+        }
+
         public User GetUserByName(string username)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText =
-                    "SELECT _user.user_key, _user.username, _user.permission_key, _permission_level.permission_type, _user.user_token FROM _user LEFT JOIN _permission_level ON (_user.permission_key = _permission_level.permission_key) WHERE _user.username = @name";
+                command.CommandText = "SELECT _user.user_key, _user.username, _user.permission_key, _permission_level.permission_type, _user.user_token FROM _user LEFT JOIN _permission_level ON (_user.permission_key = _permission_level.permission_key) WHERE _user.username = @name";
                 command.Parameters.AddWithValue("@name", username ?? throw new ConflictException("username can't be null"));
                 var reader = command.ExecuteReader();
                 if (reader.Read())
@@ -198,8 +224,7 @@ namespace SEP4_Data.Data
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText =
-                    "SELECT _user.user_key, _user.username, _user.permission_key, _permission_level.permission_type, _user.user_token FROM _user LEFT JOIN _permission_level ON (_user.permission_key = _permission_level.permission_key) WHERE _user.user_key = @key";
+                command.CommandText = "SELECT _user.user_key, _user.username, _user.permission_key, _permission_level.permission_type, _user.user_token FROM _user LEFT JOIN _permission_level ON (_user.permission_key = _permission_level.permission_key) WHERE _user.user_key = @key";
                 command.Parameters.AddWithValue("@key", userKey);
                 var reader = command.ExecuteReader();
                 if (reader.Read())
@@ -788,6 +813,43 @@ namespace SEP4_Data.Data
                 }
                 reader.Close();
                 return temp.ToArray();
+            }
+        }
+
+        public SensorEntry GetLastEntry(int specimenKey)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT TOP(1) entry_key, entry_time, air_temperature, air_humidity, air_co2, light_level, desired_air_temperature, desired_air_humidity, desired_air_co2, desired_light_level, specimen_key FROM _sensor_entry WHERE specimen_key = @specimen ORDER BY entry_time DESC";
+                command.Parameters.AddWithValue("@specimen", specimenKey);
+                var reader = command.ExecuteReader();
+                if (!reader.Read())
+                {
+                    reader.Close();
+                    throw new NotFoundException("sensor entry for specimen " + specimenKey + " (key) not found");
+                }
+                SensorEntry item = new SensorEntry
+                {
+                    Key = reader.GetInt32(0), 
+                    EntryTimeDotnet = reader.GetDateTime(1),
+                    AirTemperature = reader.GetFloat(2),
+                    AirHumidity = reader.GetFloat(3),
+                    AirCo2 = reader.GetFloat(4),
+                    LightLevel = reader.GetFloat(5),
+                    Specimen = reader.GetInt32(10)
+                };
+                if (!reader.IsDBNull(6))
+                    item.DesiredAirTemperature = reader.GetFloat(6);
+                if (!reader.IsDBNull(7))
+                    item.DesiredAirHumidity = reader.GetFloat(7);
+                if (!reader.IsDBNull(8))
+                    item.DesiredAirCo2 = reader.GetFloat(8);
+                if (!reader.IsDBNull(9))
+                    item.DesiredLightLevel = reader.GetFloat(9);
+                reader.Close();
+                return item;
             }
         }
 

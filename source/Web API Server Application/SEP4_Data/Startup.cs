@@ -40,8 +40,10 @@ namespace SEP4_Data
                 persistenceService.DropSchema();
                 persistenceService.InitSchema();
             }
-            services.AddSingleton<ILogService, LogService>();
-            services.AddSingleton<ISampleService, SampleService>();
+            ILogService logService = new LogService();
+            services.AddSingleton(init => logService);
+            ISampleService sampleService = new SampleService(_configService, logService, persistenceService);
+            services.AddSingleton(init => sampleService);
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Mushroom++", Version = "v1"});
                 // add JWT Authentication

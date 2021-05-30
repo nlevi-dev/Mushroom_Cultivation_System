@@ -50,6 +50,8 @@ namespace SEP4_Data.Model
         public float? DesiredLightLevel { get; set; }
         [JsonPropertyName("specimen_key")]
         public int? Specimen { get; set; }
+        [JsonPropertyName("hardware_id")]
+        public string Id { get; set; }
         
         public override string ToString()
         {

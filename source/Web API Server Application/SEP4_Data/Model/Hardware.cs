@@ -18,7 +18,7 @@ namespace SEP4_Data.Model
         public float? DesiredAirCo2 { get; set; }
         [JsonPropertyName("desired_light_level")]
         public float? DesiredLightLevel { get; set; }
-        [JsonIgnore]
+        [JsonPropertyName("user_key")]
         public int? UserKey { get; set; }
 
         public override string ToString()

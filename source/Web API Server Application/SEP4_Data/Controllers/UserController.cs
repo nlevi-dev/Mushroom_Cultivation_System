@@ -13,11 +13,13 @@ namespace SEP4_Data.Controllers
     {
         private readonly IPersistenceService _persistence;
         private readonly IConfigService _config;
+        private readonly ISampleService _sample;
         
-        public UserController(IPersistenceService persistence, IConfigService config)
+        public UserController(IPersistenceService persistence, IConfigService config, ISampleService sample)
         {
             _persistence = persistence;
             _config = config;
+            _sample = sample;
         }
 
         [HttpPost]
@@ -43,7 +45,8 @@ namespace SEP4_Data.Controllers
                 user.PermissionLevel = string.IsNullOrEmpty(user.Permission) ? 1 : _persistence.GetPermissionKey(user.Permission);
                 if (user.PermissionLevel > userLevel)
                     user.PermissionLevel = userLevel;
-                _persistence.CreateUser(user);
+                int temp = _persistence.CreateUser(user);
+                _sample.AddUser(_persistence.GetUserByKey(temp));
                 return StatusCode(200);
             }
             catch (UnauthorizedException e)
@@ -127,6 +130,7 @@ namespace SEP4_Data.Controllers
                 if (userKey != (int) ((User)HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
                     throw new ForbiddenException("You don't have high enough clearance for this operation!");
                 _persistence.DeleteUser(userKey);
+                _sample.DeleteUser(userKey);
                 return StatusCode(200);
             }
             catch (UnauthorizedException e)
@@ -230,6 +234,7 @@ namespace SEP4_Data.Controllers
                 if (userKey != (int) ((User)HttpContext.Items["User"]).Key && ((User)HttpContext.Items["User"]).PermissionLevel < 2)
                     throw new ForbiddenException("You don't have high enough clearance for this operation!");
                 _persistence.UpdateUserToken(userKey, user.Token);
+                _sample.UpdateUser(_persistence.GetUserByKey(userKey));
                 return StatusCode(200);
             }
             catch (UnauthorizedException e)
