@@ -33,10 +33,13 @@ namespace SEP4_Data.Data
                 Thread.Sleep(60000);
                 try
                 {
-                    var users = _persistence.GetAllUser();
-                    foreach (User user in users)
-                        GetLatestEntries((int) user.Key);
-                    Thread.Sleep(_config.SampleInterval * 60000);
+                    while (true)
+                    {
+                        var users = _persistence.GetAllUser();
+                        foreach (User user in users)
+                            GetLatestEntries((int) user.Key);
+                        Thread.Sleep(_config.SampleInterval * 60000);
+                    }
                 } catch (Exception e) {
                     _log.Log(e.ToString());
                 }
