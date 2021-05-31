@@ -24,10 +24,17 @@ namespace SEP4_Data.Data
             _persistence = persistence;
             _client = new HttpClient {BaseAddress = new Uri("http://127.0.0.1:41003/")};
             _quickfix = new ArrayList();
-            new Thread(() => {
-                Thread.Sleep(120000);
-                try {
-                    foreach (User user in _persistence.GetAllUser())
+            var hardwares = _persistence.GetAllHardware(null);
+            foreach (Hardware hardware in hardwares)
+                if (hardware.Id != null)
+                    SetDesiredHardwareValues(hardware);
+            new Thread(() =>
+            {
+                Thread.Sleep(60000);
+                try
+                {
+                    var users = _persistence.GetAllUser();
+                    foreach (User user in users)
                         GetLatestEntries((int) user.Key);
                     Thread.Sleep(_config.SampleInterval * 60000);
                 } catch (Exception e) {
@@ -39,9 +46,7 @@ namespace SEP4_Data.Data
         public SensorEntry GetLatestEntry(int userKey, string hardwareId)
         {
             try {
-                HttpResponseMessage response = _client.GetAsync("/hardware/" + userKey).Result;
-                if (!response.IsSuccessStatusCode) throw new Exception("gateway error");
-                var res = (SensorEntry[]) JsonSerializer.Deserialize(response.Content.ReadAsStringAsync().Result, typeof(SensorEntry[]));
+                var res = GetEntriesBase(userKey);
                 if (res == null) return null;
                 SaveEntries(SortOutLatest(res));
                 SensorEntry compare = new SensorEntry{EntryTimeUnix = 0};
@@ -61,9 +66,7 @@ namespace SEP4_Data.Data
         public SensorEntry[] GetLatestEntries(int userKey)
         {
             try {
-                HttpResponseMessage response = _client.GetAsync("/hardware/" + userKey).Result;
-                if (!response.IsSuccessStatusCode) throw new Exception("gateway error");
-                var res = (SensorEntry[]) JsonSerializer.Deserialize(response.Content.ReadAsStringAsync().Result, typeof(SensorEntry[]));
+                var res = GetEntriesBase(userKey);
                 if (res == null) return Array.Empty<SensorEntry>();
                 var temp = SortOutLatest(res);
                 SaveEntries(temp);
@@ -77,15 +80,21 @@ namespace SEP4_Data.Data
         public SensorEntry[] GetEntries(int userKey)
         {
             try {
-                HttpResponseMessage response = _client.GetAsync("/hardware/" + userKey).Result;
-                if (!response.IsSuccessStatusCode) throw new Exception("gateway error");
-                var res = (SensorEntry[]) JsonSerializer.Deserialize(response.Content.ReadAsStringAsync().Result, typeof(SensorEntry[]));
+                var res = GetEntriesBase(userKey);
                 SaveEntries(SortOutLatest(res));
                 return res;
             } catch (Exception e) {
                 _log.Log(e.ToString());
                 return Array.Empty<SensorEntry>();
             }
+        }
+
+        private SensorEntry[] GetEntriesBase(int userKey)
+        {
+            HttpResponseMessage response = _client.GetAsync("/hardware/" + userKey).Result;
+            if (!response.IsSuccessStatusCode) throw new Exception("gateway error");
+            var res = (SensorEntry[]) JsonSerializer.Deserialize(response.Content.ReadAsStringAsync().Result, typeof(SensorEntry[]));
+            return res;
         }
 
         public void SetDesiredHardwareValues(Hardware hardware)
@@ -134,8 +143,10 @@ namespace SEP4_Data.Data
             }
         }
 
-        private SensorEntry[] SortOutLatest(SensorEntry[] entries)
+        private static SensorEntry[] SortOutLatest(SensorEntry[] entries)
         {
+            if (entries.Length == 0)
+                return Array.Empty<SensorEntry>();
             ArrayList latest = new ArrayList();
             foreach (SensorEntry entry in entries)
             {
@@ -154,18 +165,32 @@ namespace SEP4_Data.Data
                 if (!hasCategory)
                     latest.Add(entry);
             }
-            return (SensorEntry[]) latest.ToArray();
+            return (SensorEntry[]) latest.ToArray(typeof(SensorEntry));
         }
         
         private void SaveEntries(SensorEntry[] entries)
         {
+            if (entries.Length == 0)
+                return;
+            //int cnt = 0;
             foreach (SensorEntry entry in entries)
             {
-                try {
-                    entry.Specimen = _persistence.GetHardwareById(entry.Id).SpecimenKey;
+                try
+                {
+                    Hardware hardware = _persistence.GetHardwareById(entry.Id);
+                    entry.Specimen = hardware.SpecimenKey;
+                    entry.DesiredAirTemperature = hardware.DesiredAirTemperature;
+                    entry.DesiredAirHumidity = hardware.DesiredAirHumidity;
+                    entry.DesiredAirCo2 = hardware.DesiredAirCo2;
+                    entry.DesiredLightLevel = hardware.DesiredLightLevel;
+                    //quickfix
+                    entry.EntryTimeDotnet = DateTime.Now;
+                    //--------
                     _persistence.CreateSensorEntry(entry);
+                    //cnt++;
                 } catch (NotFoundException) {/* ignored */}
             }
+            //_log.Log(cnt + " entries have been saved");
             foreach (SensorEntry entry in entries)
             {
                 bool hasCategory = false;

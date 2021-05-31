@@ -374,14 +374,18 @@ namespace SEP4_Data.Data
             }
         }
 
-        public Hardware[] GetAllHardware(int userKey)
+        public Hardware[] GetAllHardware(int? userKey)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "SELECT _hardware.hardware_key, _hardware.hardware_id, _hardware.desired_air_temperature, _hardware.desired_air_humidity, _hardware.desired_air_co2, _hardware.desired_light_level, _hardware.user_key, _specimen.specimen_key FROM _hardware LEFT JOIN _specimen ON (_hardware.hardware_key = _specimen.hardware_key) WHERE _hardware.user_key = @user_key";
-                command.Parameters.AddWithValue("@user_key", userKey);
+                command.CommandText = "SELECT _hardware.hardware_key, _hardware.hardware_id, _hardware.desired_air_temperature, _hardware.desired_air_humidity, _hardware.desired_air_co2, _hardware.desired_light_level, _hardware.user_key, _specimen.specimen_key FROM _hardware LEFT JOIN _specimen ON (_hardware.hardware_key = _specimen.hardware_key)";
+                if (userKey != null)
+                {
+                    command.CommandText += " WHERE _hardware.user_key = @user_key";
+                    command.Parameters.AddWithValue("@user_key", userKey);
+                }
                 var reader = command.ExecuteReader();
                 var temp = new List<Hardware>();
                 while (reader.Read())
