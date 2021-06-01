@@ -455,7 +455,7 @@ paths:
         in: path
         description: id of the Hardware 
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:

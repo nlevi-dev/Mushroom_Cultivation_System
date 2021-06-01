@@ -1,0 +1,129 @@
+swagger: '2.0'
+info:
+  description: |
+    Mushroom Cultivation System
+    Gateway Application
+    interprocess API
+  version: alpha-1.0
+  title: Mushroom++
+paths:
+  /user:
+    post:
+      summary: creates a thread for a LoRaWAN user, which listens to all of the hardwares associated with the user, and buffers sensory measurements
+      parameters:
+      - in: body
+        name: User
+        required: true
+        description: User
+        schema:
+          $ref: '#/definitions/user'
+      responses:
+        200:
+          description: Ok
+  /user/{user_key}:
+    delete:
+      summary: destroys a thread previously associated with a LoRaWAN user
+      parameters:
+      - name: user_key
+        in: path
+        description: key of the user
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Ok
+  /hardware:
+    post:
+      summary: tries to set the desired environmental values for a hardware, based on the user_key and hardware_id of the hardware
+      parameters:
+      - in: body
+        name: Hardware
+        required: true
+        description: Hardware
+        schema:
+          $ref: '#/definitions/hardware'
+      responses:
+        200:
+          description: Ok
+  /hardware/{user_key}:
+    get:
+      summary: gets all the buffered sensory measurements, from all of the hardwares associated with the LoRaWAN user, previously associated with the user_key
+      parameters:
+      - name: user_key
+        in: path
+        description: key of the user
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/sensor_entry'
+
+definitions:
+  
+  user:
+    type: object
+    properties:
+      user_key:
+        description: "key of the user"
+        type: integer
+        example: 1
+      user_token:
+        description: "LoRaWAN user token"
+        type: string
+        example: asdf1234
+  hardware:
+    type: object
+    properties:
+      hardware_id:
+        description: "LoRaWAN id"
+        type: string
+        example: "0123456789ABCDEF"
+      user_key:
+        description: "key of the user associated with the hardware"
+        type: integer
+        example: 1
+      desired_air_temperature:
+        type: number
+        example: 23
+      desired_air_humidity:
+        type: number
+        example: 45
+      desired_air_co2:
+        type: number
+        example: 910
+      desired_light_level:
+        type: number
+        example: 150
+  sensor_entry:
+    type: object
+    properties:
+      entry_time:
+        description: "Readonly value.\nUnix datetime format: number of milliseconds since the standard base time January 1, 1970, 00:00:00 GMT."
+        type: integer
+        example: 1492992000000
+      air_temperature:
+        description: "Readonly value."
+        type: number
+        example: 28.1
+      air_humidity:
+        description: "Readonly value."
+        type: number
+        example: 54.3
+      air_co2:
+        description: "Readonly value."
+        type: number
+        example: 874
+      light_level:
+        description: "Readonly value."
+        type: number
+        example: 132
+      hardware_id:
+        description: "Readonly value.\nLoRaWAN id"
+        type: string
+        example: "0123456789ABCDEF"
