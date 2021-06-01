@@ -69,14 +69,8 @@ CREATE TABLE [edw].[fact_cultivation]
 	SPE_ID INT NOT NULL,
 	MUA_ID INT NOT NULL,
 	STA_ID INT NOT NULL,
-	[planted_date] date NOT NULL,
-	[planted_time] time NOT NULL,
-	[entry_date] date NOT NULL,
-	[entry_time] time NOT NULL,
-	[specimen] int NOT NULL,
-	[mushroom_age] int NOT NULL,
-	[stage_age] int NOT NULL,
-	[stage_name] nvarchar(32) NOT NULL
+	stage_name nvarchar(32) NOT NULL,
+
 )
 GO
 

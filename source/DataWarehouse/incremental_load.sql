@@ -33,13 +33,6 @@ ET_ID,
 SPE_ID,
 MUA_ID,
 STA_ID,
-planted_date,
-planted_time,
-entry_date,
-entry_time,
-specimen,
-mushroom_age,
-stage_age,
 stage_name
 )
 select 
@@ -54,13 +47,6 @@ d.time_ID as ET_ID,
 b.spe_ID as SPE_ID,
 g.age_ID as MUA_ID,
 h.age_ID as STA_ID,
-(select convert(date,a.planted_date)) as planted_date,
-(select convert(time,a.planted_date)) as planted_time,
-(select convert(date,a.entry_time)) as entry_date,
-(select convert(time,a.entry_time)) as entry_time,
-a.specimen,
-g.minute as mushroom_age,
-h.minute as stage_age,
 a.stage_name
 from  staging.fact_cultivation as a 
 inner join 
@@ -93,9 +79,18 @@ on DATEDIFF(MINUTE,a.planted_date,a.entry_time) = g.minute
 left join
 edw.dim_age as h
 on DATEDIFF(MINUTE,b.entry_time,a.entry_time) = h.minute
-where not exists (select 1 from edw.fact_cultivation as b where b.specimen =a.specimen
-and convert(time,a.entry_time) = b.entry_time
-and convert(date,a.entry_time) = b.entry_date
+where not exists (select 1 from (edw.fact_cultivation as i 
+inner join edw.dim_specimen as k on i.SPE_ID =k.spe_ID
+inner join edw.dim_date as j on i.ED_ID = j.date_ID
+inner join edw.dim_time as l on i.ET_ID = l.time_ID
+)
+where a.specimen = k.specimen_key
+and datepart(year,a.entry_time) = j.year
+and datepart(month,a.entry_time) = j.month
+and datepart(year,a.entry_time) = j.year
+and datepart(day,a.entry_time) = j.day_of_month
+and datepart(hour,a.entry_time) = l.hour
+and datepart(minute,a.entry_time) = l.minute
 )
 
 -----note changes into log table------

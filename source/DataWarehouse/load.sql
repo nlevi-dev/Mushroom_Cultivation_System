@@ -113,14 +113,8 @@ ET_ID,
 SPE_ID,
 MUA_ID,
 STA_ID,
-planted_date,
-planted_time,
-entry_date,
-entry_time,
-specimen,
-mushroom_age,
-stage_age,
 stage_name
+
 )
 select 
 a.air_temperature,
@@ -134,13 +128,6 @@ d.time_ID as ET_ID,
 b.spe_ID as SPE_ID,
 g.age_ID as MUA_ID,
 h.age_ID as STA_ID,
-(select convert(date,a.planted_date)) as planted_date,
-(select convert(time,a.planted_date)) as planted_time,
-(select convert(date,a.entry_time)) as entry_date,
-(select convert(time,a.entry_time)) as entry_time,
-a.specimen,
-g.minute as mushroom_age,
-h.minute as stage_age,
 a.stage_name
 from  staging.fact_cultivation as a 
 inner join 
