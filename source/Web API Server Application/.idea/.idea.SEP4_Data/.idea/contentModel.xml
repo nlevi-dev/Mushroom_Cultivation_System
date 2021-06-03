@@ -44,6 +44,8 @@
           <e p="Exception" t="Include">
             <e p="ConflictException.cs" t="Include" />
             <e p="ForbiddenException.cs" t="Include" />
+            <e p="GatewayException.cs" t="Include" />
+            <e p="JwtException.cs" t="Include" />
             <e p="NotFoundException.cs" t="Include" />
             <e p="UnauthorizedException.cs" t="Include" />
           </e>

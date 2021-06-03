@@ -44,7 +44,7 @@ namespace SEP4_Data.Data
                 if (temp[0] == "Basic")
                     return false;
                 if (temp[0] != "Bearer" || temp.Length != 2)
-                    throw new ConflictException("malformed bearer authorization header");
+                    throw new JwtException("malformed bearer authorization header");
                 token = temp[1];
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = _config.JwtKey;
@@ -75,15 +75,15 @@ namespace SEP4_Data.Data
                 if (temp[0] == "Bearer")
                     return false;
                 if (temp[0] != "Basic" || temp.Length != 2)
-                    throw new ConflictException("malformed basic authorization header");
+                    throw new JwtException("malformed basic authorization header");
                 temp = Encoding.UTF8.GetString(Convert.FromBase64String(temp[1])).Split(":");
                 if (temp.Length != 2)
-                    throw new ConflictException("malformed basic authorization header");
+                    throw new JwtException("malformed basic authorization header");
                 temp[1] = Convert.ToBase64String(KeyDerivation.Pbkdf2(temp[1], _config.Salt, KeyDerivationPrf.HMACSHA1, 1000, 256 / 8));
                 if (_persistence.CheckUserPassword(temp[0], temp[1]))
                     context.Items["User"] = _persistence.GetUserByName(temp[0]);
                 else
-                    throw new ForbiddenException("invalid basic authorization credentials");
+                    throw new JwtException("invalid basic authorization credentials");
                 return true;
             } catch (Exception e) {
                 _log.Log(e.ToString());

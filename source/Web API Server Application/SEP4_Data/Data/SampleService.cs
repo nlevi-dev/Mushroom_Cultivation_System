@@ -93,7 +93,7 @@ namespace SEP4_Data.Data
         private SensorEntry[] GetEntriesBase(int userKey)
         {
             HttpResponseMessage response = _client.GetAsync("/hardware/" + userKey).Result;
-            if (!response.IsSuccessStatusCode) throw new ConflictException("gateway error");
+            if (!response.IsSuccessStatusCode) throw new GatewayException("gateway error");
             var res = (SensorEntry[]) JsonSerializer.Deserialize(response.Content.ReadAsStringAsync().Result, typeof(SensorEntry[]));
             return res;
         }
@@ -104,7 +104,7 @@ namespace SEP4_Data.Data
                 var json = JsonSerializer.Serialize(hardware);
                 var data = new StringContent(json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response = _client.PostAsync("/hardware", data).Result;
-                if (!response.IsSuccessStatusCode) throw new ConflictException("gateway error");
+                if (!response.IsSuccessStatusCode) throw new GatewayException("gateway error");
             } catch (Exception e) {
                 _log.Log(e.ToString());
             }
@@ -116,7 +116,7 @@ namespace SEP4_Data.Data
                 var json = JsonSerializer.Serialize(user);
                 var data = new StringContent(json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response = _client.PostAsync("/user", data).Result;
-                if (!response.IsSuccessStatusCode) throw new ConflictException("gateway error");
+                if (!response.IsSuccessStatusCode) throw new GatewayException("gateway error");
             } catch (Exception e) {
                 _log.Log(e.ToString());
             }
@@ -126,7 +126,7 @@ namespace SEP4_Data.Data
         {
             try {
                 HttpResponseMessage response = _client.DeleteAsync("/user/" + userKey).Result;
-                if (!response.IsSuccessStatusCode) throw new ConflictException("gateway error");
+                if (!response.IsSuccessStatusCode) throw new GatewayException("gateway error");
             } catch (Exception e) {
                 _log.Log(e.ToString());
             }
