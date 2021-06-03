@@ -44,12 +44,18 @@ namespace SEP4_Data.Model
             return "StatusEntry (key): " + Key;
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (!(obj is StatusEntry))
                 return false;
             StatusEntry statusEntry = (StatusEntry) obj;
             return Key == statusEntry.Key && EntryTimeUnix == statusEntry.EntryTimeUnix && Stage == statusEntry.Stage && Specimen == statusEntry.Specimen;
+        }
+        
+        public override int GetHashCode()
+        {
+            // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
+            return base.GetHashCode();
         }
     }
 }

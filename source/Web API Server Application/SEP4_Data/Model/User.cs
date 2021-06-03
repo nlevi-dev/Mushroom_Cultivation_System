@@ -22,12 +22,18 @@ namespace SEP4_Data.Model
             return "User (key): " + Key;
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (!(obj is User))
                 return false;
             User user = (User) obj;
             return Key == user.Key && Name == user.Name && Permission == user.Permission && Token == user.Token;
+        }
+        
+        public override int GetHashCode()
+        {
+            // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
+            return base.GetHashCode();
         }
     }
 }

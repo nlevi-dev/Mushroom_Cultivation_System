@@ -61,7 +61,7 @@ namespace SEP4_Data
                 };
                 c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-                    {securityScheme, new string[] { }}
+                    {securityScheme, System.Array.Empty<string>()}
                 });
                 // add Basic Authentication
                 var basicSecurityScheme = new OpenApiSecurityScheme {
@@ -75,7 +75,7 @@ namespace SEP4_Data
                 c.AddSecurityDefinition(basicSecurityScheme.Reference.Id, basicSecurityScheme);
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
-                    {basicSecurityScheme, new string[] { }}
+                    {basicSecurityScheme, System.Array.Empty<string>()}
                 });
             });
         }

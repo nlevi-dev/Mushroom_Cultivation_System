@@ -60,12 +60,18 @@ namespace SEP4_Data.Model
             return "Specimen (key): " + Key;
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (!(obj is Specimen))
                 return false;
             Specimen specimen = (Specimen) obj;
             return Key == specimen.Key && PlantedUnix == specimen.PlantedUnix && Name == specimen.Name && MushroomType == specimen.MushroomType && Description == specimen.Description && DesiredAirTemperature == specimen.DesiredAirTemperature && DesiredAirHumidity == specimen.DesiredAirHumidity && DesiredAirCo2 == specimen.DesiredAirCo2 && DesiredLightLevel == specimen.DesiredLightLevel && Hardware == specimen.Hardware;
+        }
+        
+        public override int GetHashCode()
+        {
+            // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
+            return base.GetHashCode();
         }
     }
 }

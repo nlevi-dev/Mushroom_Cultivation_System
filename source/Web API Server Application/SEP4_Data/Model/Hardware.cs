@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace SEP4_Data.Model
 {
@@ -26,12 +27,18 @@ namespace SEP4_Data.Model
             return "Hardware (key): " + Key;
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (!(obj is Hardware))
                 return false;
             Hardware hardware = (Hardware) obj;
             return Key == hardware.Key && Id == hardware.Id && SpecimenKey == hardware.SpecimenKey && DesiredAirTemperature == hardware.DesiredAirTemperature && DesiredAirHumidity == hardware.DesiredAirHumidity && DesiredAirCo2 == hardware.DesiredAirCo2 && DesiredLightLevel == hardware.DesiredLightLevel;
+        }
+
+        public override int GetHashCode()
+        {
+            // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
+            return base.GetHashCode();
         }
     }
 }

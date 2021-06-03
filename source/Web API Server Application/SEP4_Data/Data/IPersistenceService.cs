@@ -8,7 +8,7 @@ namespace SEP4_Data.Data
         public int GetMushroomStageKey(string name);
         public string[] GetMushroomTypes();
         public int GetMushroomTypeKey(string name);
-        public bool CheckUserPassword(string username, string password);
+        public bool CheckUserPassword(string username, string passwordHashed);
         public int GetPermissionKey(string name);
         public int CreateUser(User user);
         public User[] GetAllUser();

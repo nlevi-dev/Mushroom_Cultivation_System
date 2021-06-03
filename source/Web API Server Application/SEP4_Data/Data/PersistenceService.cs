@@ -9,13 +9,11 @@ namespace SEP4_Data.Data
     //methods do not support updating entities' associated user
     public class PersistenceService : IPersistenceService
     {
-        private readonly IConfigService _config;
         private readonly string _connectionString;
         
         public PersistenceService(IConfigService config)
         {
-            _config = config;
-            _connectionString = "Server=" + _config.DbHost + "," + _config.DbPort + ";Database=" + _config.DbName + ";User Id=" + _config.DbUser + ";Password=" + _config.DbPassword + ";";
+            _connectionString = "Server=" + config.DbHost + "," + config.DbPort + ";Database=" + config.DbName + ";User Id=" + config.DbUser + ";Password=" + config.DbPassword + ";";
         }
 
         public string[] GetMushroomStages()

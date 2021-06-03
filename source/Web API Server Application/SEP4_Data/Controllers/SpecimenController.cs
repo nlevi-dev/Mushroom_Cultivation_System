@@ -9,13 +9,11 @@ namespace SEP4_Data.Controllers
     public class SpecimenController : ControllerBase
     {
         private readonly IPersistenceService _persistence;
-        private readonly IConfigService _config;
         private readonly ISampleService _sample;
         
-        public SpecimenController(IPersistenceService persistence, IConfigService config, ISampleService sample)
+        public SpecimenController(IPersistenceService persistence, ISampleService sample)
         {
             _persistence = persistence;
-            _config = config;
             _sample = sample;
         }
         

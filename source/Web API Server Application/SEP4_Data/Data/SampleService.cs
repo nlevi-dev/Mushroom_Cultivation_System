@@ -95,7 +95,7 @@ namespace SEP4_Data.Data
         private SensorEntry[] GetEntriesBase(int userKey)
         {
             HttpResponseMessage response = _client.GetAsync("/hardware/" + userKey).Result;
-            if (!response.IsSuccessStatusCode) throw new Exception("gateway error");
+            if (!response.IsSuccessStatusCode) throw new ConflictException("gateway error");
             var res = (SensorEntry[]) JsonSerializer.Deserialize(response.Content.ReadAsStringAsync().Result, typeof(SensorEntry[]));
             return res;
         }
@@ -106,7 +106,7 @@ namespace SEP4_Data.Data
                 var json = JsonSerializer.Serialize(hardware);
                 var data = new StringContent(json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response = _client.PostAsync("/hardware", data).Result;
-                if (!response.IsSuccessStatusCode) throw new Exception("gateway error");
+                if (!response.IsSuccessStatusCode) throw new ConflictException("gateway error");
             } catch (Exception e) {
                 _log.Log(e.ToString());
             }
@@ -118,7 +118,7 @@ namespace SEP4_Data.Data
                 var json = JsonSerializer.Serialize(user);
                 var data = new StringContent(json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response = _client.PostAsync("/user", data).Result;
-                if (!response.IsSuccessStatusCode) throw new Exception("gateway error");
+                if (!response.IsSuccessStatusCode) throw new ConflictException("gateway error");
             } catch (Exception e) {
                 _log.Log(e.ToString());
             }
@@ -128,7 +128,7 @@ namespace SEP4_Data.Data
         {
             try {
                 HttpResponseMessage response = _client.DeleteAsync("/user/" + userKey).Result;
-                if (!response.IsSuccessStatusCode) throw new Exception("gateway error");
+                if (!response.IsSuccessStatusCode) throw new ConflictException("gateway error");
             } catch (Exception e) {
                 _log.Log(e.ToString());
             }
@@ -175,7 +175,6 @@ namespace SEP4_Data.Data
         {
             if (entries.Length == 0)
                 return;
-            //int cnt = 0;
             foreach (SensorEntry entry in entries)
             {
                 try
@@ -190,10 +189,8 @@ namespace SEP4_Data.Data
                     entry.EntryTimeDotnet = DateTime.Now;
                     //--------
                     _persistence.CreateSensorEntry(entry);
-                    //cnt++;
                 } catch (NotFoundException) {/* ignored */}
             }
-            //_log.Log(cnt + " entries have been saved");
             foreach (SensorEntry entry in entries)
             {
                 bool hasCategory = false;

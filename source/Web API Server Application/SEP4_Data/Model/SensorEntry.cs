@@ -58,12 +58,18 @@ namespace SEP4_Data.Model
             return "SensorEntry (key): " + Key;
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (!(obj is SensorEntry))
                 return false;
             SensorEntry sensorEntry = (SensorEntry) obj;
             return Key == sensorEntry.Key && EntryTimeUnix == sensorEntry.EntryTimeUnix && AirTemperature == sensorEntry.AirTemperature && AirHumidity == sensorEntry.AirHumidity && AirCo2 == sensorEntry.AirCo2 && LightLevel == sensorEntry.LightLevel && DesiredAirTemperature == sensorEntry.DesiredAirTemperature && DesiredAirHumidity == sensorEntry.DesiredAirHumidity && DesiredAirCo2 == sensorEntry.DesiredAirCo2 && DesiredLightLevel == sensorEntry.DesiredLightLevel && Specimen == sensorEntry.Specimen;
+        }
+        
+        public override int GetHashCode()
+        {
+            // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
+            return base.GetHashCode();
         }
     }
 }

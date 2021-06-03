@@ -9,12 +9,10 @@ namespace SEP4_Data.Controllers
     public class StatusController : ControllerBase
     {
         private readonly IPersistenceService _persistence;
-        private readonly IConfigService _config;
-        
-        public StatusController(IPersistenceService persistence, IConfigService config)
+
+        public StatusController(IPersistenceService persistence)
         {
             _persistence = persistence;
-            _config = config;
         }
         
         [HttpPost]
