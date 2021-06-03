@@ -6,7 +6,6 @@ using SEP4_Data.Model.Exception;
 
 namespace SEP4_Data.Data
 {
-    //methods do not support updating entities' associated user
     public class PersistenceService : IPersistenceService
     {
         private readonly string _connectionString;

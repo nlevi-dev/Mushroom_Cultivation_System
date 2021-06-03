@@ -5,11 +5,6 @@ namespace SEP4_Data.Data
 {
     public class LogService : ILogService
     {
-        public LogService()
-        {
-            
-        }
-        
         public void Log(string value)
         {
             try

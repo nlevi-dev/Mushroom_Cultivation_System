@@ -11,19 +11,17 @@ namespace SEP4_Data.Data
 {
     public class SampleService : ISampleService
     {
-        private readonly IConfigService _config;
         private readonly ILogService _log;
         private readonly IPersistenceService _persistence;
         private readonly HttpClient _client;
-        private readonly ArrayList _quickfix;
+        private readonly ArrayList _lastEntriesByHardware;
 
         public SampleService(IConfigService config, ILogService log, IPersistenceService persistence)
         {
-            _config = config;
             _log = log;
             _persistence = persistence;
             _client = new HttpClient {BaseAddress = new Uri("http://127.0.0.1:41003/")};
-            _quickfix = new ArrayList();
+            _lastEntriesByHardware = new ArrayList();
             var hardwares = _persistence.GetAllHardware(null);
             foreach (Hardware hardware in hardwares)
                 if (hardware.Id != null)
@@ -38,7 +36,7 @@ namespace SEP4_Data.Data
                         var users = _persistence.GetAllUser();
                         foreach (User user in users)
                             GetLatestEntries((int) user.Key);
-                        Thread.Sleep(_config.SampleInterval * 60000);
+                        Thread.Sleep(config.SampleInterval * 60000);
                     }
                 } catch (Exception e) {
                     _log.Log(e.ToString());
@@ -194,25 +192,25 @@ namespace SEP4_Data.Data
             foreach (SensorEntry entry in entries)
             {
                 bool hasCategory = false;
-                foreach (SensorEntry category in _quickfix)
+                foreach (SensorEntry category in _lastEntriesByHardware)
                 {
                     if (category.Id != entry.Id) continue;
                     hasCategory = true;
                     if (category.EntryTimeUnix < entry.EntryTimeUnix)
                     {
-                        _quickfix.Remove(category);
-                        _quickfix.Add(entry);
+                        _lastEntriesByHardware.Remove(category);
+                        _lastEntriesByHardware.Add(entry);
                     }
                     break;
                 }
                 if (!hasCategory)
-                    _quickfix.Add(entry);
+                    _lastEntriesByHardware.Add(entry);
             }
         }
 
         public SensorEntry GetCached(string hardwareId)
         {
-            foreach (SensorEntry category in _quickfix)
+            foreach (SensorEntry category in _lastEntriesByHardware)
                 if (category.Id == hardwareId)
                     return category;
             return null;

@@ -1,20 +1,22 @@
-﻿namespace SEP4_Data.Data
+﻿using System.Runtime.CompilerServices;
+
+namespace SEP4_Data.Data
 {
     public interface IConfigService
     {
-        public int Port { get; set; }
-        public bool Https { get; set; }
-        public string DbHost { get; set; }
-        public int DbPort { get; set; }
-        public string DbName { get; set; }
-        public string DbUser { get; set; }
-        public string DbPassword { get; set; }
-        public byte[] JwtKey { get; set; }
-        public byte[] Salt { get; set; }
-        public int UserPostPermissionLevel { get; set; }
-        public int TokenExpire { get; set; }
-        public bool Swagger { get; set; }
-        public bool ReInitializeDb { get; set; }
-        public int SampleInterval { get; set; }
+        public int Port { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
+        public bool Https { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
+        public string DbHost { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
+        public int DbPort { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
+        public string DbName { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
+        public string DbUser { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
+        public string DbPassword { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
+        public byte[] JwtKey { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
+        public byte[] Salt { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
+        public int UserPostPermissionLevel { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
+        public int TokenExpire { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
+        public bool Swagger { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
+        public bool ReInitializeDb { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
+        public int SampleInterval { get; [MethodImpl(MethodImplOptions.Synchronized)] set; }
     }
 }
