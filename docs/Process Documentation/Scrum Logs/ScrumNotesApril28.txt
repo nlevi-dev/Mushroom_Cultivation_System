@@ -1,0 +1,61 @@
+Sprint review, rerospective, and planning meeting
+
+Review: 
+
+10:45 - meeting start
+
+Levente - data part OK, minor issues
+Samantha - DWH problems
+Shaoyu - DWH problems
+
+Daria - IoT part OK, only needs connection fix and polishing
+Mihai - better than expected considering impediments
+Natali - all planned completed
+
+Kristóf - Android part OK, still needs improvements
+Bogdan - dashboard needs improvements, but most things done
+Uldis - mostly just minor issues with what we have
+
+Incomplete stuff: 
+
+data - DWH needs to be finalized
+IoT - connecting the data server and the gateway
+Android - just improvements
+
+Ongoing work recommendations: 
+
+user stories 2, 3, 4 - atomic requirements, very basic, many others build on it (Levente, Mihai, Samantha, Shaoyu, Daria, Bogdan, Uldis, Kristóf)
+possible addition - 14 (same reasons) (Natali, Samantha, Shaoyu, Daria, Bogdan, Uldis, Kristóf, Levente, Mihai)
+possible addition - 1 (same reasons) (Kristóf, Levente, Mihai, Natali, Samantha, Shaoyu, Daria, Bogdan, Uldis)
+
+
+
+11:10 - Sprint retrospective:
+
+Kristóf - more communication between teams
+Levente - more hand-in-hand collaboration
+Mihai - same as Kristóf
+Natali - same as Mihai
+Samantha - same as Natali, same as Levente
+Shaoyu - better common understanding, same as Natali
+Daria - same as Mihai
+Bogdan - same as Shaoyu
+Uldis - same as Bogdan
+
+Issue 1 - more communication between teams - schedule meetings for collaboration - eg. between tech leads, quick support initiated by person needing help
+Issue 2 - more hand-in-hand collaboration - better task management, small discussions before implementation to integrate parts
+Issue 3 - better common understanding - small discussions before implementation to integrate parts, finalizing models and designs (possibly more) - between teams
+
+
+
+Sprint planning (sprint 2 - start of construction)
+
+12:30 - meeting start
+12:45 - IoT team planned
+12:55 - data team planned
+13:00 - android team planned
+13:05 - acceptance criteria clarified (1. user creatable, can log in, 2. android app sees hardware sensor updates)
+13:05 - vote called on sprint plan, resolved 8 votes to 0.
+
+
+Conclusions: previous sprint reviewed, current sprint planned successfully, team will proceed as planned.

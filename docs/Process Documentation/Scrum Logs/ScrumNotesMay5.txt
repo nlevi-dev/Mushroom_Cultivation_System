@@ -1,0 +1,22 @@
+Daily scrum meeting, May 5th (Sprint 2)
+
+10:05 - meeting start
+
+10:05 - Android team meeting
+Bogdan: UI is work in progress, will finish this week, no problems
+Uldis: dashboard fixed, listener only for activities - needs work, will work on UI, no problems
+Kristóf: auth is work in progress, will finish it this week, no problems
+
+10:15 - data team meeting
+Audrius: DWH model, light level in model, ambients removed, will work on staging model and scripts, no problems
+Levente: DWH model, light level in model, ambients removed, will work on staging model and scripts, will test and deploy API, no problems
+Samantha: DWH model, light level in model, ambients removed, will work on staging model and scripts, no problems
+Shaoyu: DWH model, light level in model, ambients removed, will work on staging model and scripts, no problems
+
+10:30 - IoT team meeting
+Daria: data sending more reliable, downlink messages, servo, will meet with Ib and Erl. for more info on these, work on downlink, issues: system rebooting, timestamp issues
+Mihai: data sending more reliable, downlink messages, servo, will meet with Ib and Erl. for more info on these, work on downlink, issues: system rebooting, timestamp issues
+Natali: data sending more reliable, downlink messages, servo, will meet with Ib and Erl. for more info on these, work on downlink, issues: system rebooting, timestamp issues
+
+Conclusions:
+Meeting completed, impediments' fixing in progress. Team is ready to proceed. 

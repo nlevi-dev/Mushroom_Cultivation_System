@@ -1,0 +1,49 @@
+Sprint review, retrospective, and planning meeting
+
+Review: 
+
+10:00 - meeting start
+
+Levente - PBI reports finished, ETL finalized, integration and deployment theoretically finished
+Shaoyu - same
+Audrius - same
+
+Daria - project report done, process report nearly done, diagrams need working
+Natali - same
+Mihai - same
+
+Kristóf - code still needs bugfixes but otherwise done, process report nearly done, project report and diagrams in progress
+Bogdan - same
+
+Incomplete stuff: 
+
+data - PBI still needs some more fixes, reports in progress
+IoT - diagrams, user guide
+Android - bugfixes still needed, reports in progress
+
+Ongoing work recommendations: 
+
+Complete handin stuff (should be done by Wednesday).
+
+
+10:20 - Sprint retrospective:
+
+Kristóf - no major issues
+Levente - no major issues
+Audrius - no major issues
+Natali - no major issues
+Mihai - no major issues
+Shaoyu - no major issues
+Daria - no major issues
+Bogdan - no major issues
+
+
+Sprint planning (sprint 5 - construction)
+
+10:32 - meeting start
+No detailed team plans due to the completion of nearly all work.
+10:35 - acceptance criteria clarified (1. System is tested in full, 2. documentation is complete)
+10:35 - vote called on sprint plan, resolved 8 votes to 0.
+
+
+Conclusions: previous sprint reviewed, current sprint planned successfully, team will proceed as planned.

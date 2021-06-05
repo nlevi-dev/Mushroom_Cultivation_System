@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Info.InfoFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#EFEFEF"
+        android:padding="10dp"
+        android:text="    Mushrooms are not plants, and require different conditions for optimal growth. Plants develop through photosynthesis, a process that converts atmospheric carbon dioxide into carbohydrates, especially cellulose. While sunlight provides an energy source for plants, mushrooms derive all of their energy and growth materials from their growth medium, through biochemical decomposition processes. This does not mean that light is an irrelevant requirement, since some fungi use light as a signal for fruiting. However, all the materials for growth must already be present in the growth medium. Mushrooms grow well at relative humidity levels of around 95–100%, and substrate moisture levels of 50 to 75%. Instead of seeds, mushrooms reproduce asexually through spores. Spores can be contaminated with airborne microorganisms, which will interfere with mushroom growth and prevent a healthy crop.  Mycelium, or actively growing mushroom culture, is placed on a substrate—usually sterilized grains such as rye or millet—and induced to grow into those grains. This is called inoculation. Inoculated grains (or plugs) are referred to as spawn. Spores are another inoculation option, but are less developed than established mycelium. Since they are also contaminated easily, they are only manipulated in laboratory conditions with a laminar flow cabinet."
+        android:textSize="18sp" />
+
+</FrameLayout>

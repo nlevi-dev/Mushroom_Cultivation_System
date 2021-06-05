@@ -1,0 +1,56 @@
+Sprint review, rerospective, and planning meeting
+
+Review: 
+
+10:30 - meeting start
+
+Levente - model finalized, current state DB and API server is done/deployed, ETL is in progress for DWH. 
+Shaoyu - incremental load is in progress
+Audrius - documentation in progress (5-step docs for DB/DWH)
+
+Daria - nearly all code implemented (including actuator, but that has problems - fixing in progress), needs documentation, architecture needs review
+Natali - gateway API also done
+
+Kristóf - UI completed, authentication, architecture done
+Uldis - same
+
+Incomplete stuff: 
+
+data - ETL, integration of Gateway app
+IoT - actuator needs fixes
+Android - visualization (pushed to next sprint as planned)
+
+Ongoing work recommendations: 
+
+User story 6 is in progress.
+User stories 7 and 9 is to be worked on.
+User stories 8, 12 and 15 is to be worked on/in progress.
+
+
+
+10:55 - Sprint retrospective:
+
+Kristóf - most issues improved a lot, we need to talk more about reports to split up work
+Levente - most issues improved
+Audrius - agreed with Levente, problems with misunderstandings, but those were fixed
+Natali - no problems, teamwork is good during this sprint
+Shaoyu - same as Natali
+Daria - inter-team collaboration
+Uldis - same as Natali, good emergency communication if help was needed
+Samantha - better on previous issues, but workflow feels inefficient but actually isn't
+
+Issue 1 - talk more about reports - split up report into parts by individual persons working on it by the subgroups
+Reports should be reviewed by entire subgroup, then merged into the big report by the entire group.
+
+
+Sprint planning (sprint 3 - construction)
+
+12:30 - meeting start
+12:34 - IoT team planned
+12:50 - data team planned
+12:54 - android team planned
+13:00 - acceptance criteria clarified (1. Working pipeline from Android to IoT, 2. DWH works, proven by ETL scripts running on dummy data)
+13:00 - vote called on sprint plan, resolved 6 votes to 0.
+
+
+Conclusions: previous sprint reviewed, current sprint planned successfully, team will proceed as planned.

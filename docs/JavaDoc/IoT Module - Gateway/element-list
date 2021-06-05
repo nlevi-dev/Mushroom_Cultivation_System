@@ -1,0 +1,6 @@
+sep4.iot.gateway
+sep4.iot.gateway.controller
+sep4.iot.gateway.model
+sep4.iot.gateway.persistence
+sep4.iot.gateway.service
+sep4.iot.gateway.webSocket

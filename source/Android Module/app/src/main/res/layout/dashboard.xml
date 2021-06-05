@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- {@deprecated Use fragment_dashboard.xml instead.} -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:translationZ="0dp"
+    tools:context=".Dashboard.Dashboard">
+
+    <ImageButton
+        android:id="@+id/buttonAddMushroom"
+        android:layout_width="70dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="140dp"
+        android:background="@android:drawable/ic_menu_add"
+        android:scaleType="fitXY"
+        android:src="@android:drawable/ic_menu_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clickable="true"
+        android:translationZ="5dp"
+        android:tint="@color/black"
+        app:srcCompat="@android:drawable/ic_menu_add" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="20dp"
+        android:fillViewport="true"
+        android:translationZ="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.545"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TableLayout
+            android:id="@+id/dashboardTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:translationZ="2dp"
+            android:clickable="true"
+            >
+
+            <TableRow
+                android:id="@+id/dashboardTableRow1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:translationZ="2dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/containerMushroom"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <ImageButton
+                        android:id="@+id/mushroomButton"
+                        android:layout_width="97dp"
+                        android:layout_height="92dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="27dp"
+                        android:background="@drawable/shroom"
+                        android:clickable="true"
+                        android:padding="5dp"
+                        android:scaleType="fitXY"
+                        android:translationZ="3dp" />
+
+                    <TextView
+                        android:id="@+id/mushroomText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:ems="10"
+                        android:text="Shroom1"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:translationZ="2dp" />
+                </LinearLayout>
+
+            </TableRow>
+
+        </TableLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

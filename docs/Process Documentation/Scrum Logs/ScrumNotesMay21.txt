@@ -1,0 +1,18 @@
+Daily scrum meeting, May 21st (Sprint 3)
+
+10:00 - meeting start
+
+10:00 - Android team meeting
+Literally no one was here (except me).
+
+10:15 - data team meeting
+Audrius: will work on documentation, incremental load script, no problems
+Shaoyu: will work on documentation, incremental load script, no problems
+
+10:25 - IoT team meeting
+Daria: talked to Erland, documentation, will work on testing, documentation when testing is done, no problems
+Mihai: talked to Erland, documentation, will work on testing, documentation when testing is done, no problems
+Natali: talked to Erland, documentation, will work on testing, documentation when testing is done, no problems
+
+Conclusions:
+Meeting completed, impediments' fixing in progress. Team is ready to proceed. 

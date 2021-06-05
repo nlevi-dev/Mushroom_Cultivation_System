@@ -1,0 +1,35 @@
+Sprint review and retrospective meeting
+
+Review: 
+
+10:00 - meeting start
+
+Shaoyu - project report done, process report nearly done, supporting docs done
+Levente - same
+Audrius - same
+
+Daria - reports done, appendices done
+Natali - same
+Mihai - same
+
+Kristóf - reports nearly complete (just need to insert things), appendices nearly done
+Bogdan - same
+
+Incomplete stuff: 
+
+finalization of reports and appendices, video demo
+
+10:20 - Sprint retrospective:
+
+Kristóf - no major issues
+Levente - no major issues
+Audrius - no major issues
+Natali - no major issues
+Mihai - no major issues
+Samantha - no major issues
+Shaoyu - no major issues
+Daria - no major issues
+Bogdan - no major issues
+
+
+Conclusions: previous sprint reviewed, team will proceed as planned.

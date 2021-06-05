@@ -1,0 +1,15 @@
+<!--<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<item android:id="@+id/action_general_info"
+android:title="@string/general_info" />
+
+<item android:id="@+id/action_dashboard"
+android:title="@string/dashboard" />
+
+<item android:id="@+id/action_settings"
+android:title="@string/menu_settings" />
+
+</menu>-->
+<root />

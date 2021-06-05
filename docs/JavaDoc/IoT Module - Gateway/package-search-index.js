@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"sep4.iot.gateway"},{"l":"sep4.iot.gateway.controller"},{"l":"sep4.iot.gateway.model"},{"l":"sep4.iot.gateway.persistence"},{"l":"sep4.iot.gateway.service"},{"l":"sep4.iot.gateway.webSocket"}];updateSearchResults();

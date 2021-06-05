@@ -1,0 +1,6 @@
+IoT Module:		https://github.com/popaDaria/SEP4_IOT
+IoT Module - Gateway:	https://github.com/popaDaria/SEP4_IOT/tree/GatewayApp 
+IoT Module - Hardware:	https://github.com/popaDaria/SEP4_IOT/tree/hardware2
+Data Module:		https://github.com/C4T4PHR4CT/SEP4_Data
+Android Module:		https://github.com/ChrisLenard/SEP4_Android
+System Presentation:	https://www.youtube.com/watch?v=lzsCPYxxhuY

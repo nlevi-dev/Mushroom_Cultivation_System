@@ -1,0 +1,55 @@
+Sprint review, retrospective, and planning meeting
+
+Review: 
+
+10:00 - meeting start
+
+Levente - ETL should be done, gateway app ready to be deployed
+Shaoyu - same
+Audrius - documentation in progress (glossary done)
+Samantha - same
+
+Daria - code should be done, Design and Implementation for IoT project report done
+Natali - same
+
+Kristóf - code is nearly done (just needs fixes), documentation started
+Uldis - same
+Bogdan - same
+
+Incomplete stuff: 
+
+data - PBI reports, gateway deployment, incremental load
+IoT - testing
+Android - bugfixes
+general - documentation, reports
+
+Ongoing work recommendations: 
+
+Most remaining user stories need the pipeline deployment but are otherwise done.
+User story 7 in progress.
+
+
+10:25 - Sprint retrospective:
+
+Kristóf - no major issues
+Levente - no major issues
+Audrius - no major issues
+Natali - no major issues
+Shaoyu - no major issues
+Daria - no major issues
+Uldis - no major issues
+Samantha - no major issues
+Bogdan - no major issues
+
+
+Sprint planning (sprint 4 - construction)
+
+10:45 - meeting start
+10:46 - IoT team planned
+10:50 - data team planned
+10:52 - android team planned
+10:55 - acceptance criteria clarified (1. Everything is deployed, data is up in the live environment, 2. satisfactory progress with documentation)
+10:55 - vote called on sprint plan, resolved 10 votes to 0.
+
+
+Conclusions: previous sprint reviewed, current sprint planned successfully, team will proceed as planned.

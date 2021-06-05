@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Viewspecimen.ViewSpecimen">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/MushroomName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Loading..."
+            android:textAlignment="center"
+            android:textSize="36sp" />
+
+        <TextView
+            android:id="@+id/stage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Loading..."
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/stageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:text="Stage" />
+
+            <Button
+                android:id="@+id/diaryButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:text="Diary" />
+
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/temperature"
+            android:layout_width="372dp"
+            android:layout_height="108dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:paddingBottom="10dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="3dp">
+
+            <TextView
+                android:id="@+id/tempMain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_green"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:text="Temperature"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/actualTemp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/tempMain"
+                android:gravity="right|top"
+                android:paddingTop="20dp"
+                android:paddingEnd="80dp"
+                android:text="Loading..."
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/rangeTemp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom|end"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp"
+                android:text="In recommended range"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/humiditycard"
+            android:layout_width="372dp"
+            android:layout_height="108dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:id="@+id/humi"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_blue"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:text="Humidity"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/actualHum"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/tempMain"
+                android:gravity="end|top"
+                android:paddingTop="20dp"
+                android:paddingEnd="80dp"
+                android:text="Loading..."
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"  />
+
+            <TextView
+                android:id="@+id/rangeHum"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom|end"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp"
+                android:text="In recommended range"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/CO2"
+            android:layout_width="372dp"
+            android:layout_height="108dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:id="@+id/co2level"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_red"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:text="CO2 Level"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/actualCO2"
+                android:layout_width="374dp"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/tempMain"
+                android:gravity="end|top"
+                android:paddingTop="20dp"
+                android:paddingEnd="80dp"
+                android:text="Loading..."
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"  />
+
+            <TextView
+                android:id="@+id/rangeCO2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom|end"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp"
+                android:text="In recommended range"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/lightcard"
+            android:layout_width="372dp"
+            android:layout_height="108dp"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:id="@+id/lightMain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_gray"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:text="Light Level"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"  />
+
+            <TextView
+                android:id="@+id/actualLight"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/tempMain"
+                android:gravity="end|top"
+                android:paddingTop="20dp"
+                android:paddingEnd="80dp"
+                android:text="Loading..."
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"  />
+
+            <TextView
+                android:id="@+id/rangeLight"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom|end"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp"
+                android:text="In recommended range"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"/>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

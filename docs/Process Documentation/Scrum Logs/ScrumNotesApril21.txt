@@ -1,0 +1,22 @@
+Daily scrum meeting, April 21st (Sprint 1)
+
+10:00 - meeting start
+
+10:00 - Android team meeting
+Bogdan: GUI, navigation, will finish GUI and navigation, no problems
+Uldis: GUI, fixed problems, will work on WebClient, no problems
+Kristóf: backend classes, documentation, will merge branches and do backend, no problems
+
+10:15 - data team meeting
+Audrius: controllers, services, will work on finishing controllers, no problems
+Levente: not present due to personal reasons
+Samantha: mapping, extract-load (except edw - fact table), will work on updating DWH, no problems
+Shaoyu: mapping, extract-load (except edw - fact table), will work on updating DWH, no problems
+
+10:30 - IoT team meeting
+Daria: setup hardware, testing, redid gateway server, will work on diagrams, documentation, if Ib sends UI, then lorawan connection, problem: lorawan sends data a bit differently, would need a workshop
+Mihai: setup hardware, testing, will work on diagrams, documentation, if Ib sends UI, then lorawan connection, no other problems
+Natali: setup hardware, testing, will work on diagrams, documentation, if Ib sends UI, then lorawan connection, no other problems
+
+Conclusions:
+Meeting completed, impediments are pending external support. Team is ready to proceed. 

@@ -1,0 +1,19 @@
+Daily scrum meeting, May 25th (Sprint 3)
+
+8:40 - meeting start (for data team, other teams start at 10:00)
+
+8:40 - data team meeting (moved at request of data team)
+Levente: will work on documentation, gateway connection, remainder of scripts, no problems
+Audrius: worked on documentation, will work on documentation, no problems
+Samantha: worked on documentation, will work on documentation, no problems
+Shaoyu: dummy data created, ETL test started, will work on incremental load, ETL testing, no problems
+
+10:00 - Android team meeting
+Literally no one was here (except me, again).
+
+10:25 - IoT team meeting
+Daria: Code should be done, implementation and design in report, will work on diagrams, no problems
+Natali: Code should be done, implementation and design in report, will work on reports and code cleanup, no problems
+
+Conclusions:
+Meeting completed, impediments' fixing in progress. Team is ready to proceed. 

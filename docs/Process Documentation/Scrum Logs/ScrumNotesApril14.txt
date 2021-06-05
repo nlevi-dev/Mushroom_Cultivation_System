@@ -1,0 +1,22 @@
+Daily scrum meeting, April 14th (Sprint 1)
+
+10:00 - meeting start
+
+10:00 - Android team meeting
+Bogdan: completed task, will work on landing page and UI connections
+Uldis: completed task, bit of help needed, will work on UI
+Kristóf: completed task, will work on backend
+
+10:15 - data team meeting
+Audrius: endpoints, data endpoints, will work on Persistence and more endpoints, will need help with endpoints
+Levente: data warehouse, support, will work on management and support, will redistribute tasks to remove impediments (see Shaoyu for more information)
+Samantha: data staging design, will work on staging, will need help with staging after review
+Shaoyu: not much (tasks blocked, only preliminary work done), will work on staging and rearranging tasks, probably no help needed
+
+10:30 - IoT team meeting
+Daria: Gateway application, model classes, interfaces, general design, user/model coding, will work on hardware (now that we have it)
+Mihai: Gateway application, model classes, interfaces, general design, sensor coding, will work on hardware (now that we have it), impediment: Lorawan connection not trained could be a problem
+Natali: Gateway application, model classes, interfaces, general design, hardware coding, will work on hardware (now that we have it), no impediments besides Lorawan
+
+Conclusions:
+Meeting completed, impediments' fixing in progress. Team is ready to proceed. 

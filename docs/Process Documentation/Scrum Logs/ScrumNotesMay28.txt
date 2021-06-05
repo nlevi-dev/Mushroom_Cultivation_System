@@ -1,0 +1,20 @@
+Daily scrum meeting, May 28th (Sprint 4)
+
+10:00 - meeting start 
+
+10:00 - Android team meeting
+Kristóf: reports, will work on process report, no problems
+Bogdan: bugfixes in code, will work on final fixes and improvements, no problems
+
+10:15 - data team meeting
+Levente: ETL finalized, tried deploying gateway, will work on gateway, deploying to live, start documentation, no problems
+Shaoyu: incremental load done, will work on PBI, no problems
+Audrius: PBI reports in progress, will work on PBI, no problems
+Samantha: PBI reports in progress, data load fixes, will work on finishing PBI, no problems
+
+10:30 - IoT team meeting
+Daria: finished testing, worked on reports, will work on documentation, no problems
+Natali: same, will work on documentation, no problems
+
+Conclusions:
+Meeting completed, impediments' fixing in progress. Team is ready to proceed. 

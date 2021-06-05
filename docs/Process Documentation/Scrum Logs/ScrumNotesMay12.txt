@@ -1,0 +1,22 @@
+Daily scrum meeting, May 12th (Sprint 2)
+
+10:00 - meeting start
+
+10:05 - Android team meeting
+Bogdan: view for visualizations, diary UI, will work on rest of UI, no problems
+Uldis: fixed nav, dashboard fix, will work on rest of UI, no problems
+Kristóf: done auth, will work on rest of UI, no problems
+
+10:15 - data team meeting
+Audrius: no progress due to communication problems, will work on fixing problems in staging then work on DWH, no other problems
+Levente: no progress due to communication problems, will work on fixing problems in staging then work on DWH, no other problems
+Samantha: no progress due to communication problems, will work on fixing problems in staging then work on DWH, no other problems
+Shaoyu: no progress due to communication problems, will work on fixing problems in staging then work on DWH, no other problems
+
+10:30 - IoT team meeting
+Daria: Lorawan app fixed, will work on delays, improve program quality, documentation, will have to wait for Ib to respond to questions
+Mihai: Lorawan app fixed, will work on delays, improve program quality, documentation, will have to wait for Ib to respond to questions
+Natali: Lorawan app fixed, will work on delays, improve program quality, documentation, will have to wait for Ib to respond to questions
+
+Conclusions:
+Meeting completed, impediments' fixing in progress. Team is ready to proceed. 

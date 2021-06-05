@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav"
+    app:startDestination="@id/signIn">
+
+    <fragment
+        android:id="@+id/dashboard"
+        android:name="via.sep4.Dashboard.Dashboard"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/action_dashboard_to_viewSpecimen"
+            app:destination="@id/viewSpecimen" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewSpecimen"
+        android:name="via.sep4.Viewspecimen.ViewSpecimen"
+        android:label="Specimen Details"
+        tools:layout="@layout/fragment_view_specimen">
+        <action
+            android:id="@+id/action_viewSpecimen_to_diary"
+            app:destination="@id/diary" />
+        <action
+            android:id="@+id/action_viewSpecimen_to_visualisation"
+            app:destination="@id/visualisation" />
+        <action
+            android:id="@+id/action_viewSpecimen_to_selectStage"
+            app:destination="@id/selectStage" />
+    </fragment>
+    <fragment
+        android:id="@+id/signIn"
+        android:name="via.sep4.Signin.SignIn"
+        android:label="Sign In"
+        tools:layout="@layout/fragment_sign_in">
+        <action
+            android:id="@+id/action_signIn_to_dashboard"
+            app:destination="@id/dashboard" />
+    </fragment>
+    <fragment
+        android:id="@+id/diary"
+        android:name="via.sep4.Diary.Diary"
+        android:label="Diary"
+        tools:layout="@layout/fragment_diary">
+        <action
+            android:id="@+id/action_diary_to_addDiaryEntry"
+            app:destination="@id/addDiaryEntry" />
+    </fragment>
+    <fragment
+        android:id="@+id/visualisation"
+        android:name="via.sep4.Viewspecimen.visualisation"
+        android:label="Visualisation"
+        tools:layout="@layout/fragment_visualisation" />
+    <fragment
+        android:id="@+id/addDiaryEntry"
+        android:name="via.sep4.Diary.addDiaryEntry"
+        android:label="Diary"
+        tools:layout="@layout/fragment_add_diary_entry" />
+    <fragment
+        android:id="@+id/fragment_info"
+        android:name="via.sep4.Info.InfoFragment"
+        android:label="Info"
+        tools:layout="@layout/fragment_info" />
+    <fragment
+        android:id="@+id/selectStage"
+        android:name="via.sep4.Viewspecimen.selectStage"
+        android:label="Select Stage"
+        tools:layout="@layout/fragment_select_stage" >
+        <action
+            android:id="@+id/action_selectStage_to_dashboard"
+            app:destination="@id/dashboard" />
+    </fragment>
+</navigation>

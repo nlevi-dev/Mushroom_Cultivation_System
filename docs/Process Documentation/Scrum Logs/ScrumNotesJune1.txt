@@ -1,0 +1,19 @@
+Daily scrum meeting, June 1st (Sprint 5)
+
+10:00 - meeting start 
+
+10:00 - Android team meeting
+Kristóf: process report done (excluding personal refl. and concl.), will work on supplementary docs, no problems
+Bogdan: class diagram, fixes in code, will work on final fixes, project report, no problems
+
+10:15 - data team meeting
+Shaoyu: database documentation, will work on documentation, no problems
+Audrius: DWH documentation, will work on documentation, no problems
+Samantha: PBI reports done, will work on ETL script improvements, no problems
+
+10:30 - IoT team meeting
+Daria: worked on reports, will work on documentation, no problems
+Natali: same, will work on documentation, no problems
+
+Conclusions:
+Meeting completed, impediments' fixing in progress. Team is ready to proceed. 

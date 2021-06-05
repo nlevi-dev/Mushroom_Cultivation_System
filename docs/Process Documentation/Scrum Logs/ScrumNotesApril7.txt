@@ -1,0 +1,14 @@
+Scrum sprint planning meeting, April 7th (Sprint 1)
+
+Minutes:
+
+10:00 - meeting start
+10:12 - goal confirmed, capacity approximated
+10:30 - IoT team planned
+10:55 - data team planned
+11:10 - Android team planned
+11:20 - acceptance criteria clarified
+11:20 - vote called on sprint plan. Resolved 11 votes to 0.
+
+Conclusions: 
+Sprint 1 planned. Sprint planning meeting concluded.

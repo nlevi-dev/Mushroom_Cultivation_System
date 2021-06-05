@@ -1,0 +1,20 @@
+Daily scrum meeting, May 27th (Sprint 4)
+
+10:00 - meeting start 
+
+10:00 - Android team meeting
+Kristóf: bugfixes in code, reports, will work on reports, no problems
+Bogdan: same, will work on final fixes and improvements, no problems
+
+10:15 - data team meeting
+Levente: incremental load done, will work on cleanup, deployment to live, finalizing gateway deployment, no problems
+Samantha: fixes in DWH, started PBI reports, met with Astrid, will work on finishing PBI, no problems
+Shaoyu: same, will work on cleanup and PBI, no problems
+
+10:30 - IoT team meeting
+Daria: unit testing done, code documentation done, diagrams, will work on documentation, no problems
+Natali: same, will work on documentation, no problems
+Mihai: same, will work on documentation, no problems
+
+Conclusions:
+Meeting completed, impediments' fixing in progress. Team is ready to proceed. 
